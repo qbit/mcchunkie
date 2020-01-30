@@ -5,10 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
+
+func messageToMe(sn, message string) bool {
+	return strings.Contains(message, sn)
+}
 
 func sendMessage(c *gomatrix.Client, roomID, message string) error {
 	_, err := c.UserTyping(roomID, true, 3)
@@ -31,8 +37,9 @@ func main() {
 		log.Fatalf("%s\n", err)
 	}
 
-	var username, password, userID, accessToken, server string
+	var username, shortName, password, userID, accessToken, server string
 	var setup bool
+	var nameRE = regexp.MustCompile(`@(.+):.+$`)
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
 	flag.StringVar(&server, "server", "", "matrix server")
@@ -80,6 +87,7 @@ func main() {
 		store.set("account", "user_id", resp.UserID)
 	} else {
 		username, _ = store.get("account", "username")
+		shortName = nameRE.ReplaceAllString(username, "$1")
 		accessToken, _ = store.get("account", "access_token")
 		userID, _ = store.get("account", "user_id")
 	}
@@ -114,6 +122,9 @@ func main() {
 			switch mtype {
 			case "m.text":
 				if post, ok := ev.Body(); ok {
+					if messageToMe(shortName, post) {
+						sendMessage(cli, "!LTxJpLHtShMVmlpwmZ:tapenet.org", post)
+					}
 					log.Printf("%s: '%s'", ev.Sender, post)
 				}
 			}
