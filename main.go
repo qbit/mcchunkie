@@ -41,11 +41,12 @@ func main() {
 	flag.Parse()
 
 	if server == "" {
-		server, _ = store.get("config", "server")
+		server, err = store.get("config", "server")
 		if server == "" {
 			log.Fatalln("please specify a server")
 		}
 
+	} else {
 		store.set("config", "server", server)
 	}
 
