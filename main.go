@@ -66,8 +66,6 @@ func main() {
 		}
 		fmt.Println()
 
-		log.Printf("'%s' : '%s'\n", username, password)
-
 		resp, err := cli.Login(&gomatrix.ReqLogin{
 			Type:     "m.login.password",
 			User:     username,
@@ -122,9 +120,8 @@ func main() {
 		}
 	})
 
-	//cli.SendText("!tmCVBJAeuKjCfihUjb:cobryce.com", "Butts")
 	sendMessage(cli, "!LTxJpLHtShMVmlpwmZ:tapenet.org", "Typing hi!")
-	sendMessage(cli, "!tmCVBJAeuKjCfihUjb:cobryce.com", "Butts")
+	//sendMessage(cli, "!tmCVBJAeuKjCfihUjb:cobryce.com", "Butts")
 
 	avatar := "https://deftly.net/mcchunkie.png"
 	aurl, err := cli.GetAvatarURL()
