@@ -108,10 +108,10 @@ func main() {
 		if _, err := cli.JoinRoom("!ALCZnrYadLGSySIFZr:matrix.org", "", nil); err != nil {
 			log.Fatalln(err)
 		}
+		if _, err := cli.JoinRoom("!LTxJpLHtShMVmlpwmZ:tapenet.org", "", nil); err != nil {
+			log.Fatalln(err)
+		}
 	*/
-	if _, err := cli.JoinRoom("!LTxJpLHtShMVmlpwmZ:tapenet.org", "", nil); err != nil {
-		log.Fatalln(err)
-	}
 
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
 		if ev.Sender == username {
