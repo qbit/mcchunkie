@@ -10,10 +10,6 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-var (
-	username string
-)
-
 func sendMessage(c *gomatrix.Client, roomID, message string) error {
 	_, err := c.UserTyping(roomID, true, 3)
 	if err != nil {
@@ -35,7 +31,7 @@ func main() {
 		log.Fatalf("%s\n", err)
 	}
 
-	var password, userID, accessToken, server string
+	var username, password, userID, accessToken, server string
 	var setup bool
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
@@ -84,6 +80,7 @@ func main() {
 		store.set("account", "access_token", resp.AccessToken)
 		store.set("account", "user_id", resp.UserID)
 	} else {
+		username, _ = store.get("account", "username")
 		accessToken, _ = store.get("account", "access_token")
 		userID, _ = store.get("account", "user_id")
 	}
@@ -110,8 +107,7 @@ func main() {
 	}
 
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
-		fmt.Printf("'%s' == '%s'\n", ev.Sender, username)
-		if ev.Sender == fmt.Sprintf("@%s", username) {
+		if ev.Sender == username {
 			return
 		}
 
