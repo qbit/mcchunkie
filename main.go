@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"regexp"
 	"strings"
 	"time"
 
+	"git.sr.ht/~qbit/mcchunkie/plugins"
 	"github.com/matrix-org/gomatrix"
 )
 
@@ -37,9 +37,8 @@ func main() {
 		log.Fatalf("%s\n", err)
 	}
 
-	var username, shortName, password, userID, accessToken, server string
+	var username, password, userID, accessToken, server string
 	var setup bool
-	var nameRE = regexp.MustCompile(`@(.+):.+$`)
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
 	flag.StringVar(&server, "server", "", "matrix server")
@@ -87,7 +86,6 @@ func main() {
 		store.set("account", "user_id", resp.UserID)
 	} else {
 		username, _ = store.get("account", "username")
-		shortName = nameRE.ReplaceAllString(username, "$1")
 		accessToken, _ = store.get("account", "access_token")
 		userID, _ = store.get("account", "user_id")
 	}
@@ -99,6 +97,8 @@ func main() {
 	cli.Syncer = syncer
 
 	/*
+		// TODO: Add ability to join / part rooms
+
 		if _, err := cli.JoinRoom("!tmCVBJAeuKjCfihUjb:cobryce.com", "", nil); err != nil {
 			log.Fatalln(err)
 		}
@@ -118,21 +118,10 @@ func main() {
 			return
 		}
 
-		if mtype, ok := ev.MessageType(); ok {
-			switch mtype {
-			case "m.text":
-				if post, ok := ev.Body(); ok {
-					if messageToMe(shortName, post) {
-						sendMessage(cli, "!LTxJpLHtShMVmlpwmZ:tapenet.org", post)
-					}
-					log.Printf("%s: '%s'", ev.Sender, post)
-				}
-			}
+		for _, p := range plugins.Plugs {
+			p.Respond(cli, ev, username)
 		}
 	})
-
-	sendMessage(cli, "!LTxJpLHtShMVmlpwmZ:tapenet.org", "Typing hi!")
-	//sendMessage(cli, "!tmCVBJAeuKjCfihUjb:cobryce.com", "Butts")
 
 	avatar := "https://deftly.net/mcchunkie.png"
 	aurl, err := cli.GetAvatarURL()
