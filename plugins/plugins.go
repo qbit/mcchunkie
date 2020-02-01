@@ -42,6 +42,7 @@ type Plugins []Plugin
 
 // Plugs are all of our plugins
 var Plugs = Plugins{
+	&Beer{},
 	&BotSnack{},
 	&HighFive{},
 	&Hi{},
