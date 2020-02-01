@@ -14,7 +14,7 @@ type BotSnack struct {
 }
 
 func (h *BotSnack) match(msg string) bool {
-	re := regexp.MustCompile(`botsnack`)
+	re := regexp.MustCompile(`(?i)botsnack`)
 	return re.MatchString(msg)
 }
 

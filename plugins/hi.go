@@ -13,7 +13,7 @@ type Hi struct {
 }
 
 func (h *Hi) match(msg string) bool {
-	re := regexp.MustCompile(`^hi|hi$`)
+	re := regexp.MustCompile(`(?i)^hi|hi$`)
 	return re.MatchString(msg)
 }
 
