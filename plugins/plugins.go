@@ -46,4 +46,5 @@ var Plugs = Plugins{
 	&BotSnack{},
 	&HighFive{},
 	&Hi{},
+	&LoveYou{},
 }
