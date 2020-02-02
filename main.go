@@ -90,6 +90,9 @@ func main() {
 		store.set("account", "username", username)
 		store.set("account", "access_token", resp.AccessToken)
 		store.set("account", "user_id", resp.UserID)
+
+		accessToken = resp.AccessToken
+		userID = resp.UserID
 	} else {
 		username, _ = store.get("account", "username")
 		accessToken, _ = store.get("account", "access_token")
