@@ -14,7 +14,7 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// Beer responds to hi messages
+// Beer responds to beer requests
 type Beer struct {
 }
 
@@ -129,7 +129,7 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 	)
 }
 
-// Respond to hi events
+// Respond to looking up of beer requests
 func (h *Beer) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
 	if mtype, ok := ev.MessageType(); ok {
 		switch mtype {
@@ -159,7 +159,7 @@ func (h *Beer) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
 	}
 }
 
-// Name hi
+// Name Beer!
 func (h *Beer) Name() string {
 	return "Beer"
 }
