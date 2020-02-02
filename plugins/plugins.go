@@ -48,4 +48,5 @@ var Plugs = Plugins{
 	&Hi{},
 	&LoveYou{},
 	&Source{},
+	&Version{},
 }
