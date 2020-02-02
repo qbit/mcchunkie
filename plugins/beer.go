@@ -141,16 +141,16 @@ func (h *Beer) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
 						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 						brr, err := h.get(beer)
 						if err != nil {
-							SendMessage(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
+							SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
 						}
 
 						switch {
 						case brr.Nhits == 0:
-							SendMessage(c, ev.RoomID, "¯\\_(ツ)_/¯")
+							SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
 						case brr.Nhits == 1:
-							SendMessage(c, ev.RoomID, fmt.Sprintf("%s", h.pretty(*brr, false)))
+							SendText(c, ev.RoomID, fmt.Sprintf("%s", h.pretty(*brr, false)))
 						case brr.Nhits > 1:
-							SendMessage(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
+							SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
 						}
 					}
 				}

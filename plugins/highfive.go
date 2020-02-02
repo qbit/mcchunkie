@@ -23,11 +23,11 @@ func (h *HighFive) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) 
 				if ToMe(u, post) {
 					if strings.Contains(post, "o/") {
 						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-						SendMessage(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
+						SendText(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
 					}
 					if strings.Contains(post, "\\o") {
 						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-						SendMessage(c, ev.RoomID, fmt.Sprintf("%s o/", s))
+						SendText(c, ev.RoomID, fmt.Sprintf("%s o/", s))
 					}
 				}
 			}

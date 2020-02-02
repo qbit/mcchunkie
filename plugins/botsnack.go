@@ -41,7 +41,7 @@ func (h *BotSnack) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) 
 				if ToMe(u, post) {
 					if h.match(post) {
 						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-						SendMessage(c, ev.RoomID, h.resp())
+						SendText(c, ev.RoomID, h.resp())
 					}
 				}
 			}

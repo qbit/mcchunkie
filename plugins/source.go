@@ -28,7 +28,7 @@ func (h *Source) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
 				if ToMe(u, post) {
 					if h.match(post) {
 						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-						SendMessage(c, ev.RoomID, fmt.Sprintf("%s: %s ;D", s, "https://git.sr.ht/~qbit/mcchunkie"))
+						SendText(c, ev.RoomID, fmt.Sprintf("%s: %s ;D", s, "https://git.sr.ht/~qbit/mcchunkie"))
 					}
 				}
 			}

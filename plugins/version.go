@@ -33,7 +33,7 @@ func (v *Version) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
 				if ToMe(u, post) {
 					if v.match(post) {
 						log.Printf("%s: responding to '%s'", v.Name(), ev.Sender)
-						SendMessage(c, ev.RoomID, v.print(s))
+						SendText(c, ev.RoomID, v.print(s))
 					}
 				}
 			}
