@@ -8,4 +8,4 @@ sources:
 tasks:
   - test_mcchunkie: |
       cd mcchunkie
-      go test
+      go test ./...
