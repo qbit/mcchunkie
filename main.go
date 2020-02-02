@@ -32,19 +32,25 @@ func sendMessage(c *gomatrix.Client, roomID, message string) error {
 }
 
 func main() {
-	var store, err = NewStore("mcchunkie.db")
-	if err != nil {
-		log.Fatalf("%s\n", err)
-	}
-
-	var username, password, userID, accessToken, server string
+	var username, password, userID, accessToken, server, db string
 	var setup bool
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
 	flag.StringVar(&server, "server", "", "matrix server")
 	flag.BoolVar(&setup, "s", false, "setup account")
+	flag.StringVar(&db, "db", "mcchunkie.db", "full path to database file")
 
 	flag.Parse()
+
+	unveil("/etc/resolv.conf", "r")
+	unveil("/etc/ssl/cert.pem", "r")
+	unveil(db, "rwc")
+	unveilBlock()
+
+	var store, err = NewStore(db)
+	if err != nil {
+		log.Fatalf("%s\n", err)
+	}
 
 	if server == "" {
 		server, err = store.get("config", "server")
