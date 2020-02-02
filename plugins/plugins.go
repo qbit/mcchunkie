@@ -47,4 +47,5 @@ var Plugs = Plugins{
 	&HighFive{},
 	&Hi{},
 	&LoveYou{},
+	&Source{},
 }
