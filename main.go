@@ -111,6 +111,9 @@ func main() {
 		if _, err := cli.JoinRoom("!LTxJpLHtShMVmlpwmZ:tapenet.org", "", nil); err != nil {
 			log.Fatalln(err)
 		}
+		if _, err := cli.JoinRoom("!TjjamgVanKpNiswkoJ:pintobyte.com", "", nil); err != nil {
+			log.Fatalln(err)
+		}
 	*/
 
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
