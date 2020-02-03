@@ -52,6 +52,7 @@ var Plugs = Plugins{
 	&HighFive{},
 	&Hi{},
 	&LoveYou{},
+	&OpenBSDMan{},
 	&Source{},
 	&Version{},
 }
