@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -32,11 +33,12 @@ func sendMessage(c *gomatrix.Client, roomID, message string) error {
 }
 
 func main() {
-	var username, password, userID, accessToken, server, db string
+	var username, password, userID, accessToken, server, db, avatar string
 	var setup bool
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
 	flag.StringVar(&server, "server", "", "matrix server")
+	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.BoolVar(&setup, "s", false, "setup account")
 	flag.StringVar(&db, "db", "mcchunkie.db", "full path to database file")
 
@@ -146,17 +148,20 @@ func main() {
 		}
 	})
 
-	avatar := "https://deftly.net/mcchunkie.png"
-	aurl, err := cli.GetAvatarURL()
-
-	if aurl != avatar {
+	if avatar != "" {
 		log.Printf("Setting avatar to: '%s'", avatar)
-		err = cli.SetAvatarURL(avatar)
+		rmu, err := cli.UploadLink(avatar)
 		if err != nil {
-			fmt.Println("Unable to set avatar: ", err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
-	} else {
-		log.Printf("avatar already set")
+
+		err = cli.SetAvatarURL(rmu.ContentURI)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		os.Exit(0)
 	}
 
 	for {
