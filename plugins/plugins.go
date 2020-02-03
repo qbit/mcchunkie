@@ -10,7 +10,8 @@ import (
 // Plugin defines the functions a plugin must implement to be used by
 // mcchunkie.
 type Plugin interface {
-	Respond(c *gomatrix.Client, ev *gomatrix.Event, user string)
+	//Respond(c *gomatrix.Client, ev *gomatrix.Event, user string)
+	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
 	Name() string
 }
 

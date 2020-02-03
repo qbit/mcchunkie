@@ -131,7 +131,18 @@ func main() {
 		}
 
 		for _, p := range plugins.Plugs {
-			p.Respond(cli, ev, username)
+			var post string
+			var ok bool
+			if post, ok = ev.Body(); !ok {
+				// Invaild body, for some reason
+				return
+			}
+			if mtype, ok := ev.MessageType(); ok {
+				switch mtype {
+				case "m.text":
+					p.RespondText(cli, ev, username, post)
+				}
+			}
 		}
 	})
 

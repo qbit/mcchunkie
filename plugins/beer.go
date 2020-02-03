@@ -129,31 +129,24 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 	)
 }
 
-// Respond to looking up of beer requests
-func (h *Beer) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
-	if mtype, ok := ev.MessageType(); ok {
-		switch mtype {
-		case "m.text":
-			if post, ok := ev.Body(); ok {
-				if h.match(post) {
-					beer := h.fix(post)
-					if beer != "" {
-						log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-						brr, err := h.get(beer)
-						if err != nil {
-							SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
-						}
+// RespondText to looking up of beer requests
+func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+	if h.match(post) {
+		beer := h.fix(post)
+		if beer != "" {
+			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+			brr, err := h.get(beer)
+			if err != nil {
+				SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
+			}
 
-						switch {
-						case brr.Nhits == 0:
-							SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
-						case brr.Nhits == 1:
-							SendText(c, ev.RoomID, fmt.Sprintf("%s", h.pretty(*brr, false)))
-						case brr.Nhits > 1:
-							SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
-						}
-					}
-				}
+			switch {
+			case brr.Nhits == 0:
+				SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
+			case brr.Nhits == 1:
+				SendText(c, ev.RoomID, fmt.Sprintf("%s", h.pretty(*brr, false)))
+			case brr.Nhits > 1:
+				SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
 			}
 		}
 	}

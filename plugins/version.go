@@ -22,21 +22,14 @@ func (v *Version) print(to string) string {
 	return fmt.Sprintf("%s, I am written in Go, running on %s", to, runtime.GOOS)
 }
 
-// Respond to version events
-func (v *Version) Respond(c *gomatrix.Client, ev *gomatrix.Event, user string) {
-	if mtype, ok := ev.MessageType(); ok {
-		switch mtype {
-		case "m.text":
-			if post, ok := ev.Body(); ok {
-				u := NameRE.ReplaceAllString(user, "$1")
-				s := NameRE.ReplaceAllString(ev.Sender, "$1")
-				if ToMe(u, post) {
-					if v.match(post) {
-						log.Printf("%s: responding to '%s'", v.Name(), ev.Sender)
-						SendText(c, ev.RoomID, v.print(s))
-					}
-				}
-			}
+// RespondText to version events
+func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+	u := NameRE.ReplaceAllString(user, "$1")
+	s := NameRE.ReplaceAllString(ev.Sender, "$1")
+	if ToMe(u, post) {
+		if v.match(post) {
+			log.Printf("%s: responding to '%s'", v.Name(), ev.Sender)
+			SendText(c, ev.RoomID, v.print(s))
 		}
 	}
 }
