@@ -2,3 +2,4 @@
 *.db
 mcchunkie
 deploy.sh
+*.core
