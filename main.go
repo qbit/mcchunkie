@@ -44,6 +44,7 @@ func main() {
 
 	flag.Parse()
 
+	pledge("stdio unveil rpath wpath cpath flock dns inet tty")
 	unveil("/etc/resolv.conf", "r")
 	unveil("/etc/ssl/cert.pem", "r")
 	unveil(db, "rwc")
@@ -88,6 +89,9 @@ func main() {
 		if err != nil {
 			log.Fatalln(err)
 		}
+
+		// No longer need tty now that we have our info
+		pledge("stdio unveil rpath wpath cpath flock dns inet")
 
 		store.set("account", "username", username)
 		store.set("account", "access_token", resp.AccessToken)

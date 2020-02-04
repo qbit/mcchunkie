@@ -14,7 +14,6 @@ func unveilBlock() {
 	unix.UnveilBlock()
 }
 
-func plegde(promises string) {
+func pledge(promises string) {
 	unix.PledgePromises(promises)
-
 }
