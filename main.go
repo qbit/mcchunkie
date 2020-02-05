@@ -40,7 +40,7 @@ func main() {
 	flag.StringVar(&server, "server", "", "matrix server")
 	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.BoolVar(&setup, "s", false, "setup account")
-	flag.StringVar(&db, "db", "mcchunkie.db", "full path to database file")
+	flag.StringVar(&db, "db", "db", "full path to database directory")
 
 	flag.Parse()
 
@@ -56,13 +56,13 @@ func main() {
 	}
 
 	if server == "" {
-		server, err = store.get("config", "server")
+		server, err = store.get("server")
 		if server == "" {
 			log.Fatalln("please specify a server")
 		}
 
 	} else {
-		store.set("config", "server", server)
+		store.set("server", server)
 	}
 
 	log.Printf("connecting to %s\n", server)
@@ -93,16 +93,16 @@ func main() {
 		// No longer need tty now that we have our info
 		pledge("stdio unveil rpath wpath cpath flock dns inet")
 
-		store.set("account", "username", username)
-		store.set("account", "access_token", resp.AccessToken)
-		store.set("account", "user_id", resp.UserID)
+		store.set("username", username)
+		store.set("access_token", resp.AccessToken)
+		store.set("user_id", resp.UserID)
 
 		accessToken = resp.AccessToken
 		userID = resp.UserID
 	} else {
-		username, _ = store.get("account", "username")
-		accessToken, _ = store.get("account", "access_token")
-		userID, _ = store.get("account", "user_id")
+		username, _ = store.get("username")
+		accessToken, _ = store.get("access_token")
+		userID, _ = store.get("user_id")
 	}
 
 	cli.SetCredentials(userID, accessToken)

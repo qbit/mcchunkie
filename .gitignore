@@ -1,4 +1,5 @@
 .todo
+db/*
 *.db
 mcchunkie
 deploy.sh
