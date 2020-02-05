@@ -9,7 +9,7 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// BotSnack responds to hi messages
+// BotSnack responds to botsnack messages
 type BotSnack struct {
 }
 
@@ -31,7 +31,7 @@ func (h *BotSnack) resp() string {
 
 }
 
-// RespondText to hi events
+// RespondText to botsnack events
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")
 	if ToMe(u, post) {
@@ -42,7 +42,7 @@ func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, pos
 	}
 }
 
-// Name hi
+// Name BotSnack
 func (h *BotSnack) Name() string {
 	return "BotSnack"
 }
