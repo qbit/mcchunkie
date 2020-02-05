@@ -13,7 +13,7 @@ type OpenBSDMan struct {
 }
 
 func (h *OpenBSDMan) fix(msg string) string {
-	re := regexp.MustCompile(`(?i)^man: (\d?)\s?(\w+)$`)
+	re := regexp.MustCompile(`(?i)^man: (\[1-9]?p?)\s?(\w+)$`)
 	resp := ""
 	section := re.ReplaceAllString(msg, "$1")
 	if section != "" {
