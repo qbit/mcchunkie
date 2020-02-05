@@ -15,7 +15,7 @@ type MCStore struct {
 	db *diskv.Diskv
 }
 
-// NewStore creates a new MCStore instance populated with the proper buckets.
+// NewStore creates a new MCStore instance.
 func NewStore(path string) (*MCStore, error) {
 	flatTransform := func(s string) []string { return []string{} }
 	db := diskv.New(diskv.Options{
