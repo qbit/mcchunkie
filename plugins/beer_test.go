@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -15,5 +14,4 @@ func TestBeer(t *testing.T) {
 	if b.Nhits == 0 {
 		t.Errorf("Expected 7 results; got %d\n", b.Nhits)
 	}
-	fmt.Printf("%+v", b)
 }
