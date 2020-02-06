@@ -22,6 +22,9 @@ func (v *Version) print(to string) string {
 	return fmt.Sprintf("%s, I am written in Go, running on %s", to, runtime.GOOS)
 }
 
+// SetStore does nothing in here
+func (h *Version) SetStore(s PluginStore) { return }
+
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")

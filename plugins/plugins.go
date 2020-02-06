@@ -7,12 +7,19 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
+// PluginStore matches MCStore so that the main store can be used by plugins.
+type PluginStore interface {
+	Set(key, values string)
+	Get(key string) (string, error)
+}
+
 // Plugin defines the functions a plugin must implement to be used by
 // mcchunkie.
 type Plugin interface {
 	//Respond(c *gomatrix.Client, ev *gomatrix.Event, user string)
 	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
 	Name() string
+	SetStore(s PluginStore)
 }
 
 // NameRE matches the "friendly" name. This is typically used in tab

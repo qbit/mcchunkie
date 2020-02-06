@@ -31,6 +31,9 @@ func (h *BotSnack) resp() string {
 
 }
 
+// SetStore we don't need a store, so just return
+func (h *BotSnack) SetStore(s PluginStore) { return }
+
 // RespondText to botsnack events
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")

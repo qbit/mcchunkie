@@ -129,6 +129,9 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 	)
 }
 
+// SetStore we don't need a store here.
+func (h *Beer) SetStore(s PluginStore) { return }
+
 // RespondText to looking up of beer requests
 func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	if h.match(post) {

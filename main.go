@@ -60,12 +60,12 @@ func main() {
 	}
 
 	if key != "" && value != "" {
-		store.set(key, value)
+		store.Set(key, value)
 		os.Exit(0)
 	}
 
 	if get != "" {
-		val, err := store.get(get)
+		val, err := store.Get(get)
 		if err != nil {
 			log.Fatalf("%s\n", err)
 		}
@@ -74,13 +74,13 @@ func main() {
 	}
 
 	if server == "" {
-		server, err = store.get("server")
+		server, err = store.Get("server")
 		if server == "" {
 			log.Fatalln("please specify a server")
 		}
 
 	} else {
-		store.set("server", server)
+		store.Set("server", server)
 	}
 
 	log.Printf("connecting to %s\n", server)
@@ -111,16 +111,16 @@ func main() {
 		// No longer need tty now that we have our info
 		pledge("stdio unveil rpath wpath cpath flock dns inet")
 
-		store.set("username", username)
-		store.set("access_token", resp.AccessToken)
-		store.set("user_id", resp.UserID)
+		store.Set("username", username)
+		store.Set("access_token", resp.AccessToken)
+		store.Set("user_id", resp.UserID)
 
 		accessToken = resp.AccessToken
 		userID = resp.UserID
 	} else {
-		username, _ = store.get("username")
-		accessToken, _ = store.get("access_token")
-		userID, _ = store.get("user_id")
+		username, _ = store.Get("username")
+		accessToken, _ = store.Get("access_token")
+		userID, _ = store.Get("user_id")
 	}
 
 	cli.SetCredentials(userID, accessToken)
@@ -164,6 +164,7 @@ func main() {
 			if mtype, ok := ev.MessageType(); ok {
 				switch mtype {
 				case "m.text":
+					p.SetStore(store)
 					p.RespondText(cli, ev, username, post)
 				}
 			}

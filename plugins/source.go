@@ -17,6 +17,9 @@ func (h *Source) match(msg string) bool {
 	return re.MatchString(msg)
 }
 
+// SetStore does nothing in here
+func (h *Source) SetStore(s PluginStore) { return }
+
 // RespondText to questions about TheSource™©®⑨
 func (h *Source) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")

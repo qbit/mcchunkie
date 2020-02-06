@@ -17,6 +17,9 @@ func (h *Hi) match(msg string) bool {
 	return re.MatchString(msg)
 }
 
+// SetStore we don't need a store here
+func (h *Hi) SetStore(s PluginStore) { return }
+
 // RespondText to hi events
 func (h *Hi) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")
