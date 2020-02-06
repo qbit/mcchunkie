@@ -34,9 +34,13 @@ func sendMessage(c *gomatrix.Client, roomID, message string) error {
 
 func main() {
 	var username, password, userID, accessToken, server, db, avatar string
+	var key, value, get string
 	var setup bool
 
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
+	flag.StringVar(&get, "get", "", "grab an entry from the store")
+	flag.StringVar(&key, "key", "", "create an entry in the data store listed under 'key'")
+	flag.StringVar(&value, "value", "", "set the value of 'key' to be stored")
 	flag.StringVar(&server, "server", "", "matrix server")
 	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.BoolVar(&setup, "s", false, "setup account")
@@ -53,6 +57,20 @@ func main() {
 	var store, err = NewStore(db)
 	if err != nil {
 		log.Fatalf("%s\n", err)
+	}
+
+	if key != "" && value != "" {
+		store.set(key, value)
+		os.Exit(0)
+	}
+
+	if get != "" {
+		val, err := store.get(get)
+		if err != nil {
+			log.Fatalf("%s\n", err)
+		}
+		fmt.Println(val)
+		os.Exit(0)
 	}
 
 	if server == "" {
