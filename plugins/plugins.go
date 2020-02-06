@@ -62,4 +62,5 @@ var Plugs = Plugins{
 	&OpenBSDMan{},
 	&Source{},
 	&Version{},
+	&Weather{},
 }
