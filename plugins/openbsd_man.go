@@ -12,10 +12,17 @@ import (
 type OpenBSDMan struct {
 }
 
+func (h *OpenBSDMan) re() string {
+	return `(?i)^man: ([1-9]?p?)\s?(\w+)$`
+}
+
 func (h *OpenBSDMan) fix(msg string) string {
-	re := regexp.MustCompile(`(?i)^man: (\[1-9]?p?)\s?(\w+)$`)
+	re := regexp.MustCompile(h.re())
 	resp := ""
 	section := re.ReplaceAllString(msg, "$1")
+	if section == msg {
+		return ""
+	}
 	if section != "" {
 		resp = re.ReplaceAllString(msg, "$2.$1")
 	} else {
@@ -26,7 +33,7 @@ func (h *OpenBSDMan) fix(msg string) string {
 }
 
 func (h *OpenBSDMan) match(msg string) bool {
-	re := regexp.MustCompile(`(?i)^man: (\d?)\s?(\w+)$`)
+	re := regexp.MustCompile(h.re())
 	return re.MatchString(msg)
 }
 
