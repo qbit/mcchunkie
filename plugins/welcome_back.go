@@ -18,7 +18,7 @@ func (h *Wb) match(msg string) bool {
 }
 
 // SetStore we don't need a store here
-func (h *Wb) SetStore(s PluginStore) { return }
+func (h *Wb) SetStore(s PluginStore) {}
 
 // RespondText to welcome back events
 func (h *Wb) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {

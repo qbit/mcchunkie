@@ -38,7 +38,7 @@ func (h *OpenBSDMan) match(msg string) bool {
 }
 
 // SetStore does nothing in OpenBSDMan
-func (h *OpenBSDMan) SetStore(s PluginStore) { return }
+func (h *OpenBSDMan) SetStore(s PluginStore) {}
 
 // RespondText sends back a man page.
 func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {

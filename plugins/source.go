@@ -18,7 +18,7 @@ func (h *Source) match(msg string) bool {
 }
 
 // SetStore does nothing in here
-func (h *Source) SetStore(s PluginStore) { return }
+func (h *Source) SetStore(s PluginStore) {}
 
 // RespondText to questions about TheSource™©®⑨
 func (h *Source) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {

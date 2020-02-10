@@ -74,13 +74,17 @@ type Records struct {
 	RecordTimestamp time.Time `json:"record_timestamp"`
 }
 
+func (h *Beer) re() string {
+	return `(?i)^beer: `
+}
+
 func (h *Beer) fix(msg string) string {
-	re := regexp.MustCompile(`(?i)^beer: `)
+	re := regexp.MustCompile(h.re())
 	return re.ReplaceAllString(msg, "$1")
 }
 
 func (h *Beer) match(msg string) bool {
-	re := regexp.MustCompile(`(?i)^beer: `)
+	re := regexp.MustCompile(h.re())
 	return re.MatchString(msg)
 }
 
@@ -130,7 +134,7 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 }
 
 // SetStore we don't need a store here.
-func (h *Beer) SetStore(s PluginStore) { return }
+func (h *Beer) SetStore(s PluginStore) {}
 
 // RespondText to looking up of beer requests
 func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
@@ -147,7 +151,7 @@ func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post st
 			case brr.Nhits == 0:
 				SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
 			case brr.Nhits == 1:
-				SendText(c, ev.RoomID, fmt.Sprintf("%s", h.pretty(*brr, false)))
+				SendText(c, ev.RoomID, h.pretty(*brr, false))
 			case brr.Nhits > 1:
 				SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
 			}

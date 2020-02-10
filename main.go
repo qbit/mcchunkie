@@ -6,31 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"git.sr.ht/~qbit/mcchunkie/plugins"
 	"github.com/matrix-org/gomatrix"
 )
-
-func messageToMe(sn, message string) bool {
-	return strings.Contains(message, sn)
-}
-
-func sendMessage(c *gomatrix.Client, roomID, message string) error {
-	_, err := c.UserTyping(roomID, true, 3)
-	if err != nil {
-		return err
-	}
-
-	c.SendText(roomID, message)
-
-	_, err = c.UserTyping(roomID, false, 0)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 func main() {
 	var username, password, userID, accessToken, server, db, avatar string
@@ -75,6 +55,11 @@ func main() {
 
 	if server == "" {
 		server, err = store.Get("server")
+		if err != nil {
+			if err != nil {
+				log.Fatalf("%s\n", err)
+			}
+		}
 		if server == "" {
 			log.Fatalln("please specify a server")
 		}
@@ -90,6 +75,9 @@ func main() {
 		"",
 		"",
 	)
+	if err != nil {
+		log.Fatalf("%s\n", err)
+	}
 
 	if setup {
 		log.Println("requesting access token")

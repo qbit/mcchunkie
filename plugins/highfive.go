@@ -13,7 +13,7 @@ type HighFive struct {
 }
 
 // SetStore we don't need a store here.
-func (h *HighFive) SetStore(s PluginStore) { return }
+func (h *HighFive) SetStore(s PluginStore) {}
 
 // RespondText to high five events
 func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {

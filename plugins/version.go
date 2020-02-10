@@ -23,7 +23,7 @@ func (v *Version) print(to string) string {
 }
 
 // SetStore does nothing in here
-func (h *Version) SetStore(s PluginStore) { return }
+func (h *Version) SetStore(s PluginStore) {}
 
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {

@@ -112,7 +112,7 @@ func (h *Weather) get(loc string) (*WeatherResp, error) {
 	}
 
 	if key == "" {
-		return nil, fmt.Errorf("No API key set")
+		return nil, fmt.Errorf("no API key set")
 	}
 
 	v := url.Values{}
@@ -142,13 +142,17 @@ func (h *Weather) get(loc string) (*WeatherResp, error) {
 	return w, nil
 }
 
+func (h *Weather) re() string {
+	return `(?i)^weather: (\d+)$`
+}
+
 func (h *Weather) match(msg string) bool {
-	re := regexp.MustCompile(`(?i)^weather: \d+$`)
+	re := regexp.MustCompile(h.re())
 	return re.MatchString(msg)
 }
 
 func (h *Weather) fix(msg string) string {
-	re := regexp.MustCompile(`(?i)^weather: (\d+)$`)
+	re := regexp.MustCompile(h.re())
 	return re.ReplaceAllString(msg, "$1")
 }
 
@@ -163,7 +167,7 @@ func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post
 				SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
 			}
 			SendText(c, ev.RoomID,
-				fmt.Sprintf("%s: %s (%s) Humidity: %s, %s",
+				fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
 					wd.Name,
 					wd.f(),
 					wd.c(),

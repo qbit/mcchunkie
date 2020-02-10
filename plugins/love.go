@@ -33,7 +33,7 @@ func (h *LoveYou) resp() string {
 }
 
 // SetStore we don't need a store, so just return
-func (h *LoveYou) SetStore(s PluginStore) { return }
+func (h *LoveYou) SetStore(s PluginStore) {}
 
 // RespondText to love events
 func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
