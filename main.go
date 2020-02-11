@@ -48,6 +48,7 @@ func main() {
 
 	if doc {
 		fmt.Println("|Plugin Name|Match|Description|")
+		fmt.Println("|----|---|---|")
 		for _, p := range plugins.Plugs {
 			fmt.Printf("|%s|`%s`|%s|\n", p.Name(), p.Re(), p.Descr())
 		}

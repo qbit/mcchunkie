@@ -4,6 +4,7 @@
 
 
 |Plugin Name|Match|Description|
+|----|---|---|
 |Beer|`(?i)^beer: `|Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer.|
 |BotSnack|`(?i)botsnack`|Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.|
 |HighFive|`o/|\o`|Everyone loves highfives.|
