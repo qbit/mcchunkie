@@ -12,9 +12,10 @@ import (
 type Hi struct {
 }
 
-func (h *Hi) match(msg string) bool {
+// Match determines if we are highfiving
+func (h *Hi) Match(user, msg string) bool {
 	re := regexp.MustCompile(`(?i)^hi|hi$`)
-	return re.MatchString(msg)
+	return re.MatchString(msg) && ToMe(user, msg)
 }
 
 // SetStore we don't need a store here
@@ -22,14 +23,10 @@ func (h *Hi) SetStore(s PluginStore) {}
 
 // RespondText to hi events
 func (h *Hi) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	u := NameRE.ReplaceAllString(user, "$1")
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
-	if ToMe(u, post) {
-		if h.match(post) {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, fmt.Sprintf("hi %s!", s))
-		}
-	}
+
+	log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+	SendText(c, ev.RoomID, fmt.Sprintf("hi %s!", s))
 }
 
 // Name hi

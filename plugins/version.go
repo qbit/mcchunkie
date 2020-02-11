@@ -13,9 +13,11 @@ import (
 type Version struct {
 }
 
-func (v *Version) match(msg string) bool {
+// Match checks for "version" anywhere. Might want to tighten this one down at
+// some point
+func (v *Version) Match(user, msg string) bool {
 	re := regexp.MustCompile(`(?i)version$`)
-	return re.MatchString(msg)
+	return re.MatchString(msg) && ToMe(user, msg)
 }
 
 func (v *Version) print(to string) string {
@@ -23,18 +25,14 @@ func (v *Version) print(to string) string {
 }
 
 // SetStore does nothing in here
-func (h *Version) SetStore(s PluginStore) {}
+func (v *Version) SetStore(s PluginStore) {}
 
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	u := NameRE.ReplaceAllString(user, "$1")
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
-	if ToMe(u, post) {
-		if v.match(post) {
-			log.Printf("%s: responding to '%s'", v.Name(), ev.Sender)
-			SendText(c, ev.RoomID, v.print(s))
-		}
-	}
+
+	log.Printf("%s: responding to '%s'", v.Name(), ev.Sender)
+	SendText(c, ev.RoomID, v.print(s))
 }
 
 // Name Version

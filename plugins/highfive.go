@@ -15,19 +15,22 @@ type HighFive struct {
 // SetStore we don't need a store here.
 func (h *HighFive) SetStore(s PluginStore) {}
 
+// Match determines if we should bother giving a high five
+func (h *HighFive) Match(user, msg string) bool {
+	return ToMe(user, msg)
+}
+
 // RespondText to high five events
 func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	u := NameRE.ReplaceAllString(user, "$1")
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
-	if ToMe(u, post) {
-		if strings.Contains(post, "o/") {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
-		}
-		if strings.Contains(post, "\\o") {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, fmt.Sprintf("%s o/", s))
-		}
+
+	if strings.Contains(post, "o/") {
+		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+		SendText(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
+	}
+	if strings.Contains(post, "\\o") {
+		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+		SendText(c, ev.RoomID, fmt.Sprintf("%s o/", s))
 	}
 }
 

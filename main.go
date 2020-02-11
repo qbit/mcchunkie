@@ -152,8 +152,10 @@ func main() {
 			if mtype, ok := ev.MessageType(); ok {
 				switch mtype {
 				case "m.text":
-					p.SetStore(store)
-					p.RespondText(cli, ev, username, post)
+					if p.Match(username, post) {
+						p.SetStore(store)
+						p.RespondText(cli, ev, username, post)
+					}
 				}
 			}
 		}

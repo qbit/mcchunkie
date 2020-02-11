@@ -13,7 +13,8 @@ import (
 type BotSnack struct {
 }
 
-func (h *BotSnack) match(msg string) bool {
+// Match determines if we should execute BotSnack
+func (h *BotSnack) Match(user, msg string) bool {
 	re := regexp.MustCompile(`(?i)botsnack`)
 	return re.MatchString(msg)
 }
@@ -38,10 +39,8 @@ func (h *BotSnack) SetStore(s PluginStore) {}
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")
 	if ToMe(u, post) {
-		if h.match(post) {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, h.resp())
-		}
+		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+		SendText(c, ev.RoomID, h.resp())
 	}
 }
 

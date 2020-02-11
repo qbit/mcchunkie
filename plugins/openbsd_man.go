@@ -32,7 +32,8 @@ func (h *OpenBSDMan) fix(msg string) string {
 	return resp
 }
 
-func (h *OpenBSDMan) match(msg string) bool {
+// Match checks for our man page re
+func (h *OpenBSDMan) Match(user, msg string) bool {
 	re := regexp.MustCompile(h.re())
 	return re.MatchString(msg)
 }
@@ -42,12 +43,10 @@ func (h *OpenBSDMan) SetStore(s PluginStore) {}
 
 // RespondText sends back a man page.
 func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	if h.match(post) {
-		page := h.fix(post)
-		if page != "" {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, fmt.Sprintf("https://man.openbsd.org/%s", page))
-		}
+	page := h.fix(post)
+	if page != "" {
+		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+		SendText(c, ev.RoomID, fmt.Sprintf("https://man.openbsd.org/%s", page))
 	}
 }
 

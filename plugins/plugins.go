@@ -7,18 +7,27 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// PluginStore matches MCStore so that the main store can be used by plugins.
+// PluginStore matches MCStore. This allows the main store to be used by
+// plugins.
 type PluginStore interface {
 	Set(key, values string)
 	Get(key string) (string, error)
 }
 
-// Plugin defines the functions a plugin must implement to be used by
+// Plugin defines the interface a plugin must implement to be used by
 // mcchunkie.
 type Plugin interface {
-	//Respond(c *gomatrix.Client, ev *gomatrix.Event, user string)
+	// RespondText responds to a "m.text" event
 	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
+
+	// Name should return the human readable name of the bot
 	Name() string
+
+	// Match determines if the plugin's main Respond function should be
+	// called
+	Match(user, message string) bool
+
+	// SetStore exposes the top level MCStore to a plugin
 	SetStore(s PluginStore)
 }
 
@@ -28,7 +37,8 @@ var NameRE = regexp.MustCompile(`@(.+):.+$`)
 
 // ToMe returns true of the message pertains to the bot
 func ToMe(user, message string) bool {
-	return strings.Contains(message, user)
+	u := NameRE.ReplaceAllString(user, "$1")
+	return strings.Contains(message, u)
 }
 
 // SendText sends a text message to a given room. It pretends to be

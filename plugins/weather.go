@@ -146,7 +146,8 @@ func (h *Weather) re() string {
 	return `(?i)^weather: (\d+)$`
 }
 
-func (h *Weather) match(msg string) bool {
+// Match checks for "weather: " messages
+func (h *Weather) Match(user, msg string) bool {
 	re := regexp.MustCompile(h.re())
 	return re.MatchString(msg)
 }
@@ -158,23 +159,21 @@ func (h *Weather) fix(msg string) string {
 
 // RespondText to looking up of weather lookup requests
 func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	if h.match(post) {
-		weather := h.fix(post)
-		if weather != "" {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			wd, err := h.get(weather)
-			if err != nil {
-				SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
-			}
-			SendText(c, ev.RoomID,
-				fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
-					wd.Name,
-					wd.f(),
-					wd.c(),
-					wd.humidity(),
-					wd.conditions(),
-				))
+	weather := h.fix(post)
+	if weather != "" {
+		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+		wd, err := h.get(weather)
+		if err != nil {
+			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
 		}
+		SendText(c, ev.RoomID,
+			fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
+				wd.Name,
+				wd.f(),
+				wd.c(),
+				wd.humidity(),
+				wd.conditions(),
+			))
 	}
 }
 

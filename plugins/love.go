@@ -13,9 +13,10 @@ import (
 type LoveYou struct {
 }
 
-func (h *LoveYou) match(msg string) bool {
+// Match checks for 'i love you' and a reference to the bot name
+func (h *LoveYou) Match(user, msg string) bool {
 	re := regexp.MustCompile(`(?i)i love you`)
-	return re.MatchString(msg)
+	return re.MatchString(msg) && ToMe(user, msg)
 }
 
 func (h *LoveYou) resp() string {
@@ -37,13 +38,8 @@ func (h *LoveYou) SetStore(s PluginStore) {}
 
 // RespondText to love events
 func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	u := NameRE.ReplaceAllString(user, "$1")
-	if ToMe(u, post) {
-		if h.match(post) {
-			log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-			SendText(c, ev.RoomID, h.resp())
-		}
-	}
+	log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
+	SendText(c, ev.RoomID, h.resp())
 }
 
 // Name i love you
