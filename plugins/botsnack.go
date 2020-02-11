@@ -13,9 +13,19 @@ import (
 type BotSnack struct {
 }
 
+// Descr returns a description
+func (h *BotSnack) Descr() string {
+	return "Consumes a botsnack. This pleases mcchunkie and brings balance to the universe."
+}
+
+// Re matches "botsnack" in a given string
+func (h *BotSnack) Re() string {
+	return `(?i)botsnack`
+}
+
 // Match determines if we should execute BotSnack
 func (h *BotSnack) Match(user, msg string) bool {
-	re := regexp.MustCompile(`(?i)botsnack`)
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 

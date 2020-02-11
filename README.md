@@ -2,14 +2,15 @@
 
 [![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)
 
-| Plugin   | Match                         | Purpose                                                                                                                                |
-|----------|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| beer     | '^beer: '                     | Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer. |
-| botsnack | name: 'botsnack$'             | Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.                                                        |
-| hi       | name: '^hi' or 'hi$'          | Friendly bots say hi.                                                                                                                  |
-| highfive | name: 'o/' or '\o'            | Everyone loves highfives.                                                                                                              |
-| love     | name: 'i love you'            | Spreading love where ever we can.                                                                                                      |
-| source   | name: 'where is your source?' | Tell people where they can find more information on mcchunkie.                                                                         |
-| version  | name: 'version$'              | Bit of information about what we are.                                                                                                  |
 
-
+|Plugin Name|Match|Description|
+|Beer|`(?i)^beer: `|Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer.|
+|BotSnack|`(?i)botsnack`|Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.|
+|HighFive|`o/|\o`|Everyone loves highfives.|
+|Hi|`(?i)^hi|hi$`|Friendly bots say hi.|
+|LoveYou|`(?i)i love you`|Spreading love where ever we can by responding when someone shows us love.|
+|OpenBSDMan|`(?i)^man: ([1-9]?p?)\s?(\w+)$`|Produces a link to man.openbsd.org.|
+|Source|`(?i)where is your (source|code)`|Tell people where they can find more information about myself.|
+|Version|`(?i)version$`|Show a bit of information about what we are.|
+|Wb|`(?i)^welcome back|welcome back$|^wb|wb$`|Respond to welcome back messages.|
+|Weather|`(?i)^weather: (\d+)$`|Produce weather information for a given ZIP code. Data comes from openweathermap.org.|

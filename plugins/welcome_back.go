@@ -12,9 +12,19 @@ import (
 type Wb struct {
 }
 
+// Descr describes this plugin
+func (h *Wb) Descr() string {
+	return "Respond to welcome back messages."
+}
+
+// Re checks for various welcome back things
+func (h *Wb) Re() string {
+	return `(?i)^welcome back|welcome back$|^wb|wb$`
+}
+
 // Match determins if we are welcomed back
 func (h *Wb) Match(user, msg string) bool {
-	re := regexp.MustCompile(`(?i)^welcome back|welcome back$|^wb|wb$`)
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 

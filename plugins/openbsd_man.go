@@ -12,12 +12,18 @@ import (
 type OpenBSDMan struct {
 }
 
-func (h *OpenBSDMan) re() string {
+// Descr describes this plugin
+func (h *OpenBSDMan) Descr() string {
+	return "Produces a link to man.openbsd.org."
+}
+
+// Re matches our man format
+func (h *OpenBSDMan) Re() string {
 	return `(?i)^man: ([1-9]?p?)\s?(\w+)$`
 }
 
 func (h *OpenBSDMan) fix(msg string) string {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	resp := ""
 	section := re.ReplaceAllString(msg, "$1")
 	if section == msg {
@@ -34,7 +40,7 @@ func (h *OpenBSDMan) fix(msg string) string {
 
 // Match checks for our man page re
 func (h *OpenBSDMan) Match(user, msg string) bool {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 

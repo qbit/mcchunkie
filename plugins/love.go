@@ -13,9 +13,19 @@ import (
 type LoveYou struct {
 }
 
+// Descr describes this plugin
+func (h *LoveYou) Descr() string {
+	return "Spreading love where ever we can by responding when someone shows us love."
+}
+
+// Re matches "i love you"
+func (h *LoveYou) Re() string {
+	return `(?i)i love you`
+}
+
 // Match checks for 'i love you' and a reference to the bot name
 func (h *LoveYou) Match(user, msg string) bool {
-	re := regexp.MustCompile(`(?i)i love you`)
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 

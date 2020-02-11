@@ -13,10 +13,20 @@ import (
 type Version struct {
 }
 
+// Descr describes this plugin
+func (v *Version) Descr() string {
+	return "Show a bit of information about what we are."
+}
+
+// Re matches version
+func (v *Version) Re() string {
+	return `(?i)version$`
+}
+
 // Match checks for "version" anywhere. Might want to tighten this one down at
 // some point
 func (v *Version) Match(user, msg string) bool {
-	re := regexp.MustCompile(`(?i)version$`)
+	re := regexp.MustCompile(v.Re())
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 

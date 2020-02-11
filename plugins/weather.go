@@ -142,18 +142,24 @@ func (h *Weather) get(loc string) (*WeatherResp, error) {
 	return w, nil
 }
 
-func (h *Weather) re() string {
+// Descr describes this plugin
+func (h *Weather) Descr() string {
+	return "Produce weather information for a given ZIP code. Data comes from openweathermap.org."
+}
+
+// Re is what our weather matches
+func (h *Weather) Re() string {
 	return `(?i)^weather: (\d+)$`
 }
 
 // Match checks for "weather: " messages
 func (h *Weather) Match(user, msg string) bool {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 func (h *Weather) fix(msg string) string {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	return re.ReplaceAllString(msg, "$1")
 }
 

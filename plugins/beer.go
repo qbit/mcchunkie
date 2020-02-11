@@ -74,18 +74,24 @@ type Records struct {
 	RecordTimestamp time.Time `json:"record_timestamp"`
 }
 
-func (h *Beer) re() string {
+// Descr describes this plugin
+func (h *Beer) Descr() string {
+	return "Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer."
+}
+
+// Re returns the beer matching string
+func (h *Beer) Re() string {
 	return `(?i)^beer: `
 }
 
 func (h *Beer) fix(msg string) string {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	return re.ReplaceAllString(msg, "$1")
 }
 
 // Match determines if we should call the response for Beer
 func (h *Beer) Match(user, msg string) bool {
-	re := regexp.MustCompile(h.re())
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 

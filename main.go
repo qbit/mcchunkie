@@ -15,16 +15,18 @@ import (
 func main() {
 	var username, password, userID, accessToken, server, db, avatar string
 	var key, value, get string
-	var setup bool
+	var setup, doc bool
 
-	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
+	flag.BoolVar(&doc, "doc", false, "print plugin information and exit")
+	flag.BoolVar(&setup, "s", false, "setup account")
+
+	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
+	flag.StringVar(&db, "db", "db", "full path to database directory")
 	flag.StringVar(&get, "get", "", "grab an entry from the store")
 	flag.StringVar(&key, "key", "", "create an entry in the data store listed under 'key'")
-	flag.StringVar(&value, "value", "", "set the value of 'key' to be stored")
 	flag.StringVar(&server, "server", "", "matrix server")
-	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
-	flag.BoolVar(&setup, "s", false, "setup account")
-	flag.StringVar(&db, "db", "db", "full path to database directory")
+	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
+	flag.StringVar(&value, "value", "", "set the value of 'key' to be stored")
 
 	flag.Parse()
 
@@ -41,6 +43,14 @@ func main() {
 
 	if key != "" && value != "" {
 		store.Set(key, value)
+		os.Exit(0)
+	}
+
+	if doc {
+		fmt.Println("|Plugin Name|Match|Description|")
+		for _, p := range plugins.Plugs {
+			fmt.Printf("|%s|`%s`|%s|\n", p.Name(), p.Re(), p.Descr())
+		}
 		os.Exit(0)
 	}
 

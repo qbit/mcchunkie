@@ -12,9 +12,19 @@ import (
 type Hi struct {
 }
 
+// Descr describes this plugin
+func (h *Hi) Descr() string {
+	return "Friendly bots say hi."
+}
+
+// Re is the regex for matching hi messages.
+func (h *Hi) Re() string {
+	return `(?i)^hi|hi$`
+}
+
 // Match determines if we are highfiving
 func (h *Hi) Match(user, msg string) bool {
-	re := regexp.MustCompile(`(?i)^hi|hi$`)
+	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 

@@ -17,15 +17,21 @@ type PluginStore interface {
 // Plugin defines the interface a plugin must implement to be used by
 // mcchunkie.
 type Plugin interface {
-	// RespondText responds to a "m.text" event
-	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
-
-	// Name should return the human readable name of the bot
-	Name() string
+	// Descr returns a brief description of the plugin.
+	Descr() string
 
 	// Match determines if the plugin's main Respond function should be
 	// called
 	Match(user, message string) bool
+
+	// Name should return the human readable name of the bot
+	Name() string
+
+	// Re returns the regular expression that a plugin uses to "match"
+	Re() string
+
+	// RespondText responds to a "m.text" event
+	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
 
 	// SetStore exposes the top level MCStore to a plugin
 	SetStore(s PluginStore)
