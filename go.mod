@@ -1,4 +1,4 @@
-module git.sr.ht/~qbit/mcchunkie
+module suah.dev/mcchunkie
 
 go 1.13
 

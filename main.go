@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"git.sr.ht/~qbit/mcchunkie/plugins"
 	"github.com/matrix-org/gomatrix"
+	"suah.dev/mcchunkie/plugins"
 )
 
 func main() {
