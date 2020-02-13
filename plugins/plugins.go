@@ -70,6 +70,7 @@ type Plugins []Plugin
 
 // Plugs defines the "enabled" plugins.
 var Plugs = Plugins{
+	&Beat{},
 	&Beer{},
 	&BotSnack{},
 	&HighFive{},
