@@ -12,6 +12,7 @@
 |LoveYou|`(?i)i love you`|Spreading love where ever we can by responding when someone shows us love.|
 |OpenBSDMan|`(?i)^man: ([1-9]?p?)\s?(\w+)$`|Produces a link to man.openbsd.org.|
 |Source|`(?i)where is your (source|code)`|Tell people where they can find more information about myself.|
+|Thanks|`(?i)^thank you|thank you$|^thanks|thanks$|^ty|ty$`|Bots should be respectful. Respond to thanks.|
 |Version|`(?i)version$`|Show a bit of information about what we are.|
 |Wb|`(?i)^welcome back|welcome back$|^wb|wb$`|Respond to welcome back messages.|
 |Weather|`(?i)^weather: (\d+)$`|Produce weather information for a given ZIP code. Data comes from openweathermap.org.|

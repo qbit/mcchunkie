@@ -78,6 +78,7 @@ var Plugs = Plugins{
 	&LoveYou{},
 	&OpenBSDMan{},
 	&Source{},
+	&Thanks{},
 	&Version{},
 	&Wb{},
 	&Weather{},
