@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	var username, password, userID, accessToken, server, db, avatar string
+	var username, password, userID, accessToken, server, db, avatar, botOwner string
 	var key, value, get string
 	var setup, doc bool
 
@@ -120,6 +120,7 @@ func main() {
 		username, _ = store.Get("username")
 		accessToken, _ = store.Get("access_token")
 		userID, _ = store.Get("user_id")
+		botOwner, _ = store.Get("bot_owner")
 	}
 
 	cli.SetCredentials(userID, accessToken)
@@ -128,25 +129,18 @@ func main() {
 	cli.Client = http.DefaultClient
 	cli.Syncer = syncer
 
-	/*
-		// TODO: Add ability to join / part rooms
+	syncer.OnEventType("m.room.member", func(ev *gomatrix.Event) {
+		if ev.Sender == username {
+			return
+		}
 
-		if _, err := cli.JoinRoom("!tmCVBJAeuKjCfihUjb:cobryce.com", "", nil); err != nil {
-			log.Fatalln(err)
+		if ev.Sender == botOwner && ev.Content["membership"] == "invite" {
+			log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
+			if _, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
+				log.Fatalln(err)
+			}
 		}
-		if _, err := cli.JoinRoom("!sFPUeGfHqjiItcjNIN:matrix.org", "", nil); err != nil {
-			log.Fatalln(err)
-		}
-		if _, err := cli.JoinRoom("!ALCZnrYadLGSySIFZr:matrix.org", "", nil); err != nil {
-			log.Fatalln(err)
-		}
-		if _, err := cli.JoinRoom("!LTxJpLHtShMVmlpwmZ:tapenet.org", "", nil); err != nil {
-			log.Fatalln(err)
-		}
-		if _, err := cli.JoinRoom("!TjjamgVanKpNiswkoJ:pintobyte.com", "", nil); err != nil {
-			log.Fatalln(err)
-		}
-	*/
+	})
 
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
 		if ev.Sender == username {
