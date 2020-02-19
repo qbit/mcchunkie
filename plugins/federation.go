@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -16,6 +17,7 @@ import (
 type ServiceInfo struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
+	Error   string `json:"error"`
 }
 
 // FedResp represents a federation statuse response
@@ -52,7 +54,10 @@ func (h *Feder) Match(user, msg string) bool {
 func (h *Feder) get(hserver string) (*FedResp, error) {
 	u := "https://federationtester.matrix.org/api/report?server_name="
 	u = fmt.Sprintf("%s%s", u, url.PathEscape(hserver))
-	resp, err := http.Get(u)
+	hClient := http.Client{
+		Timeout: time.Duration(5 * time.Second),
+	}
+	resp, err := hClient.Get(u)
 	if err != nil {
 		return nil, err
 	}
@@ -92,14 +97,21 @@ func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post s
 		fed, err := h.get(homeServer)
 		if err != nil {
 			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the federation status (%s)", ev.Sender, err))
+			return
 		}
 
 		stat := "broken"
 		if fed.Status {
 			stat = "OK"
 		}
-		SendText(c, ev.RoomID, fmt.Sprintf("%s is running %s (%s) and is %s.",
-			homeServer, fed.Info.Name, fed.Info.Version, stat))
+
+		if fed.Info.Error != "" {
+			SendText(c, ev.RoomID, fmt.Sprintf("%s seems to be broken, maybe it isn't a homeserver?\n%s",
+				homeServer, fed.Info.Error))
+		} else {
+			SendText(c, ev.RoomID, fmt.Sprintf("%s is running %s (%s) and is %s.",
+				homeServer, fed.Info.Name, fed.Info.Version, stat))
+		}
 
 	}
 }
