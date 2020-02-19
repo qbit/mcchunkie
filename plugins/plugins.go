@@ -73,6 +73,7 @@ var Plugs = Plugins{
 	&Beat{},
 	&Beer{},
 	&BotSnack{},
+	&Feder{},
 	&HighFive{},
 	&Hi{},
 	&LoveYou{},

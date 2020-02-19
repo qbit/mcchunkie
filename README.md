@@ -7,6 +7,7 @@
 |Beat|`(?i)^\.beat$|^what time is it\?$|^beat( )?time:?\??$`|Print the current [beat time](https://en.wikipedia.org/wiki/Swatch_Internet_Time).|
 |Beer|`(?i)^beer: `|Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer.|
 |BotSnack|`(?i)botsnack`|Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.|
+|Feder|`(?i)^feder: (.*)$`|check the Matrix federation status of a given URL.|
 |HighFive|`o/|\o`|Everyone loves highfives.|
 |Hi|`(?i)^hi|hi$`|Friendly bots say hi.|
 |LoveYou|`(?i)i love you`|Spreading love where ever we can by responding when someone shows us love.|
