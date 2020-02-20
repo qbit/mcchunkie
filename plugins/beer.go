@@ -1,12 +1,9 @@
 package plugins
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math/rand"
-	"net/http"
 	"net/url"
 	"regexp"
 	"time"
@@ -95,30 +92,6 @@ func (h *Beer) Match(user, msg string) bool {
 	return re.MatchString(msg)
 }
 
-func (h *Beer) get(beer string) (*BeerResp, error) {
-	u := "https://data.opendatasoft.com/api/records/1.0/search?dataset=open-beer-database%40public-us&q="
-	u = fmt.Sprintf("%s%s", u, url.PathEscape(beer))
-	resp, err := http.Get(u)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var beers = &BeerResp{}
-	err = json.Unmarshal([]byte(body), beers)
-	if err != nil {
-		return nil, err
-	}
-
-	return beers, nil
-}
-
 func (h *Beer) pretty(b BeerResp, random bool) string {
 	idx := 0
 
@@ -148,18 +121,28 @@ func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post st
 	beer := h.fix(post)
 	if beer != "" {
 		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-		brr, err := h.get(beer)
+		var beers = &BeerResp{}
+		u := fmt.Sprintf("%s%s",
+			"https://data.opendatasoft.com/api/records/1.0/search?dataset=open-beer-database%40public-us&q=",
+			url.PathEscape(beer),
+		)
+		req := HTTPRequest{
+			Method:  "GET",
+			ResBody: beers,
+			URL:     u,
+		}
+		err := req.DoJSON()
 		if err != nil {
 			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
 		}
 
 		switch {
-		case brr.Nhits == 0:
+		case beers.Nhits == 0:
 			SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
-		case brr.Nhits == 1:
-			SendText(c, ev.RoomID, h.pretty(*brr, false))
-		case brr.Nhits > 1:
-			SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", brr.Nhits, h.pretty(*brr, true)))
+		case beers.Nhits == 1:
+			SendText(c, ev.RoomID, h.pretty(*beers, false))
+		case beers.Nhits > 1:
+			SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", beers.Nhits, h.pretty(*beers, true)))
 		}
 	}
 }

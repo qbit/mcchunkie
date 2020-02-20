@@ -1,11 +1,8 @@
 package plugins
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"net/url"
 	"regexp"
 	"time"
@@ -51,33 +48,6 @@ func (h *Feder) Match(user, msg string) bool {
 	return re.MatchString(msg)
 }
 
-func (h *Feder) get(hserver string) (*FedResp, error) {
-	u := "https://federationtester.matrix.org/api/report?server_name="
-	u = fmt.Sprintf("%s%s", u, url.PathEscape(hserver))
-	hClient := http.Client{
-		Timeout: time.Duration(5 * time.Second),
-	}
-	resp, err := hClient.Get(u)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var fresp = &FedResp{}
-	err = json.Unmarshal([]byte(body), fresp)
-	if err != nil {
-		return nil, err
-	}
-
-	return fresp, nil
-}
-
 // SetStore we don't need a store here.
 func (h *Feder) SetStore(s PluginStore) {}
 
@@ -94,7 +64,21 @@ func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post s
 		homeServer = u.Hostname()
 
 		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
-		fed, err := h.get(homeServer)
+
+		furl := fmt.Sprintf("%s%s",
+			"https://federationtester.matrix.org/api/report?server_name=",
+			url.PathEscape(homeServer),
+		)
+		var fed = &FedResp{}
+
+		var req = HTTPRequest{
+			Timeout: 5 * time.Second,
+			URL:     furl,
+			Method:  "GET",
+			ResBody: fed,
+		}
+		err = req.DoJSON()
+
 		if err != nil {
 			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the federation status (%s)", ev.Sender, err))
 			return

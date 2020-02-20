@@ -1,8 +1,12 @@
 package plugins
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -45,6 +49,60 @@ var NameRE = regexp.MustCompile(`@(.+):.+$`)
 func ToMe(user, message string) bool {
 	u := NameRE.ReplaceAllString(user, "$1")
 	return strings.Contains(message, u)
+}
+
+// HTTPRequest has the bits for making http requests
+type HTTPRequest struct {
+	Client  http.Client
+	Request *http.Request
+	Timeout time.Duration
+	URL     string
+	Method  string
+	ReqBody interface{}
+	ResBody interface{}
+}
+
+// DoJSON is a general purpose http mechanic that can be used to get, post..
+// what evs. The response is always expected to be json
+func (h *HTTPRequest) DoJSON() (err error) {
+	h.Client.Timeout = h.Timeout
+
+	if h.Method == "" {
+		h.Method = "GET"
+	}
+
+	if h.ReqBody != nil {
+		// We have a request to send to the server
+		buf := new(bytes.Buffer)
+		err = json.NewEncoder(buf).Encode(h.ReqBody)
+		if err != nil {
+			return err
+		}
+		h.Request, err = http.NewRequest(h.Method, h.URL, buf)
+	} else {
+		// Just gimme dem datas
+		h.Request, err = http.NewRequest(h.Method, h.URL, nil)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	h.Request.Header.Set("Content-Type", "application/json")
+
+	res, err := h.Client.Do(h.Request)
+	if res != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return err
+	}
+
+	if h.ResBody != nil && res.Body != nil {
+		return json.NewDecoder(res.Body).Decode(&h.ResBody)
+	}
+
+	return nil
 }
 
 // SendText sends a text message to a given room. It pretends to be
