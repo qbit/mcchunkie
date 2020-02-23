@@ -136,6 +136,7 @@ var Plugs = Plugins{
 	&Hi{},
 	&LoveYou{},
 	&OpenBSDMan{},
+	&Snap{},
 	&Source{},
 	&Thanks{},
 	&Version{},
