@@ -19,7 +19,7 @@ func (h *OpenBSDMan) Descr() string {
 
 // Re matches our man format
 func (h *OpenBSDMan) Re() string {
-	return `(?i)^man: ([1-9]?p?)\s?(\w+)$`
+	return `(?i)^man: ([1-9]?p?)\s?(.+)$`
 }
 
 func (h *OpenBSDMan) fix(msg string) string {
