@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -38,6 +39,8 @@ func main() {
 	unveil(db, "rwc")
 	unveilBlock()
 
+	var help = `^help: (\w+)$`
+	var helpRE = regexp.MustCompile(help)
 	var store, err = NewStore(db)
 	if err != nil {
 		log.Fatalf("%s\n", err)
@@ -185,6 +188,9 @@ func main() {
 			return
 		}
 
+		// Sending a response per plugin hits issues, so save them and
+		// send as one message.
+		helps := []string{}
 		for _, p := range plugins.Plugs {
 			var post string
 			var ok bool
@@ -195,12 +201,23 @@ func main() {
 			if mtype, ok := ev.MessageType(); ok {
 				switch mtype {
 				case "m.text":
+					if helpRE.Match([]byte(post)) {
+						pn := p.Name()
+						hName := helpRE.ReplaceAllString(post, "$1")
+						if hName == pn || hName == "puke" {
+							helps = append(helps, fmt.Sprintf("**%s**: `%s` -  _%s_\n", p.Name(), p.Re(), p.Descr()))
+						}
+
+					}
 					if p.Match(username, post) {
 						p.SetStore(store)
 						p.RespondText(cli, ev, username, post)
 					}
 				}
 			}
+		}
+		if len(helps) > 0 {
+			plugins.SendMD(cli, ev.RoomID, strings.Join(helps, "\n"))
 		}
 	})
 
