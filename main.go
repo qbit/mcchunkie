@@ -157,6 +157,7 @@ func main() {
 				fmt.Println(err)
 			}
 			l := got.Length
+			fmt.Printf("Found %d errata, I know about: %d\n", l, errataCount)
 			if l > errataCount {
 				log.Println("Found new errata")
 				alertRooms, _ := store.Get("errata_rooms")
@@ -174,7 +175,7 @@ func main() {
 				errataCount = l
 			}
 			fmt.Printf("Setting errata_count to %d\n", l)
-			store.Set("errata_count", string(l))
+			store.Set("errata_count", strconv.Itoa(l))
 			time.Sleep(2 * time.Hour)
 		}
 	}()
