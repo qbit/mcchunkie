@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gomarkdown/markdown"
 	"github.com/matrix-org/gomatrix"
 )
 
@@ -119,6 +120,31 @@ func SendText(c *gomatrix.Client, roomID, message string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// SendHTML sends an html message to a given room. It pretends to be
+// "typing" by calling UserTyping for the caller.
+func SendHTML(c *gomatrix.Client, roomID, message string) error {
+	_, err := c.UserTyping(roomID, true, 3)
+	if err != nil {
+		return err
+	}
+
+	c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.text", message))
+
+	_, err = c.UserTyping(roomID, false, 0)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendMD takes markdown and converts it to an html message.
+func SendMD(c *gomatrix.Client, roomID, message string) error {
+	md := []byte(message)
+	html := markdown.ToHTML(md, nil, nil)
+	SendHTML(c, roomID, string(html))
 	return nil
 }
 
