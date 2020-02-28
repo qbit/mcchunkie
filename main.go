@@ -160,16 +160,13 @@ func main() {
 				fmt.Println(err)
 			}
 			l := got.Length
-			fmt.Printf("Found %d errata, I know about: %d\n", l, errataCount)
 			if l > errataCount {
-				log.Println("Found new errata")
 				alertRooms, _ := store.Get("errata_rooms")
 				c := 0
 				for _, errata := range got.List {
 					if c+1 > errataCount {
 						log.Printf("%03d: %s - %s\n", errata.ID, errata.Type, errata.Desc)
 						for _, room := range strings.Split(alertRooms, ",") {
-							log.Printf("sending errata %03d alert to '%s'\n", errata.ID, room)
 							cli.SendNotice(room, PrintErrata(&errata))
 						}
 					}
@@ -177,7 +174,6 @@ func main() {
 				}
 				errataCount = l
 			}
-			fmt.Printf("Setting errata_count to %d\n", l)
 			store.Set("errata_count", strconv.Itoa(l))
 			time.Sleep(2 * time.Hour)
 		}
