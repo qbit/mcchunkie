@@ -18,11 +18,11 @@ import (
 func main() {
 	var username, password, userID, accessToken, server, db, avatar, botOwner string
 	var key, value, get string
-	var setup, doc, debug bool
+	var setup, doc, verbose bool
 
 	flag.BoolVar(&doc, "doc", false, "print plugin information and exit")
 	flag.BoolVar(&setup, "s", false, "setup account")
-	flag.BoolVar(&debug, "debug", false, "print debug messages")
+	flag.BoolVar(&verbose, "v", false, "print verbose messages")
 
 	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.StringVar(&db, "db", "db", "full path to database directory")
@@ -213,7 +213,7 @@ func main() {
 						start := time.Now()
 						p.RespondText(cli, ev, username, post)
 						elapsed := time.Since(start)
-						if debug {
+						if verbose {
 							log.Printf("%s took %s to run\n", p.Name(), elapsed)
 						}
 					}
