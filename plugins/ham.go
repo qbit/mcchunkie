@@ -2,7 +2,9 @@ package plugins
 
 import (
 	"fmt"
+	"math/rand"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/matrix-org/gomatrix"
@@ -64,12 +66,23 @@ func (h *Ham) Match(user, msg string) bool {
 func (h *Ham) SetStore(s PluginStore) {}
 
 func (h *Ham) pretty(resp *LicenseResp) string {
-	return fmt.Sprintf("%s: %s (expires: %s) %s\n",
-		resp.Licenses.License[0].Callsign,
-		resp.Licenses.License[0].LicName,
-		resp.Licenses.License[0].ExpiredDate,
-		resp.Licenses.License[0].CategoryDesc,
-	)
+	var s []string
+	idx := 0
+
+	if resp.Licenses.TotalRows != "1" {
+		rand.Seed(time.Now().Unix())
+		idx = rand.Intn(len(resp.Licenses.License))
+		s = append(s, fmt.Sprintf("Found %s licenses, here is a random one:", resp.Licenses.TotalRows))
+	}
+
+	s = append(s, fmt.Sprintf("%s: %s (expires: %s) %s\n",
+		resp.Licenses.License[idx].Callsign,
+		resp.Licenses.License[idx].LicName,
+		resp.Licenses.License[idx].ExpiredDate,
+		resp.Licenses.License[idx].CategoryDesc,
+	))
+
+	return strings.Join(s, " ")
 }
 
 // RespondText to looking up of federation check requests
