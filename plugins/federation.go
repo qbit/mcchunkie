@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"regexp"
 	"time"
@@ -62,8 +61,6 @@ func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post s
 		}
 
 		homeServer = u.Hostname()
-
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 
 		furl := fmt.Sprintf("%s%s",
 			"https://federationtester.matrix.org/api/report?server_name=",

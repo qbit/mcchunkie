@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 
 	"github.com/matrix-org/gomatrix"
@@ -51,7 +50,6 @@ func (h *OpenBSDMan) SetStore(s PluginStore) {}
 func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	page := h.fix(post)
 	if page != "" {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		SendText(c, ev.RoomID, fmt.Sprintf("https://man.openbsd.org/%s", page))
 	}
 }

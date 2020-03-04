@@ -3,7 +3,6 @@ package plugins
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"regexp"
 
@@ -35,7 +34,6 @@ func (p *Snap) SetStore(s PluginStore) {}
 
 // RespondText to looking up of federation check requests
 func (p *Snap) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	log.Printf("%s: responding to '%s'", p.Name(), ev.Sender)
 	resp, err := http.Get("https://ftp.usa.openbsd.org/pub/OpenBSD/snapshots/amd64/BUILDINFO")
 	if err != nil {
 		SendText(c, ev.RoomID, fmt.Sprintf("%s", err))

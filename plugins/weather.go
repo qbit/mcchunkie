@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -167,7 +166,6 @@ func (h *Weather) fix(msg string) string {
 func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	weather := h.fix(post)
 	if weather != "" {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		wd, err := h.get(weather)
 		if err != nil {
 			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))

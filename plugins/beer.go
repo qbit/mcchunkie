@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"net/url"
 	"regexp"
@@ -120,7 +119,6 @@ func (h *Beer) SetStore(s PluginStore) {}
 func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	beer := h.fix(post)
 	if beer != "" {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		var beers = &BeerResp{}
 		u := fmt.Sprintf("%s%s",
 			"https://data.opendatasoft.com/api/records/1.0/search?dataset=open-beer-database%40public-us&q=",

@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"regexp"
 	"time"
@@ -46,7 +45,6 @@ func (h *Thanks) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post 
 
 	rand.Seed(time.Now().Unix())
 
-	log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 	SendText(c, ev.RoomID, a[rand.Intn(len(a))])
 }
 

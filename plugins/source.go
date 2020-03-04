@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 
 	"github.com/matrix-org/gomatrix"
@@ -35,7 +34,6 @@ func (h *Source) SetStore(s PluginStore) {}
 func (h *Source) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 
-	log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 	SendText(c, ev.RoomID, fmt.Sprintf("%s: %s ;D", s, "https://git.sr.ht/~qbit/mcchunkie"))
 }
 

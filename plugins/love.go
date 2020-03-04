@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"log"
 	"math/rand"
 	"regexp"
 	"time"
@@ -48,7 +47,6 @@ func (h *LoveYou) SetStore(s PluginStore) {}
 
 // RespondText to love events
 func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 	SendText(c, ev.RoomID, h.resp())
 }
 

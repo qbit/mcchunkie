@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/matrix-org/gomatrix"
@@ -43,11 +42,9 @@ func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, pos
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 
 	if strings.Contains(post, rightFive()) {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		SendText(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
 	}
 	if strings.Contains(post, leftFive()) {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		SendText(c, ev.RoomID, fmt.Sprintf("%s o/", s))
 	}
 }

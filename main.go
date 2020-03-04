@@ -18,10 +18,11 @@ import (
 func main() {
 	var username, password, userID, accessToken, server, db, avatar, botOwner string
 	var key, value, get string
-	var setup, doc bool
+	var setup, doc, debug bool
 
 	flag.BoolVar(&doc, "doc", false, "print plugin information and exit")
 	flag.BoolVar(&setup, "s", false, "setup account")
+	flag.BoolVar(&debug, "debug", false, "print debug messages")
 
 	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.StringVar(&db, "db", "db", "full path to database directory")
@@ -206,8 +207,15 @@ func main() {
 
 					}
 					if p.Match(username, post) {
+						log.Printf("%s: responding to '%s'", p.Name(), ev.Sender)
 						p.SetStore(store)
+
+						start := time.Now()
 						p.RespondText(cli, ev, username, post)
+						elapsed := time.Since(start)
+						if debug {
+							log.Printf("%s took %s to run\n", p.Name(), elapsed)
+						}
 					}
 				}
 			}

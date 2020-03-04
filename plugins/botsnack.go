@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"log"
 	"math/rand"
 	"regexp"
 	"time"
@@ -49,7 +48,6 @@ func (h *BotSnack) SetStore(s PluginStore) {}
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	u := NameRE.ReplaceAllString(user, "$1")
 	if ToMe(u, post) {
-		log.Printf("%s: responding to '%s'", h.Name(), ev.Sender)
 		SendText(c, ev.RoomID, h.resp())
 	}
 }
