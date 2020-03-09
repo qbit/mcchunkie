@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMatch(t *testing.T) {
+func TestOpenBSDManfix(t *testing.T) {
 	testStrings := make(map[string]string)
 	testStrings["man: pledge"] = "https://man.openbsd.org/pledge"
 	testStrings["man: 2 pledge"] = "https://man.openbsd.org/pledge.2"
