@@ -18,7 +18,7 @@ func (h *OpenBSDMan) Descr() string {
 
 // Re matches our man format
 func (h *OpenBSDMan) Re() string {
-	return `(?i)^man: ([1-9]?p?)\s?(.+)$`
+	return `(?i)^man: ([1-9][p]?)?\s?(.+)$`
 }
 
 func (h *OpenBSDMan) fix(msg string) string {
@@ -30,6 +30,10 @@ func (h *OpenBSDMan) fix(msg string) string {
 	}
 	if section != "" {
 		resp = re.ReplaceAllString(msg, "$2.$1")
+		if matched, _ := regexp.MatchString(`3p`, resp); matched {
+			resp = fmt.Sprintf("man3p/%s", resp)
+		}
+
 	} else {
 		resp = re.ReplaceAllString(msg, "$2")
 	}
