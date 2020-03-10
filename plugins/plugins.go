@@ -3,6 +3,9 @@ package plugins
 import (
 	"bytes"
 	"encoding/json"
+	"image"
+	"image/png"
+	"io"
 	"net/http"
 	"regexp"
 	"strings"
@@ -145,6 +148,28 @@ func SendMD(c *gomatrix.Client, roomID, message string) error {
 	md := []byte(message)
 	html := markdown.ToHTML(md, nil, nil)
 	SendHTML(c, roomID, string(html))
+	return nil
+}
+
+// SendImage takes an image and sends it!.
+func SendImage(c *gomatrix.Client, roomID string, img *image.RGBA) error {
+	r, w := io.Pipe()
+
+	go func() {
+		defer w.Close()
+		png.Encode(w, img)
+	}()
+
+	mediaURL, err := c.UploadToContentRepo(r, "image/png", 0)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.SendImage(roomID, "", mediaURL.ContentURI)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
