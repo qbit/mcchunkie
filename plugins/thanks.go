@@ -40,7 +40,7 @@ func (h *Thanks) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post 
 		"welcome",
 		"you're welcome",
 		"np!",
-		fmt.Sprintf("you'r welcome, %s", s),
+		fmt.Sprintf("you're welcome, %s", s),
 	}
 
 	rand.Seed(time.Now().Unix())
