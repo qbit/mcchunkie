@@ -188,6 +188,7 @@ var Plugs = Plugins{
 	&Hi{},
 	&LoveYou{},
 	&OpenBSDMan{},
+	&Palette{},
 	&Snap{},
 	&Source{},
 	&Thanks{},
