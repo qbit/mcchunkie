@@ -8,6 +8,8 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
+var version string
+
 // Version responds to hi messages
 type Version struct {
 }
@@ -30,7 +32,10 @@ func (v *Version) Match(user, msg string) bool {
 }
 
 func (v *Version) print(to string) string {
-	return fmt.Sprintf("%s, I am written in Go, running on %s", to, runtime.GOOS)
+	if version == "" {
+		version = "unknown version"
+	}
+	return fmt.Sprintf("%s running on %s", version, runtime.GOOS)
 }
 
 // SetStore does nothing in here
