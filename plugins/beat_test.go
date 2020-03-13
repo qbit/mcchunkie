@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestMatch(t *testing.T) {
+func TestBeatMatch(t *testing.T) {
 	testStrings := make(map[string]bool)
 	testStrings["what time is it??!!?!"] = true
 	testStrings["what time is it"] = false
