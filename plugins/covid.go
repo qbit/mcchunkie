@@ -61,7 +61,7 @@ func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post s
 
 		var s State
 		for i, p := range states {
-			if strings.ToLower(i) == strings.ToLower(state) {
+			if strings.EqualFold(i, state) {
 				s = p
 				state = i
 			}
