@@ -182,6 +182,7 @@ var Plugs = Plugins{
 	&Beat{},
 	&Beer{},
 	&BotSnack{},
+	&Covid{},
 	&Feder{},
 	&Ham{},
 	&HighFive{},
