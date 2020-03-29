@@ -162,20 +162,26 @@ func main() {
 		errataCount, err = strconv.Atoi(storeCount)
 		for {
 			got, err := ParseRemoteErrata(
-				fmt.Sprintf("https://www.openbsd.org/errata%s.html", openbsdRelease),
+				fmt.Sprintf("http://ftp.openbsd.org/pub/OpenBSD/patches/%s/common/", openbsdRelease),
 			)
 			if err != nil {
 				fmt.Println(err)
 			}
-			l := got.Length
+			l := len(got.List)
 			if l > errataCount {
 				alertRooms, _ := store.Get("errata_rooms")
 				c := 0
-				for _, errata := range got.List {
+				for _, erratum := range got.List {
 					if c+1 > errataCount {
-						log.Printf("%03d: %s - %s\n", errata.ID, errata.Type, errata.Desc)
+						log.Printf("Notifying for erratum %03d\n", erratum.ID)
+						err = erratum.Fetch()
+						if err != nil {
+							fmt.Println(err)
+							break
+						}
 						for _, room := range strings.Split(alertRooms, ",") {
-							cli.SendNotice(room, PrintErrata(&errata))
+							cli.SendNotice(room, PrintErrata(&erratum))
+							plugins.SendMD(cli, room, PrintErrataMD(&erratum))
 						}
 					}
 					c = c + 1
