@@ -180,8 +180,7 @@ func main() {
 							break
 						}
 						for _, room := range strings.Split(alertRooms, ",") {
-							cli.SendNotice(room, PrintErrata(&erratum))
-							plugins.SendMD(cli, room, PrintErrataMD(&erratum))
+							plugins.SendMDNotice(cli, room, PrintErrataMD(&erratum))
 						}
 					}
 					c = c + 1

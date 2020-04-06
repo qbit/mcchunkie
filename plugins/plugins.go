@@ -143,6 +143,25 @@ func SendHTML(c *gomatrix.Client, roomID, message string) error {
 	return nil
 }
 
+// SendMDNotice sends an html notice to a given room. It pretends to be
+// "typing" by calling UserTyping for the caller.
+func SendMDNotice(c *gomatrix.Client, roomID, message string) error {
+	_, err := c.UserTyping(roomID, true, 3)
+	if err != nil {
+		return err
+	}
+
+	md := []byte(message)
+	html := markdown.ToHTML(md, nil, nil)
+	c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.notice", string(html)))
+
+	_, err = c.UserTyping(roomID, false, 0)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SendMD takes markdown and converts it to an html message.
 func SendMD(c *gomatrix.Client, roomID, message string) error {
 	md := []byte(message)

@@ -189,18 +189,18 @@ func ParseRemoteErrata(s string) (*Errata, error) {
 }
 
 // PrintErrata pretty prints an errata
-func PrintErrata(e *Erratum) string {
-	return fmt.Sprintf("New OpenBSD Errata: %03d\n%s: %s\n%s",
-		e.ID,
-		e.Date.String(),
-		e.Desc,
-		e.Link,
-	)
-}
+//func PrintErrata(e *Erratum) string {
+//	return fmt.Sprintf("New OpenBSD Errata: %03d\n%s: %s\n%s",
+//		e.ID,
+//		e.Date.String(),
+//		e.Desc,
+//		e.Link,
+//	)
+//}
 
 // PrintErrataMD pretty prints an errata in markdown
 func PrintErrataMD(e *Erratum) string {
-	return fmt.Sprintf("# OpenBSD Errata %03d (_%s_)\n<pre>%s</pre>\n[A source code patch exists which remedies this problem.](%s)",
+	return fmt.Sprintf("# OpenBSD Errata %03d ( _%s_ )\n<pre>%s</pre>\n[A source code patch exists which remedies this problem.](%s)",
 		e.ID,
 		e.Date.Format("January 2, 2006"),
 		e.Desc,
