@@ -212,6 +212,7 @@ var Plugs = Plugins{
 	&Snap{},
 	&Source{},
 	&Thanks{},
+	&Toki{},
 	&Version{},
 	&Wb{},
 	&Weather{},
