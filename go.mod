@@ -3,6 +3,7 @@ module suah.dev/mcchunkie
 go 1.13
 
 require (
+	github.com/caneroj1/stemmer v0.0.0-20170128035808-c9f2ce1504d5
 	github.com/gomarkdown/markdown v0.0.0-20200127000047-1813ea067497
 	github.com/google/btree v1.0.0 // indirect
 	github.com/matrix-org/gomatrix v0.0.0-20200128155335-9e7906b6766d

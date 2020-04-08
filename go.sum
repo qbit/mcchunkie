@@ -1,3 +1,5 @@
+github.com/caneroj1/stemmer v0.0.0-20170128035808-c9f2ce1504d5 h1:KrgIOxLMw9OvGiPOX1WlxUOZzhJ6NvslCVEMb3SrIXQ=
+github.com/caneroj1/stemmer v0.0.0-20170128035808-c9f2ce1504d5/go.mod h1:FX8SGAdUYnFYgGoy+xeGdnVIEq/ITKM7iMewnmng4Y4=
 github.com/gomarkdown/markdown v0.0.0-20200127000047-1813ea067497 h1:wJkj+x9gPYlDyM34C6r3SXPs270coWeh85wu1CsusDo=
 github.com/gomarkdown/markdown v0.0.0-20200127000047-1813ea067497/go.mod h1:aii0r/K0ZnHv7G0KF7xy1v0A7s2Ljrb5byB7MO5p6TU=
 github.com/google/btree v1.0.0 h1:0udJVsspx3VBr5FwtLhQQtuAsVc79tTq0ocGIPAU6qo=
