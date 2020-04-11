@@ -4038,6 +4038,7 @@ func (t *Toki) fix(msg string) (string, string) {
 // RespondText to hi events
 func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
 	cmd, w := t.fix(post)
+	cmd = strings.ToLower(cmd)
 	switch cmd {
 	case "toki":
 		if word, ok := TokiLang[w]; ok {
