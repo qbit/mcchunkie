@@ -166,6 +166,8 @@ func main() {
 			)
 			if err != nil {
 				fmt.Println(err)
+				time.Sleep(2 * time.Hour)
+				continue
 			}
 			l := len(got.List)
 			if l > errataCount {
