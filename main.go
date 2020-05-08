@@ -151,7 +151,6 @@ func main() {
 		}
 		switch ev.Sender {
 		case botOwner:
-			log.Println("message from owner")
 			if ev.Content["membership"] == "invite" {
 				log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
 				if _, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
