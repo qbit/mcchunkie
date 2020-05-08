@@ -20,6 +20,14 @@ func TestPluginsNameRE(t *testing.T) {
 	}
 }
 
+func TestPluginsRemoveName(t *testing.T) {
+	expected := "this is for you"
+	n := RemoveName("mctest", fmt.Sprintf("mctest: %s", expected))
+	if n != expected {
+		t.Errorf("Expected %q; got %q\n", expected, n)
+	}
+}
+
 type testResp struct {
 	Name string `json:"test"`
 }

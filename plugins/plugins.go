@@ -55,6 +55,12 @@ func ToMe(user, message string) bool {
 	return strings.Contains(message, u)
 }
 
+// RemoveName removes the friendly name from a given message
+func RemoveName(user, message string) string {
+	n := NameRE.ReplaceAllString(user, "$1")
+	return strings.ReplaceAll(message, n + ": ", "")
+}
+
 // HTTPRequest has the bits for making http requests
 type HTTPRequest struct {
 	Client  http.Client
