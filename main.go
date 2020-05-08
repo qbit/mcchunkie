@@ -22,7 +22,7 @@ const header = `
 `
 
 func main() {
-	var username, password, userID, accessToken, server, db, avatar, botOwner string
+	var username, shortname, password, userID, accessToken, server, db, avatar, botOwner string
 	var key, value, get string
 	var setup, doc, verbose bool
 
@@ -48,6 +48,7 @@ func main() {
 
 	var help = `^help: (\w+)$`
 	var helpRE = regexp.MustCompile(help)
+	var kvRE = regexp.MustCompile(`^(.+)\s->\s(.+)$`)
 	var store, err = NewStore(db)
 	if err != nil {
 		log.Fatalf("%s\n", err)
@@ -136,6 +137,8 @@ func main() {
 		botOwner, _ = store.Get("bot_owner")
 	}
 
+	shortname = plugins.NameRE.ReplaceAllString(username, "$1")
+
 	cli.SetCredentials(userID, accessToken)
 	cli.Store = store
 	syncer := gomatrix.NewDefaultSyncer(username, store)
@@ -146,11 +149,15 @@ func main() {
 		if ev.Sender == username {
 			return
 		}
-
-		if ev.Sender == botOwner && ev.Content["membership"] == "invite" {
-			log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
-			if _, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
-				log.Fatalln(err)
+		switch ev.Sender {
+		case botOwner:
+			log.Println("message from owner")
+			if ev.Content["membership"] == "invite" {
+				log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
+				if _, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
+					log.Fatalln(err)
+				}
+				return
 			}
 		}
 	})
@@ -197,6 +204,28 @@ func main() {
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
 		if ev.Sender == username {
 			return
+		}
+
+		switch ev.Sender {
+		case botOwner:
+			var post string
+			var ok bool
+
+			if post, ok = ev.Body(); !ok {
+				return
+			}
+
+			if plugins.ToMe(username, post) {
+				mp := plugins.RemoveName(shortname, post)
+				if kvRE.MatchString(mp) {
+					key := kvRE.ReplaceAllString(post, "$1")
+					val := kvRE.ReplaceAllString(post, "$2")
+					store.Set(key, val)
+					log.Printf("Setting %q to %q", key, val)
+					plugins.SendMD(cli, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
+					return
+				}
+			}
 		}
 
 		// Sending a response per plugin hits issues, so save them and
