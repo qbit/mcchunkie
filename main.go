@@ -13,6 +13,7 @@ import (
 
 	"github.com/matrix-org/gomatrix"
 	"suah.dev/mcchunkie/plugins"
+	"suah.dev/protect"
 )
 
 const header = `
@@ -40,11 +41,11 @@ func main() {
 
 	flag.Parse()
 
-	pledge("stdio unveil rpath wpath cpath flock dns inet tty")
-	unveil("/etc/resolv.conf", "r")
-	unveil("/etc/ssl/cert.pem", "r")
-	unveil(db, "rwc")
-	unveilBlock()
+	protect.Pledge("stdio unveil rpath wpath cpath flock dns inet tty")
+	protect.Unveil("/etc/resolv.conf", "r")
+	protect.Unveil("/etc/ssl/cert.pem", "r")
+	protect.Unveil(db, "rwc")
+	protect.UnveilBlock()
 
 	var help = `^help: (\w+)$`
 	var helpRE = regexp.MustCompile(help)
@@ -122,7 +123,7 @@ func main() {
 		}
 
 		// No longer need tty now that we have our info
-		pledge("stdio unveil rpath wpath cpath flock dns inet")
+		protect.Pledge("stdio unveil rpath wpath cpath flock dns inet")
 
 		store.Set("username", username)
 		store.Set("access_token", resp.AccessToken)

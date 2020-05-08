@@ -10,5 +10,6 @@ require (
 	github.com/peterbourgon/diskv v2.0.1+incompatible
 	golang.org/x/crypto v0.0.0-20200128174031-69ecbb4d6d5d
 	golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
-	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9
+	golang.org/x/sys v0.0.0-20200501145240-bc7a7d42d5c3
+	suah.dev/protect v0.0.0-20200508135532-408f86d55f26
 )
