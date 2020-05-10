@@ -25,3 +25,5 @@ suah.dev/protect v0.0.0-20200508135532-408f86d55f26 h1:trB+FkW4IPwmiON5ipshh3y/7
 suah.dev/protect v0.0.0-20200508135532-408f86d55f26/go.mod h1:ZSgyBM30JUwhVPWJzVHh0jlu5W6Qz1VR6tIhAzqJZ9Y=
 suah.dev/protect v0.1.0 h1:ZHFEMrLULY8qH5EJSTiqgKvjsG7z3wXLBBmxbAonp6g=
 suah.dev/protect v0.1.0/go.mod h1:ZSgyBM30JUwhVPWJzVHh0jlu5W6Qz1VR6tIhAzqJZ9Y=
+suah.dev/protect v1.0.0 h1:X8pzDvDIZIiugmkmr6DES6JFO1XUdJWi34Ffmk6CMZY=
+suah.dev/protect v1.0.0/go.mod h1:ZSgyBM30JUwhVPWJzVHh0jlu5W6Qz1VR6tIhAzqJZ9Y=
