@@ -23,7 +23,7 @@ const header = `
 `
 
 func main() {
-	var username, shortname, password, userID, accessToken, server, db, avatar, botOwner string
+	var username, shortName, password, userID, accessToken, server, db, avatar, botOwner string
 	var key, value, get string
 	var setup, doc, verbose bool
 
@@ -142,7 +142,7 @@ func main() {
 		botOwner, _ = store.Get("bot_owner")
 	}
 
-	shortname = plugins.NameRE.ReplaceAllString(username, "$1")
+	shortName = plugins.NameRE.ReplaceAllString(username, "$1")
 
 	cli.SetCredentials(userID, accessToken)
 	cli.Store = store
@@ -223,7 +223,7 @@ func main() {
 			}
 
 			if plugins.ToMe(username, post) {
-				mp := plugins.RemoveName(shortname, post)
+				mp := plugins.RemoveName(shortName, post)
 				if kvRE.MatchString(mp) {
 					key := kvRE.ReplaceAllString(post, "$1")
 					val := kvRE.ReplaceAllString(post, "$2")
