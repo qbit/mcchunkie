@@ -34,7 +34,10 @@ type testResp struct {
 
 func TestHTTPRequestDoJSON(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, `{"test":"success"}`)
+		_, err := fmt.Fprintln(w, `{"test":"success"}`)
+		if err != nil {
+			t.Error(err)
+		}
 	}))
 	defer ts.Close()
 

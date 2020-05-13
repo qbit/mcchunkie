@@ -23,7 +23,7 @@ func (h *Thanks) Re() string {
 	return `(?i)^thank you|thank you$|^thanks|thanks$|^ty|ty$`
 }
 
-// Match determins if we are being thanked
+// Match determines if we are being thanked
 func (h *Thanks) Match(user, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)

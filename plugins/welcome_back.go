@@ -21,7 +21,7 @@ func (h *Wb) Re() string {
 	return `(?i)^welcome back|welcome back$|^wb|wb$`
 }
 
-// Match determins if we are welcomed back
+// Match determines if we are welcomed back
 func (h *Wb) Match(user, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)

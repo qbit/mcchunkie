@@ -21,7 +21,7 @@ func (h *Source) Re() string {
 	return `(?i)where is your (source|code)`
 }
 
-// Match determins if someone is asking about the source code
+// Match determines if someone is asking about the source code
 func (h *Source) Match(user, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg) && ToMe(user, msg)

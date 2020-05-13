@@ -19,8 +19,7 @@ import (
 const header = `
 # mcchunkie
 
-[![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)
-`
+[![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)`
 
 func main() {
 	var username, shortName, password, userID, accessToken, server, db, avatar, botOwner string
@@ -66,7 +65,7 @@ func main() {
 
 	if doc {
 		fmt.Println(header)
-		fmt.Println("|Plugin Name|Match|Description|")
+		fmt.Println("\n|Plugin Name|Match|Description|")
 		fmt.Println("|----|---|---|")
 		for _, p := range plugins.Plugs {
 			fmt.Printf("|%s|`%s`|%s|\n", p.Name(), p.Re(), p.Descr())

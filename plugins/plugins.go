@@ -123,7 +123,10 @@ func SendText(c *gomatrix.Client, roomID, message string) error {
 		return err
 	}
 
-	c.SendText(roomID, message)
+	_, err = c.SendText(roomID, message)
+	if err != nil {
+		return err
+	}
 
 	_, err = c.UserTyping(roomID, false, 0)
 	if err != nil {
@@ -140,7 +143,10 @@ func SendHTML(c *gomatrix.Client, roomID, message string) error {
 		return err
 	}
 
-	c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.text", message))
+	_, err = c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.text", message))
+	if err != nil {
+		return err
+	}
 
 	_, err = c.UserTyping(roomID, false, 0)
 	if err != nil {
@@ -159,7 +165,10 @@ func SendMDNotice(c *gomatrix.Client, roomID, message string) error {
 
 	md := []byte(message)
 	html := markdown.ToHTML(md, nil, nil)
-	c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.notice", string(html)))
+	_, err = c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.notice", string(html)))
+	if err != nil {
+		return err
+	}
 
 	_, err = c.UserTyping(roomID, false, 0)
 	if err != nil {
@@ -172,8 +181,7 @@ func SendMDNotice(c *gomatrix.Client, roomID, message string) error {
 func SendMD(c *gomatrix.Client, roomID, message string) error {
 	md := []byte(message)
 	html := markdown.ToHTML(md, nil, nil)
-	SendHTML(c, roomID, string(html))
-	return nil
+	return SendHTML(c, roomID, string(html))
 }
 
 // SendImage takes an image and sends it!.
@@ -182,7 +190,7 @@ func SendImage(c *gomatrix.Client, roomID string, img *image.RGBA) error {
 
 	go func() {
 		defer w.Close()
-		png.Encode(w, img)
+		_ = png.Encode(w, img)
 	}()
 
 	mediaURL, err := c.UploadToContentRepo(r, "image/png", 0)

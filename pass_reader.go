@@ -6,6 +6,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+//noinspection GoUnresolvedReference
 func prompt(p string) (string, error) {
 	oldState, err := terminal.MakeRaw(0)
 	if err != nil {
