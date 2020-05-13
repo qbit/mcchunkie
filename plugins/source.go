@@ -28,10 +28,10 @@ func (h *Source) Match(user, msg string) bool {
 }
 
 // SetStore does nothing in here
-func (h *Source) SetStore(s PluginStore) {}
+func (h *Source) SetStore(_ PluginStore) {}
 
 // RespondText to questions about TheSource™©®⑨
-func (h *Source) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Source) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 
 	return SendText(c, ev.RoomID, fmt.Sprintf("%s: %s ;D", s, "https://git.sr.ht/~qbit/mcchunkie"))

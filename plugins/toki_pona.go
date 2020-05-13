@@ -4022,13 +4022,13 @@ func (t *Toki) Re() string {
 }
 
 // Match determines if we are highfiving
-func (t *Toki) Match(user, msg string) bool {
+func (t *Toki) Match(_, msg string) bool {
 	re := regexp.MustCompile(t.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here
-func (t *Toki) SetStore(s PluginStore) {}
+func (t *Toki) SetStore(_ PluginStore) {}
 
 func (t *Toki) fix(msg string) (string, string) {
 	re := regexp.MustCompile(t.Re())
@@ -4036,7 +4036,7 @@ func (t *Toki) fix(msg string) (string, string) {
 }
 
 // RespondText to hi events
-func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	cmd, w := t.fix(post)
 	cmd = strings.ToLower(cmd)
 	switch cmd {

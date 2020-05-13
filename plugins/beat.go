@@ -23,16 +23,16 @@ func (h *Beat) Re() string {
 }
 
 // Match determines if we are asking for a beat
-func (h *Beat) Match(user, msg string) bool {
+func (h *Beat) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here
-func (h *Beat) SetStore(s PluginStore) {}
+func (h *Beat) SetStore(_ PluginStore) {}
 
 // RespondText to beat request events
-func (h *Beat) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Beat) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
 	n := time.Now()
 	utc1 := n.Unix() + 3600
 	r := utc1 % 86400

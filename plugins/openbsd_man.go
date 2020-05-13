@@ -42,16 +42,16 @@ func (h *OpenBSDMan) fix(msg string) string {
 }
 
 // Match checks for our man page re
-func (h *OpenBSDMan) Match(user, msg string) bool {
+func (h *OpenBSDMan) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore does nothing in OpenBSDMan
-func (h *OpenBSDMan) SetStore(s PluginStore) {}
+func (h *OpenBSDMan) SetStore(_ PluginStore) {}
 
 // RespondText sends back a man page.
-func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	page := h.fix(post)
 	if page != "" {
 		return SendText(c, ev.RoomID, fmt.Sprintf("https://man.openbsd.org/%s", page))

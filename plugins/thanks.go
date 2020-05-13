@@ -30,10 +30,10 @@ func (h *Thanks) Match(user, msg string) bool {
 }
 
 // SetStore we don't need a store here
-func (h *Thanks) SetStore(s PluginStore) {}
+func (h *Thanks) SetStore(_ PluginStore) {}
 
 // RespondText to welcome back events
-func (h *Thanks) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Thanks) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 	a := []string{
 		fmt.Sprintf("welcome %s", s),

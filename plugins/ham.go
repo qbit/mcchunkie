@@ -57,13 +57,13 @@ func (h *Ham) fix(msg string) string {
 }
 
 // Match determines if we should call the response for Ham
-func (h *Ham) Match(user, msg string) bool {
+func (h *Ham) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here.
-func (h *Ham) SetStore(s PluginStore) {}
+func (h *Ham) SetStore(_ PluginStore) {}
 
 func (h *Ham) pretty(resp *LicenseResp) string {
 	var s []string
@@ -86,7 +86,7 @@ func (h *Ham) pretty(resp *LicenseResp) string {
 }
 
 // RespondText to looking up of federation check requests
-func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	call := h.fix(post)
 	if call != "" {
 		furl := fmt.Sprintf("%s%s",

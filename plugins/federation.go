@@ -42,16 +42,16 @@ func (h *Feder) fix(msg string) string {
 }
 
 // Match determines if we should call the response for Feder
-func (h *Feder) Match(user, msg string) bool {
+func (h *Feder) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here.
-func (h *Feder) SetStore(s PluginStore) {}
+func (h *Feder) SetStore(_ PluginStore) {}
 
 // RespondText to looking up of federation check requests
-func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	homeServer := h.fix(post)
 	if homeServer != "" {
 		u, err := url.Parse(fmt.Sprintf("https://%s", homeServer))

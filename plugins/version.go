@@ -31,7 +31,7 @@ func (v *Version) Match(user, msg string) bool {
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 
-func (v *Version) print(to string) string {
+func (v *Version) print() string {
 	if version == "" {
 		version = "unknown version"
 	}
@@ -39,13 +39,11 @@ func (v *Version) print(to string) string {
 }
 
 // SetStore does nothing in here
-func (v *Version) SetStore(s PluginStore) {}
+func (v *Version) SetStore(_ PluginStore) {}
 
 // RespondText to version events
-func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
-	s := NameRE.ReplaceAllString(ev.Sender, "$1")
-
-	return SendText(c, ev.RoomID, v.print(s))
+func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
+	return SendText(c, ev.RoomID, v.print())
 }
 
 // Name Version

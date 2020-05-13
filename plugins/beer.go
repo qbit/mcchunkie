@@ -86,7 +86,7 @@ func (h *Beer) fix(msg string) string {
 }
 
 // Match determines if we should call the response for Beer
-func (h *Beer) Match(user, msg string) bool {
+func (h *Beer) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
@@ -113,10 +113,10 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 }
 
 // SetStore we don't need a store here.
-func (h *Beer) SetStore(s PluginStore) {}
+func (h *Beer) SetStore(_ PluginStore) {}
 
 // RespondText to looking up of beer requests
-func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	beer := h.fix(post)
 	if beer != "" {
 		var beers = &BeerResp{}

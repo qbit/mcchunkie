@@ -23,7 +23,7 @@ func (h *BotSnack) Re() string {
 }
 
 // Match determines if we should execute BotSnack
-func (h *BotSnack) Match(user, msg string) bool {
+func (h *BotSnack) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
@@ -42,7 +42,7 @@ func (h *BotSnack) resp() string {
 }
 
 // SetStore we don't need a store, so just return
-func (h *BotSnack) SetStore(s PluginStore) {}
+func (h *BotSnack) SetStore(_ PluginStore) {}
 
 // RespondText to botsnack events
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {

@@ -31,7 +31,7 @@ func (h *HighFive) Re() string {
 }
 
 // SetStore we don't need a store here.
-func (h *HighFive) SetStore(s PluginStore) {}
+func (h *HighFive) SetStore(_ PluginStore) {}
 
 // Match determines if we should bother giving a high five
 func (h *HighFive) Match(user, msg string) bool {
@@ -40,7 +40,7 @@ func (h *HighFive) Match(user, msg string) bool {
 }
 
 // RespondText to high five events
-func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 
 	rm := regexp.MustCompile(rightFive())

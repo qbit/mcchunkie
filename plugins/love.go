@@ -43,10 +43,10 @@ func (h *LoveYou) resp() string {
 }
 
 // SetStore we don't need a store, so just return
-func (h *LoveYou) SetStore(s PluginStore) {}
+func (h *LoveYou) SetStore(_ PluginStore) {}
 
 // RespondText to love events
-func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
 	return SendText(c, ev.RoomID, h.resp())
 }
 

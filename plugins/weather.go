@@ -152,7 +152,7 @@ func (h *Weather) Re() string {
 }
 
 // Match checks for "weather: " messages
-func (h *Weather) Match(user, msg string) bool {
+func (h *Weather) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
@@ -163,7 +163,7 @@ func (h *Weather) fix(msg string) string {
 }
 
 // RespondText to looking up of weather lookup requests
-func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	weather := h.fix(post)
 	if weather != "" {
 		wd, err := h.get(weather)
