@@ -240,7 +240,7 @@ func main() {
 
 		// Sending a response per plugin hits issues, so save them and
 		// send as one message.
-		helps := []string{}
+		var helps []string
 		for _, p := range plugins.Plugs {
 			var post string
 			var ok bool
