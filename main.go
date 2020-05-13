@@ -41,11 +41,15 @@ func main() {
 
 	flag.Parse()
 
-	protect.Pledge("stdio unveil rpath wpath cpath flock dns inet tty")
-	protect.Unveil("/etc/resolv.conf", "r")
-	protect.Unveil("/etc/ssl/cert.pem", "r")
-	protect.Unveil(db, "rwc")
-	protect.UnveilBlock()
+	_ = protect.Pledge("stdio unveil rpath wpath cpath flock dns inet tty")
+	_ = protect.Unveil("/etc/resolv.conf", "r")
+	_ = protect.Unveil("/etc/ssl/cert.pem", "r")
+	_ = protect.Unveil(db, "rwc")
+
+	var err = protect.UnveilBlock()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	var help = `^help: (\w+)$`
 	var helpRE = regexp.MustCompile(help)
@@ -123,7 +127,7 @@ func main() {
 		}
 
 		// No longer need tty now that we have our info
-		protect.Pledge("stdio unveil rpath wpath cpath flock dns inet")
+		_ = protect.Pledge("stdio unveil rpath wpath cpath flock dns inet")
 
 		store.Set("username", username)
 		store.Set("access_token", resp.AccessToken)
