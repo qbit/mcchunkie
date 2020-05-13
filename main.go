@@ -54,7 +54,7 @@ func main() {
 	var help = `^help: (\w+)$`
 	var helpRE = regexp.MustCompile(help)
 	var kvRE = regexp.MustCompile(`^(.+)\s->\s(.+)$`)
-	var store, err = NewStore(db)
+	store, err := NewStore(db)
 	if err != nil {
 		log.Fatalf("%s\n", err)
 	}
