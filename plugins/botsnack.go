@@ -45,11 +45,12 @@ func (h *BotSnack) resp() string {
 func (h *BotSnack) SetStore(s PluginStore) {}
 
 // RespondText to botsnack events
-func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	u := NameRE.ReplaceAllString(user, "$1")
 	if ToMe(u, post) {
-		SendText(c, ev.RoomID, h.resp())
+		return SendText(c, ev.RoomID, h.resp())
 	}
+	return nil
 }
 
 // Name BotSnack

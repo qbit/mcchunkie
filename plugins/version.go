@@ -42,10 +42,10 @@ func (v *Version) print(to string) string {
 func (v *Version) SetStore(s PluginStore) {}
 
 // RespondText to version events
-func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	s := NameRE.ReplaceAllString(ev.Sender, "$1")
 
-	SendText(c, ev.RoomID, v.print(s))
+	return SendText(c, ev.RoomID, v.print(s))
 }
 
 // Name Version

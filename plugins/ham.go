@@ -86,7 +86,7 @@ func (h *Ham) pretty(resp *LicenseResp) string {
 }
 
 // RespondText to looking up of federation check requests
-func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	call := h.fix(post)
 	if call != "" {
 		furl := fmt.Sprintf("%s%s",
@@ -104,16 +104,16 @@ func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post str
 
 		err := req.DoJSON()
 		if err != nil {
-			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS (%s)", ev.Sender, err))
-			return
+			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS (%s)", ev.Sender, err))
 		}
 
 		if res.Status == "OK" {
-			SendText(c, ev.RoomID, h.pretty(res))
+			return SendText(c, ev.RoomID, h.pretty(res))
 		} else {
-			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", ev.Sender))
+			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", ev.Sender))
 		}
 	}
+	return nil
 }
 
 // Name Ham!

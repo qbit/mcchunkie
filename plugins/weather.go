@@ -29,7 +29,7 @@ type WeatherResp struct {
 }
 
 func (w *WeatherResp) conditions() string {
-	s := []string{}
+	var s []string
 	for _, cond := range w.Weather {
 		s = append(s, cond.Description)
 	}
@@ -133,7 +133,7 @@ func (h *Weather) get(loc string) (*WeatherResp, error) {
 	}
 
 	var w = &WeatherResp{}
-	err = json.Unmarshal([]byte(body), w)
+	err = json.Unmarshal(body, w)
 	if err != nil {
 		return nil, err
 	}
@@ -163,14 +163,14 @@ func (h *Weather) fix(msg string) string {
 }
 
 // RespondText to looking up of weather lookup requests
-func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	weather := h.fix(post)
 	if weather != "" {
 		wd, err := h.get(weather)
 		if err != nil {
-			SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
+			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
 		}
-		SendText(c, ev.RoomID,
+		return SendText(c, ev.RoomID,
 			fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
 				wd.Name,
 				wd.f(),
@@ -179,6 +179,7 @@ func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post
 				wd.conditions(),
 			))
 	}
+	return nil
 }
 
 // Name Weather!

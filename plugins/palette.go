@@ -24,13 +24,13 @@ func (h *Palette) Re() string {
 }
 
 // Match determines if we are asking for a color
-func (h *Palette) Match(user, msg string) bool {
+func (h *Palette) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here
-func (h *Palette) SetStore(s PluginStore) {}
+func (h *Palette) SetStore(_ PluginStore) {}
 
 func (h *Palette) parseHexColor(s string) (*color.RGBA, error) {
 	c := &color.RGBA{
@@ -57,7 +57,7 @@ func isEdge(x, y int) bool {
 }
 
 // RespondText to color request events
-func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	const width, height = 56, 56
 
 	img := image.NewRGBA(image.Rect(0, 0, 56, 56))
@@ -67,10 +67,10 @@ func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post
 		B: 0x00,
 		A: 0xff,
 	}
-	color, err := h.parseHexColor(post)
+	clr, err := h.parseHexColor(post)
 	if err != nil {
 		fmt.Println(err)
-		SendText(c, ev.RoomID, fmt.Sprintf("%s", err))
+		return SendText(c, ev.RoomID, fmt.Sprintf("%s", err))
 	}
 
 	for y := 0; y < height; y++ {
@@ -78,7 +78,7 @@ func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post
 			if isEdge(x, y) {
 				img.Set(x, y, border)
 			} else {
-				img.Set(x, y, color)
+				img.Set(x, y, clr)
 			}
 		}
 	}
@@ -86,7 +86,9 @@ func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post
 	err = SendImage(c, ev.RoomID, img)
 	if err != nil {
 		fmt.Println(err)
+		return err
 	}
+	return nil
 }
 
 // Name color

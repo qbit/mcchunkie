@@ -32,12 +32,12 @@ func (h *Beat) Match(user, msg string) bool {
 func (h *Beat) SetStore(s PluginStore) {}
 
 // RespondText to beat request events
-func (h *Beat) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *Beat) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	n := time.Now()
 	utc1 := n.Unix() + 3600
 	r := utc1 % 86400
 	bt := float32(r) / 86.4
-	SendText(c, ev.RoomID, fmt.Sprintf("@%03d", int32(bt)))
+	return SendText(c, ev.RoomID, fmt.Sprintf("@%03d", int32(bt)))
 }
 
 // Name beat

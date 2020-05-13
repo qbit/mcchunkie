@@ -189,7 +189,10 @@ func main() {
 							break
 						}
 						for _, room := range strings.Split(alertRooms, ",") {
-							plugins.SendMDNotice(cli, room, PrintErrataMD(&erratum))
+							err = plugins.SendMDNotice(cli, room, PrintErrataMD(&erratum))
+							if err != nil {
+								fmt.Println(err)
+							}
 						}
 					}
 					c = c + 1
@@ -222,7 +225,10 @@ func main() {
 					val := kvRE.ReplaceAllString(post, "$2")
 					store.Set(key, val)
 					log.Printf("Setting %q to %q", key, val)
-					plugins.SendMD(cli, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
+					err := plugins.SendMD(cli, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
+					if err != nil {
+						log.Println(err)
+					}
 					return
 				}
 			}
@@ -254,7 +260,10 @@ func main() {
 						p.SetStore(store)
 
 						start := time.Now()
-						p.RespondText(cli, ev, username, post)
+						err := p.RespondText(cli, ev, username, post)
+						if err != nil {
+							fmt.Println(err)
+						}
 						elapsed := time.Since(start)
 						if verbose {
 							log.Printf("%s took %s to run\n", p.Name(), elapsed)
@@ -264,7 +273,10 @@ func main() {
 			}
 		}
 		if len(helps) > 0 {
-			plugins.SendMD(cli, ev.RoomID, strings.Join(helps, "\n"))
+			err := plugins.SendMD(cli, ev.RoomID, strings.Join(helps, "\n"))
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	})
 

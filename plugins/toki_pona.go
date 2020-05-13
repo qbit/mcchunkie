@@ -28,7 +28,7 @@ func (t *Toki) Words() []string {
 	s := strings.Join(t.Meanings, " ")
 	w := strings.Split(s, " ")
 	contains := make(map[string]bool)
-	result := []string{}
+	var result []string
 
 	for _, x := range w {
 		if ok := contains[x]; !ok {
@@ -42,8 +42,8 @@ func (t *Toki) Words() []string {
 
 // TokiLang is our full representation of toki pona
 var TokiLang = map[string][]Toki{
-	"telo (e )": []Toki{
-		Toki{
+	"telo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to wash with water",
@@ -54,8 +54,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nanpa (e )": []Toki{
-		Toki{
+	"nanpa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to reckon",
@@ -64,8 +64,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kasi (e )": []Toki{
-		Toki{
+	"kasi (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to grow",
@@ -73,8 +73,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ken (e )": []Toki{
-		Toki{
+	"ken (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to enable",
@@ -84,8 +84,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kiwen": []Toki{
-		Toki{
+	"kiwen": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"solid",
@@ -94,7 +94,7 @@ var TokiLang = map[string][]Toki{
 				"hard",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"solid",
@@ -103,7 +103,7 @@ var TokiLang = map[string][]Toki{
 				"hard",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"rock",
@@ -115,8 +115,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"weka": []Toki{
-		Toki{
+	"weka": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"away",
@@ -124,15 +124,15 @@ var TokiLang = map[string][]Toki{
 				"absent",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"absence",
 			},
 		},
 	},
-	"open (e )": []Toki{
-		Toki{
+	"open (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to start",
@@ -142,8 +142,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kama (e )": []Toki{
-		Toki{
+	"kama (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to summon",
@@ -151,8 +151,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"walo": []Toki{
-		Toki{
+	"walo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"whitish",
@@ -161,7 +161,7 @@ var TokiLang = map[string][]Toki{
 				"white",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"whiteness",
@@ -170,9 +170,9 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mi ' pona, tan ni": []Toki{},
-	"anpa": []Toki{
-		Toki{
+	"mi ' pona, tan ni": {},
+	"anpa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"lower",
@@ -181,7 +181,7 @@ var TokiLang = map[string][]Toki{
 				"low",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"below",
@@ -191,7 +191,7 @@ var TokiLang = map[string][]Toki{
 				"downstairs",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"lower part",
@@ -202,27 +202,27 @@ var TokiLang = map[string][]Toki{
 				"bottom",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to prostrate oneself",
 			},
 		},
 	},
-	"lukin": []Toki{
-		Toki{
+	"lukin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"visual(ly)",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"visual(ly)",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"try to",
@@ -230,7 +230,7 @@ var TokiLang = map[string][]Toki{
 				"to seek to",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"look",
@@ -243,7 +243,7 @@ var TokiLang = map[string][]Toki{
 				"view",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to watch out",
@@ -252,8 +252,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pali (e )": []Toki{
-		Toki{
+	"pali (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make",
@@ -263,8 +263,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"musi (e )": []Toki{
-		Toki{
+	"musi (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to entertain",
@@ -272,16 +272,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mu!": []Toki{
-		Toki{
+	"mu!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"woof! meow! moo! etc. (cute animal noise)",
 			},
 		},
 	},
-	"weka (e )": []Toki{
-		Toki{
+	"weka (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to eliminate",
@@ -291,15 +291,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"namako": []Toki{
-		Toki{
+	"namako": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"piquant",
 				"spicy",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"something extra",
@@ -309,8 +309,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pini": []Toki{
-		Toki{
+	"pini": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"finished",
@@ -319,7 +319,7 @@ var TokiLang = map[string][]Toki{
 				"completed",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"past",
@@ -327,7 +327,7 @@ var TokiLang = map[string][]Toki{
 				"ago",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"to finish",
@@ -336,7 +336,7 @@ var TokiLang = map[string][]Toki{
 				"to stop",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"tip",
@@ -344,34 +344,34 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pakala!": []Toki{
-		Toki{
+	"pakala!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"damn! fuck!",
 			},
 		},
 	},
-	"kama moli": []Toki{
-		Toki{
+	"kama moli": {
+		{
 			POS: "intransitives verb",
 			Meanings: []string{
 				"dieing",
 			},
 		},
 	},
-	"mi moku, tan ni": []Toki{},
-	"moli (e )": []Toki{
-		Toki{
+	"mi moku, tan ni": {},
+	"moli (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to kill",
 			},
 		},
 	},
-	"mi wile e ni": []Toki{},
-	"kalama": []Toki{
-		Toki{
+	"mi wile e ni": {},
+	"kalama": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"loud",
@@ -379,7 +379,7 @@ var TokiLang = map[string][]Toki{
 				"noisy",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"noise",
@@ -387,15 +387,15 @@ var TokiLang = map[string][]Toki{
 				"sound",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to make noise",
 			},
 		},
 	},
-	"linja": []Toki{
-		Toki{
+	"linja": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"oblong",
@@ -403,7 +403,7 @@ var TokiLang = map[string][]Toki{
 				"elongated",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"rope",
@@ -417,8 +417,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lape": []Toki{
-		Toki{
+	"lape": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"of sleep",
@@ -426,20 +426,20 @@ var TokiLang = map[string][]Toki{
 				"sleeping",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"asleep",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"rest",
 				"sleep",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to rest",
@@ -447,8 +447,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tenpo": []Toki{
-		Toki{
+	"tenpo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"chronological",
@@ -456,13 +456,13 @@ var TokiLang = map[string][]Toki{
 				"temporal",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"chronologically",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"period of time",
@@ -474,8 +474,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sewi": []Toki{
-		Toki{
+	"sewi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"elevated",
@@ -484,7 +484,7 @@ var TokiLang = map[string][]Toki{
 				"superior",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"elevated",
@@ -493,7 +493,7 @@ var TokiLang = map[string][]Toki{
 				"superior",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"up",
@@ -504,15 +504,15 @@ var TokiLang = map[string][]Toki{
 				"high",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to get up",
 			},
 		},
 	},
-	"kon (e )": []Toki{
-		Toki{
+	"kon (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to puff away something",
@@ -520,14 +520,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"waso": []Toki{
-		Toki{
+	"waso": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"bird-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"bat; flying creature",
@@ -536,8 +536,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sitelen": []Toki{
-		Toki{
+	"sitelen": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"pictorial",
@@ -546,13 +546,13 @@ var TokiLang = map[string][]Toki{
 				"figurative",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"pictorially",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"image",
@@ -564,8 +564,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sin (e )": []Toki{
-		Toki{
+	"sin (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to renovate",
@@ -574,8 +574,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sike (e )": []Toki{
-		Toki{
+	"sike (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to circle",
@@ -586,37 +586,37 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"unpa": []Toki{
-		Toki{
+	"unpa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"sexual",
 				"erotic",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"sexual",
 				"erotic",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"sexuality",
 				"sex",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to have sex",
 			},
 		},
 	},
-	"sijelo (e )": []Toki{
-		Toki{
+	"sijelo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to heal up",
@@ -625,8 +625,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"palisa (e )": []Toki{
-		Toki{
+	"palisa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to beat",
@@ -637,8 +637,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pakala (e )": []Toki{
-		Toki{
+	"pakala (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to ruin",
@@ -650,8 +650,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"alasa (e )": []Toki{
-		Toki{
+	"alasa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to forage",
@@ -659,15 +659,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"insa": []Toki{
-		Toki{
+	"insa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"internal",
 				"inner",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"inner world",
@@ -677,8 +677,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ko": []Toki{
-		Toki{
+	"ko": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"dough",
@@ -690,8 +690,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"len": []Toki{
-		Toki{
+	"len": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"clothed",
@@ -700,7 +700,7 @@ var TokiLang = map[string][]Toki{
 				"dressed",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"cloth",
@@ -711,8 +711,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lawa": []Toki{
-		Toki{
+	"lawa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"leading",
@@ -720,7 +720,7 @@ var TokiLang = map[string][]Toki{
 				"main",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"leading",
@@ -728,7 +728,7 @@ var TokiLang = map[string][]Toki{
 				"main",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"mind",
@@ -736,8 +736,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sitelen (e )": []Toki{
-		Toki{
+	"sitelen (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to write",
@@ -745,24 +745,24 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"!": []Toki{
-		Toki{
+	"!": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'.",
 			},
 		},
 	},
-	"\"": []Toki{
-		Toki{
+	"\"": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"Quotation marks are used for words with original spelling or for quotes.",
 			},
 		},
 	},
-	"lupa": []Toki{
-		Toki{
+	"lupa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"holey",
@@ -770,7 +770,7 @@ var TokiLang = map[string][]Toki{
 				"hole-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"orifice",
@@ -780,24 +780,24 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"#": []Toki{
-		Toki{
+	"#": {
+		{
 			POS: "unofficial",
 			Meanings: []string{
 				"Number sign",
 			},
 		},
 	},
-	"kama jo (e )": []Toki{
-		Toki{
+	"kama jo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to get",
 			},
 		},
 	},
-	"sijelo": []Toki{
-		Toki{
+	"sijelo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"bodily",
@@ -808,14 +808,14 @@ var TokiLang = map[string][]Toki{
 				"physical",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"bodily",
 				"physically",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"physical state",
@@ -824,25 +824,25 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pimeja (e )": []Toki{
-		Toki{
+	"pimeja (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to darken",
 			},
 		},
 	},
-	"ona li wile e ni": []Toki{},
-	"a a a!": []Toki{
-		Toki{
+	"ona li wile e ni": {},
+	"a a a!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"laugh",
 			},
 		},
 	},
-	"kulupu (e )": []Toki{
-		Toki{
+	"kulupu (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to call together",
@@ -851,16 +851,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"'": []Toki{
-		Toki{
+	"'": {
+		{
 			POS: "unofficial",
 			Meanings: []string{
 				"An apostrophe can identify a predicate that does not contain a verb.",
 			},
 		},
 	},
-	"tawa (e )": []Toki{
-		Toki{
+	"tawa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to displace",
@@ -868,14 +868,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"soweli": []Toki{
-		Toki{
+	"soweli": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"animal",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"especially land mammal",
@@ -885,16 +885,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"en": []Toki{
-		Toki{
+	"en": {
+		{
 			POS: "conjunction",
 			Meanings: []string{
 				"and (used to coordinate head nouns)",
 			},
 		},
 	},
-	"jo (e )": []Toki{
-		Toki{
+	"jo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to contain",
@@ -902,8 +902,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"wile (e )": []Toki{
-		Toki{
+	"wile (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"need",
@@ -916,22 +916,22 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	",": []Toki{
-		Toki{
+	",": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"A comma is used after an 'o' to addressing people. Optional you can put a comma before a preposition. Don't use a comma before or after",
 			},
 		},
 	},
-	"palisa": []Toki{
-		Toki{
+	"palisa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"long",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"rod",
@@ -941,8 +941,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"alasa": []Toki{
-		Toki{
+	"alasa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"-hunting",
@@ -950,15 +950,15 @@ var TokiLang = map[string][]Toki{
 				"hunting-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"hunting",
 			},
 		},
 	},
-	"la": []Toki{
-		Toki{
+	"la": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"half sentence or noun. Don't use 'la' before or after",
@@ -966,24 +966,24 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	".": []Toki{
-		Toki{
+	".": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'.",
 			},
 		},
 	},
-	"ike!": []Toki{
-		Toki{
+	"ike!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"oh dear! woe! alas!",
 			},
 		},
 	},
-	"suli (e )": []Toki{
-		Toki{
+	"suli (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to lengthen",
@@ -991,8 +991,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tomo (e )": []Toki{
-		Toki{
+	"tomo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to construct",
@@ -1001,8 +1001,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"toki": []Toki{
-		Toki{
+	"toki": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"eloquent",
@@ -1012,7 +1012,7 @@ var TokiLang = map[string][]Toki{
 				"speaking",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"eloquent",
@@ -1022,7 +1022,7 @@ var TokiLang = map[string][]Toki{
 				"speaking",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"speech",
@@ -1033,7 +1033,7 @@ var TokiLang = map[string][]Toki{
 				"language",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to chat",
@@ -1042,15 +1042,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"taso": []Toki{
-		Toki{
+	"taso": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"sole",
 				"only",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"just",
@@ -1061,7 +1061,7 @@ var TokiLang = map[string][]Toki{
 				"only",
 			},
 		},
-		Toki{
+		{
 			POS: "conjunction",
 			Meanings: []string{
 				"however",
@@ -1069,8 +1069,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"li": []Toki{
-		Toki{
+	"li": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'",
@@ -1079,8 +1079,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"suli": []Toki{
-		Toki{
+	"suli": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"tall",
@@ -1090,7 +1090,7 @@ var TokiLang = map[string][]Toki{
 				"big",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"tall",
@@ -1100,32 +1100,32 @@ var TokiLang = map[string][]Toki{
 				"big",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"size",
 			},
 		},
 	},
-	"selo mi li wile e ni": []Toki{},
-	"pan (e )": []Toki{
-		Toki{
+	"selo mi li wile e ni": {},
+	"pan (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to sow",
 			},
 		},
 	},
-	"sewi (e )": []Toki{
-		Toki{
+	"sewi (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to lift",
 			},
 		},
 	},
-	"sama": []Toki{
-		Toki{
+	"sama": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"similar",
@@ -1134,7 +1134,7 @@ var TokiLang = map[string][]Toki{
 				"same",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"equally",
@@ -1144,7 +1144,7 @@ var TokiLang = map[string][]Toki{
 				"just as",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"parity",
@@ -1155,7 +1155,7 @@ var TokiLang = map[string][]Toki{
 				"equality",
 			},
 		},
-		Toki{
+		{
 			POS: "preposition",
 			Meanings: []string{
 				"as",
@@ -1164,8 +1164,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pona la": []Toki{
-		Toki{
+	"pona la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if simplicity",
@@ -1174,8 +1174,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ike (e )": []Toki{
-		Toki{
+	"ike (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to worsen",
@@ -1183,8 +1183,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kule (e )": []Toki{
-		Toki{
+	"kule (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to color",
@@ -1192,8 +1192,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lili (e )": []Toki{
-		Toki{
+	"lili (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to shorten",
@@ -1203,8 +1203,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pali": []Toki{
-		Toki{
+	"pali": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"work-related",
@@ -1213,14 +1213,14 @@ var TokiLang = map[string][]Toki{
 				"active",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"briskly",
 				"actively",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"work",
@@ -1229,7 +1229,7 @@ var TokiLang = map[string][]Toki{
 				"activity",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to work",
@@ -1238,8 +1238,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ala": []Toki{
-		Toki{
+	"ala": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"not",
@@ -1248,20 +1248,20 @@ var TokiLang = map[string][]Toki{
 				"no",
 			},
 		},
-		Toki{
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"0",
 				"null",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"don't",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"negation",
@@ -1270,16 +1270,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"?": []Toki{
-		Toki{
+	"?": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'.",
 			},
 		},
 	},
-	"selo (e )": []Toki{
-		Toki{
+	"selo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to protect",
@@ -1288,8 +1288,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ale": []Toki{
-		Toki{
+	"ale": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"every",
@@ -1299,13 +1299,13 @@ var TokiLang = map[string][]Toki{
 				"all",
 			},
 		},
-		Toki{
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"100 (official Toki Pona book)",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"forever",
@@ -1315,7 +1315,7 @@ var TokiLang = map[string][]Toki{
 				"always",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"anything",
@@ -1326,23 +1326,23 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jaki!": []Toki{
-		Toki{
+	"jaki!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"ew! yuck!",
 			},
 		},
 	},
-	"ken": []Toki{
-		Toki{
+	"ken": {
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"may",
 				"to can",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"ability",
@@ -1351,7 +1351,7 @@ var TokiLang = map[string][]Toki{
 				"possibility",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"is able to",
@@ -1362,8 +1362,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kin la": []Toki{
-		Toki{
+	"kin la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if fact",
@@ -1371,8 +1371,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ali": []Toki{
-		Toki{
+	"ali": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"every",
@@ -1381,7 +1381,7 @@ var TokiLang = map[string][]Toki{
 				"all",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"forever",
@@ -1390,7 +1390,7 @@ var TokiLang = map[string][]Toki{
 				"always",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"anything",
@@ -1400,8 +1400,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ante la": []Toki{
-		Toki{
+	"ante la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if variance",
@@ -1410,8 +1410,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"esun (e )": []Toki{
-		Toki{
+	"esun (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to sell",
@@ -1421,8 +1421,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"anpa (e )": []Toki{
-		Toki{
+	"anpa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to beat",
@@ -1433,8 +1433,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pipi": []Toki{
-		Toki{
+	"pipi": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"insect",
@@ -1443,8 +1443,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"open": []Toki{
-		Toki{
+	"open": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"starting",
@@ -1452,14 +1452,14 @@ var TokiLang = map[string][]Toki{
 				"initial",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"to start",
 				"to begin",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"beginning",
@@ -1468,23 +1468,23 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"o!": []Toki{
-		Toki{
+	"o!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"hey! (calling somebody's attention)",
 			},
 		},
 	},
-	"wan": []Toki{
-		Toki{
+	"wan": {
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"1",
 				"one",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"element",
@@ -1495,8 +1495,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"telo": []Toki{
-		Toki{
+	"telo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"slobbery",
@@ -1510,7 +1510,7 @@ var TokiLang = map[string][]Toki{
 				"wett",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"slobbery",
@@ -1524,7 +1524,7 @@ var TokiLang = map[string][]Toki{
 				"wett",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"liquid",
@@ -1534,8 +1534,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pona (e )": []Toki{
-		Toki{
+	"pona (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to fix",
@@ -1545,8 +1545,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ma": []Toki{
-		Toki{
+	"ma": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"outdoor",
@@ -1555,7 +1555,7 @@ var TokiLang = map[string][]Toki{
 				"countrified",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"earth",
@@ -1565,8 +1565,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sinpin": []Toki{
-		Toki{
+	"sinpin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"frontal",
@@ -1575,7 +1575,7 @@ var TokiLang = map[string][]Toki{
 				"facial",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"foremost",
@@ -1587,14 +1587,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"poka": []Toki{
-		Toki{
+	"poka": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"neighbouring",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"hip",
@@ -1603,8 +1603,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"seli": []Toki{
-		Toki{
+	"seli": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"warm",
@@ -1612,7 +1612,7 @@ var TokiLang = map[string][]Toki{
 				"hot",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"warm",
@@ -1620,7 +1620,7 @@ var TokiLang = map[string][]Toki{
 				"hot",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"warmth",
@@ -1629,22 +1629,22 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"luka": []Toki{
-		Toki{
+	"luka": {
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"5",
 				"five",
 			},
 		},
-		Toki{
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"palpable",
 				"tangible",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"hand",
@@ -1653,8 +1653,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sin": []Toki{
-		Toki{
+	"sin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"fresh",
@@ -1663,13 +1663,13 @@ var TokiLang = map[string][]Toki{
 				"new",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"regenerative",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"novelty",
@@ -1680,15 +1680,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pimeja": []Toki{
-		Toki{
+	"pimeja": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"dark",
 				"black",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"shadows",
@@ -1696,8 +1696,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"wile": []Toki{
-		Toki{
+	"wile": {
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"need",
@@ -1709,7 +1709,7 @@ var TokiLang = map[string][]Toki{
 				"to want",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"need",
@@ -1718,23 +1718,23 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"olin (e )": []Toki{
-		Toki{
+	"olin (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to love (a person)",
 			},
 		},
 	},
-	"mi": []Toki{
-		Toki{
+	"mi": {
+		{
 			POS: "personal pronoun",
 			Meanings: []string{
 				"we",
 				"I",
 			},
 		},
-		Toki{
+		{
 			POS: "possessive pronoun",
 			Meanings: []string{
 				"our",
@@ -1742,8 +1742,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"selo": []Toki{
-		Toki{
+	"selo": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"outer form",
@@ -1757,8 +1757,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"poki": []Toki{
-		Toki{
+	"poki": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"box",
@@ -1769,24 +1769,24 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"o,": []Toki{
-		Toki{
+	"o,": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"adressing people",
 			},
 		},
 	},
-	"mute (e )": []Toki{
-		Toki{
+	"mute (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make many or much",
 			},
 		},
 	},
-	"jaki": []Toki{
-		Toki{
+	"jaki": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"gross",
@@ -1795,7 +1795,7 @@ var TokiLang = map[string][]Toki{
 				"dirty",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"gross",
@@ -1803,7 +1803,7 @@ var TokiLang = map[string][]Toki{
 				"dirty",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"pollution",
@@ -1814,14 +1814,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mun": []Toki{
-		Toki{
+	"mun": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"lunar",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"lunar",
@@ -1831,8 +1831,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"loje": []Toki{
-		Toki{
+	"loje": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"ruddy",
@@ -1842,15 +1842,15 @@ var TokiLang = map[string][]Toki{
 				"reddish",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"red",
 			},
 		},
 	},
-	"sike": []Toki{
-		Toki{
+	"sike": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"cyclical",
@@ -1858,13 +1858,13 @@ var TokiLang = map[string][]Toki{
 				"round",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"rotated",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"ball",
@@ -1875,16 +1875,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ijo (e )": []Toki{
-		Toki{
+	"ijo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to objectify",
 			},
 		},
 	},
-	"nasa": []Toki{
-		Toki{
+	"nasa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"crazy",
@@ -1896,7 +1896,7 @@ var TokiLang = map[string][]Toki{
 				"silly",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"crazy",
@@ -1908,7 +1908,7 @@ var TokiLang = map[string][]Toki{
 				"silly",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"foolishness",
@@ -1921,9 +1921,9 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mi pilin e ni": []Toki{},
-	"ike la": []Toki{
-		Toki{
+	"mi pilin e ni": {},
+	"ike la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if badness",
@@ -1932,8 +1932,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kiwen (e )": []Toki{
-		Toki{
+	"kiwen (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to harden",
@@ -1943,16 +1943,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mu (e )": []Toki{
-		Toki{
+	"mu (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make animal noise",
 			},
 		},
 	},
-	"noka": []Toki{
-		Toki{
+	"noka": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"lower",
@@ -1960,13 +1960,13 @@ var TokiLang = map[string][]Toki{
 				"foot-",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"on foot",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"foot; organ of locomotion; bottom",
@@ -1975,48 +1975,48 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"o !": []Toki{
-		Toki{
+	"o !": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'o' replace 'li'.",
 			},
 		},
-		Toki{
+		{
 			POS: "subject",
 			Meanings: []string{
 				"An 'o' is used for imperative (commands). 'o' replace the subject.",
 			},
 		},
 	},
-	"mu": []Toki{
-		Toki{
+	"mu": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"animal nois-",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"animal nois-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"animal noise",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to communicate animally",
 			},
 		},
 	},
-	"a": []Toki{
-		Toki{
+	"a": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"ha",
@@ -2029,29 +2029,29 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"oko": []Toki{
-		Toki{
+	"oko": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"eye-",
 				"optical",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"eye",
 			},
 		},
 	},
-	"kala": []Toki{
-		Toki{
+	"kala": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"fish-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"marine animal",
@@ -2060,8 +2060,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"e sina": []Toki{
-		Toki{
+	"e sina": {
+		{
 			POS: "reflexive pronoun",
 			Meanings: []string{
 				"yourselves",
@@ -2069,8 +2069,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nasa (e )": []Toki{
-		Toki{
+	"nasa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make weird",
@@ -2078,8 +2078,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"e": []Toki{
-		Toki{
+	"e": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'",
@@ -2088,20 +2088,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ijo": []Toki{
-		Toki{
+	"ijo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"of something",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"of something",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"something",
@@ -2112,16 +2112,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pona!": []Toki{
-		Toki{
+	"pona!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"great! good! thanks! OK! cool! yay!",
 			},
 		},
 	},
-	"ante (e )": []Toki{
-		Toki{
+	"ante (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to alter",
@@ -2130,8 +2130,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"akesi": []Toki{
-		Toki{
+	"akesi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"reptilian-",
@@ -2139,7 +2139,7 @@ var TokiLang = map[string][]Toki{
 				"amphibian-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"amphibian; non-cute animal",
@@ -2147,8 +2147,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"seme": []Toki{
-		Toki{
+	"seme": {
+		{
 			POS: "question pronoun",
 			Meanings: []string{
 				"which",
@@ -2157,16 +2157,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nimi (e )": []Toki{
-		Toki{
+	"nimi (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to name",
 			},
 		},
 	},
-	"e ona": []Toki{
-		Toki{
+	"e ona": {
+		{
 			POS: "reflexive pronoun",
 			Meanings: []string{
 				"herself",
@@ -2176,8 +2176,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mije": []Toki{
-		Toki{
+	"mije": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"masculine",
@@ -2185,7 +2185,7 @@ var TokiLang = map[string][]Toki{
 				"male",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"male",
@@ -2195,8 +2195,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mama": []Toki{
-		Toki{
+	"mama": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"parental",
@@ -2207,7 +2207,7 @@ var TokiLang = map[string][]Toki{
 				"of the parent",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"mother",
@@ -2216,15 +2216,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tu": []Toki{
-		Toki{
+	"tu": {
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"2",
 				"two",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"pair",
@@ -2232,8 +2232,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jaki (e )": []Toki{
-		Toki{
+	"jaki (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to dirty",
@@ -2241,8 +2241,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"wan (e )": []Toki{
-		Toki{
+	"wan (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make one",
@@ -2250,8 +2250,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"suno (e )": []Toki{
-		Toki{
+	"suno (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to illumine",
@@ -2259,15 +2259,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ni": []Toki{
-		Toki{
+	"ni": {
+		{
 			POS: "adjective demonstrative pronoun",
 			Meanings: []string{
 				"that",
 				"this",
 			},
 		},
-		Toki{
+		{
 			POS: "noun demonstrative pronoun",
 			Meanings: []string{
 				"that",
@@ -2275,8 +2275,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kute (e )": []Toki{
-		Toki{
+	"kute (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to listen",
@@ -2285,14 +2285,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pana": []Toki{
-		Toki{
+	"pana": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"generous",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"transfer",
@@ -2301,14 +2301,14 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nanpa": []Toki{
-		Toki{
+	"nanpa": {
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"To build ordinal numbers.",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"numeral",
@@ -2316,8 +2316,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lupa (e )": []Toki{
-		Toki{
+	"lupa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to stab",
@@ -2326,8 +2326,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tomo": []Toki{
-		Toki{
+	"tomo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"domestic",
@@ -2335,7 +2335,7 @@ var TokiLang = map[string][]Toki{
 				"urban",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"domestic",
@@ -2343,7 +2343,7 @@ var TokiLang = map[string][]Toki{
 				"urban",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"e.g. house",
@@ -2354,8 +2354,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nasin": []Toki{
-		Toki{
+	"nasin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"habitual",
@@ -2364,7 +2364,7 @@ var TokiLang = map[string][]Toki{
 				"systematic",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"manner",
@@ -2378,8 +2378,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kepeken": []Toki{
-		Toki{
+	"kepeken": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"usage",
@@ -2387,29 +2387,29 @@ var TokiLang = map[string][]Toki{
 				"use",
 			},
 		},
-		Toki{
+		{
 			POS: "preposition",
 			Meanings: []string{
 				"using",
 				"with",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to use",
 			},
 		},
 	},
-	"laso": []Toki{
-		Toki{
+	"laso": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"bluey",
 				"bluish",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"blue-green",
@@ -2417,8 +2417,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ko (e )": []Toki{
-		Toki{
+	"ko (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to pulverize",
@@ -2426,8 +2426,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lipu": []Toki{
-		Toki{
+	"lipu": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"paper-",
@@ -2439,7 +2439,7 @@ var TokiLang = map[string][]Toki{
 				"book-",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"book",
@@ -2452,22 +2452,22 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"suno": []Toki{
-		Toki{
+	"suno": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"sunnily",
 				"sunny",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"sunnily",
 				"sunny",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"light",
@@ -2475,9 +2475,9 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sina toki e ni, tawa mi": []Toki{},
-	"open la": []Toki{
-		Toki{
+	"sina toki e ni, tawa mi": {},
+	"open la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"in the beginning",
@@ -2485,8 +2485,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ike": []Toki{
-		Toki{
+	"ike": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"negative",
@@ -2496,7 +2496,7 @@ var TokiLang = map[string][]Toki{
 				"bad",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"negative",
@@ -2506,7 +2506,7 @@ var TokiLang = map[string][]Toki{
 				"bad",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"badness",
@@ -2514,7 +2514,7 @@ var TokiLang = map[string][]Toki{
 				"negativity",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to suck",
@@ -2522,8 +2522,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kule": []Toki{
-		Toki{
+	"kule": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"pigmented",
@@ -2531,7 +2531,7 @@ var TokiLang = map[string][]Toki{
 				"colourful",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"colour",
@@ -2543,20 +2543,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"moku": []Toki{
-		Toki{
+	"moku": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"eating",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"eating",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"meal",
@@ -2564,8 +2564,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kasi": []Toki{
-		Toki{
+	"kasi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"vegetal",
@@ -2575,7 +2575,7 @@ var TokiLang = map[string][]Toki{
 				"vegetable",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"vegetation",
@@ -2584,15 +2584,15 @@ var TokiLang = map[string][]Toki{
 				"plant",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to grow",
 			},
 		},
 	},
-	"musi": []Toki{
-		Toki{
+	"musi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"fun",
@@ -2600,13 +2600,13 @@ var TokiLang = map[string][]Toki{
 				"artful",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"cheerfully",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"playing",
@@ -2617,7 +2617,7 @@ var TokiLang = map[string][]Toki{
 				"fun",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to have fun",
@@ -2625,8 +2625,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"awen": []Toki{
-		Toki{
+	"awen": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"stationary",
@@ -2635,14 +2635,14 @@ var TokiLang = map[string][]Toki{
 				"remaining",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"yet",
 				"still",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"continuity",
@@ -2651,7 +2651,7 @@ var TokiLang = map[string][]Toki{
 				"inertia",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to wait",
@@ -2660,8 +2660,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"e mi": []Toki{
-		Toki{
+	"e mi": {
+		{
 			POS: "reflexive pronoun",
 			Meanings: []string{
 				"ourselves",
@@ -2669,20 +2669,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"uta": []Toki{
-		Toki{
+	"uta": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"oral",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"orally",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"lips",
@@ -2693,29 +2693,29 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kama": []Toki{
-		Toki{
+	"kama": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"future",
 				"coming",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"future",
 				"coming",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"to mange to",
 				"to become",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"happening",
@@ -2725,7 +2725,7 @@ var TokiLang = map[string][]Toki{
 				"event",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to become",
@@ -2735,8 +2735,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"wawa": []Toki{
-		Toki{
+	"wawa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"strong",
@@ -2747,14 +2747,14 @@ var TokiLang = map[string][]Toki{
 				"energetic",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"powerfully",
 				"strongly",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"strength",
@@ -2763,8 +2763,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"uta (e )": []Toki{
-		Toki{
+	"uta (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to osculate",
@@ -2774,8 +2774,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"meli": []Toki{
-		Toki{
+	"meli": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"feminine",
@@ -2783,7 +2783,7 @@ var TokiLang = map[string][]Toki{
 				"female",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"female",
@@ -2794,8 +2794,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ante": []Toki{
-		Toki{
+	"ante": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"dissimilar",
@@ -2806,7 +2806,7 @@ var TokiLang = map[string][]Toki{
 				"different",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"distinction",
@@ -2818,8 +2818,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"utala (e )": []Toki{
-		Toki{
+	"utala (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to strike",
@@ -2829,8 +2829,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jan (e )": []Toki{
-		Toki{
+	"jan (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to humanize",
@@ -2839,16 +2839,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pu (e )": []Toki{
-		Toki{
+	"pu (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to apply (the official Toki Pona book) to",
 			},
 		},
 	},
-	"poki (e )": []Toki{
-		Toki{
+	"poki (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to put in",
@@ -2858,8 +2858,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"len (e )": []Toki{
-		Toki{
+	"len (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to be dressed",
@@ -2868,8 +2868,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lon": []Toki{
-		Toki{
+	"lon": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"existing",
@@ -2879,7 +2879,7 @@ var TokiLang = map[string][]Toki{
 				"true",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"being",
@@ -2887,13 +2887,13 @@ var TokiLang = map[string][]Toki{
 				"existence",
 			},
 		},
-		Toki{
+		{
 			POS: "preposition",
 			Meanings: []string{
 				"be (located) in/at/on",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to be present",
@@ -2903,8 +2903,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sona": []Toki{
-		Toki{
+	"sona": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"cognizant",
@@ -2912,13 +2912,13 @@ var TokiLang = map[string][]Toki{
 				"knowing",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"to know how to",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"wisdom",
@@ -2927,7 +2927,7 @@ var TokiLang = map[string][]Toki{
 				"knowledge",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to understand",
@@ -2935,8 +2935,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"moli": []Toki{
-		Toki{
+	"moli": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"dying",
@@ -2949,20 +2949,20 @@ var TokiLang = map[string][]Toki{
 				"dead",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"mortally",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"decease",
 				"death",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to be dead",
@@ -2970,8 +2970,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"esun": []Toki{
-		Toki{
+	"esun": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"trade",
@@ -2982,7 +2982,7 @@ var TokiLang = map[string][]Toki{
 				"commercial",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"shop",
@@ -2994,8 +2994,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kalama (e )": []Toki{
-		Toki{
+	"kalama (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to ring",
@@ -3004,16 +3004,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"anu": []Toki{
-		Toki{
+	"anu": {
+		{
 			POS: "conjunction",
 			Meanings: []string{
 				"or (used for decision questions)",
 			},
 		},
 	},
-	"wawa (e )": []Toki{
-		Toki{
+	"wawa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to energize",
@@ -3022,16 +3022,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"suwi (e )": []Toki{
-		Toki{
+	"suwi (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to sweeten",
 			},
 		},
 	},
-	"moku (e )": []Toki{
-		Toki{
+	"moku (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to drink",
@@ -3042,8 +3042,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"namako (e )": []Toki{
-		Toki{
+	"namako (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to flavor",
@@ -3052,8 +3052,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pakala": []Toki{
-		Toki{
+	"pakala": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"ruined",
@@ -3063,7 +3063,7 @@ var TokiLang = map[string][]Toki{
 				"destroyed",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"ruined",
@@ -3073,7 +3073,7 @@ var TokiLang = map[string][]Toki{
 				"destroyed",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"accident",
@@ -3084,7 +3084,7 @@ var TokiLang = map[string][]Toki{
 				"blunder",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to fall apart",
@@ -3093,8 +3093,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pan": []Toki{
-		Toki{
+	"pan": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"grain; barley",
@@ -3107,8 +3107,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mani": []Toki{
-		Toki{
+	"mani": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"financially",
@@ -3117,13 +3117,13 @@ var TokiLang = map[string][]Toki{
 				"financial",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"financially",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"material wealth",
@@ -3134,8 +3134,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"toki!": []Toki{
-		Toki{
+	"toki!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"hi",
@@ -3145,8 +3145,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mute": []Toki{
-		Toki{
+	"mute": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"very",
@@ -3159,13 +3159,13 @@ var TokiLang = map[string][]Toki{
 				"many",
 			},
 		},
-		Toki{
+		{
 			POS: "adjective numeral",
 			Meanings: []string{
 				"20 (official Toki Pona book)",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"very",
@@ -3178,7 +3178,7 @@ var TokiLang = map[string][]Toki{
 				"many",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"quantity",
@@ -3186,30 +3186,30 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"olin": []Toki{
-		Toki{
+	"olin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"love",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"love",
 			},
 		},
 	},
-	"ala!": []Toki{
-		Toki{
+	"ala!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"no!",
 			},
 		},
 	},
-	"lon (e )": []Toki{
-		Toki{
+	"lon (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to create",
@@ -3217,29 +3217,29 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tawa": []Toki{
-		Toki{
+	"tawa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"mobile",
 				"moving",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"mobile",
 				"moving",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"transportation",
 				"movement",
 			},
 		},
-		Toki{
+		{
 			POS: "preposition",
 			Meanings: []string{
 				"in order to",
@@ -3249,7 +3249,7 @@ var TokiLang = map[string][]Toki{
 				"to",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to travel",
@@ -3260,8 +3260,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"seli (e )": []Toki{
-		Toki{
+	"seli (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to warm up",
@@ -3270,8 +3270,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lawa (e )": []Toki{
-		Toki{
+	"lawa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to control",
@@ -3281,8 +3281,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pilin": []Toki{
-		Toki{
+	"pilin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"feeling",
@@ -3290,13 +3290,13 @@ var TokiLang = map[string][]Toki{
 				"sensitive",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"perceptively",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"emotion",
@@ -3308,7 +3308,7 @@ var TokiLang = map[string][]Toki{
 				"feelings",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to sense",
@@ -3316,8 +3316,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"walo (e )": []Toki{
-		Toki{
+	"walo (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to whitewash",
@@ -3325,8 +3325,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pini (e )": []Toki{
-		Toki{
+	"pini (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to stop",
@@ -3337,8 +3337,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pana (e )": []Toki{
-		Toki{
+	"pana (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to put",
@@ -3351,20 +3351,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ilo": []Toki{
-		Toki{
+	"ilo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"useful",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"usefully",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"device",
@@ -3374,8 +3374,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lete (e )": []Toki{
-		Toki{
+	"lete (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to chill",
@@ -3383,8 +3383,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tu (e )": []Toki{
-		Toki{
+	"tu (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to double",
@@ -3394,15 +3394,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jelo": []Toki{
-		Toki{
+	"jelo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"yellowy",
 				"yellowish",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"light green",
@@ -3410,16 +3410,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"awen (e )": []Toki{
-		Toki{
+	"awen (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to keep",
 			},
 		},
 	},
-	"kulupu": []Toki{
-		Toki{
+	"kulupu": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"shared",
@@ -3428,7 +3428,7 @@ var TokiLang = map[string][]Toki{
 				"communal",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"community",
@@ -3439,8 +3439,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"pona": []Toki{
-		Toki{
+	"pona": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"simple",
@@ -3451,7 +3451,7 @@ var TokiLang = map[string][]Toki{
 				"good",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"simple",
@@ -3462,7 +3462,7 @@ var TokiLang = map[string][]Toki{
 				"good",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"simplicity",
@@ -3471,15 +3471,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"monsi": []Toki{
-		Toki{
+	"monsi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"rear",
 				"back",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"rear end",
@@ -3489,8 +3489,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"supa": []Toki{
-		Toki{
+	"supa": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"shallow",
@@ -3499,7 +3499,7 @@ var TokiLang = map[string][]Toki{
 				"flat",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"e.g furniture",
@@ -3511,8 +3511,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sama la": []Toki{
-		Toki{
+	"sama la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if parity",
@@ -3521,15 +3521,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kute": []Toki{
-		Toki{
+	"kute": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"hearing",
 				"auditory",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"ear",
@@ -3537,8 +3537,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"mama (e )": []Toki{
-		Toki{
+	"mama (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to wet-nurse",
@@ -3547,20 +3547,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"utala": []Toki{
-		Toki{
+	"utala": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"fighting",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"fighting",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"disharmony",
@@ -3573,30 +3573,30 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sina": []Toki{
-		Toki{
+	"sina": {
+		{
 			POS: "personal pronoun",
 			Meanings: []string{
 				"you",
 			},
 		},
-		Toki{
+		{
 			POS: "possessive pronoun",
 			Meanings: []string{
 				"yours",
 			},
 		},
 	},
-	"pi": []Toki{
-		Toki{
+	"pi": {
+		{
 			POS: "separator",
 			Meanings: []string{
 				"'pi' is used to build complex compound nouns. 'pi' separates a (pro)noun from another (pro)noun that has at least one adjective. After 'pi' could only be a noun or pronoun.",
 			},
 		},
 	},
-	"ona": []Toki{
-		Toki{
+	"ona": {
+		{
 			POS: "personal pronoun",
 			Meanings: []string{
 				"he",
@@ -3605,7 +3605,7 @@ var TokiLang = map[string][]Toki{
 				"she",
 			},
 		},
-		Toki{
+		{
 			POS: "possessive pronoun",
 			Meanings: []string{
 				"his",
@@ -3614,8 +3614,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nena": []Toki{
-		Toki{
+	"nena": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"undulating",
@@ -3626,7 +3626,7 @@ var TokiLang = map[string][]Toki{
 				"hilly",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"hill",
@@ -3639,8 +3639,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kon": []Toki{
-		Toki{
+	"kon": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"ethereal",
@@ -3648,7 +3648,7 @@ var TokiLang = map[string][]Toki{
 				"air-like",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"ethereal",
@@ -3656,7 +3656,7 @@ var TokiLang = map[string][]Toki{
 				"air-like",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"wind",
@@ -3666,8 +3666,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"unpa (e )": []Toki{
-		Toki{
+	"unpa (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to sleep with",
@@ -3676,8 +3676,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"toki (e )": []Toki{
-		Toki{
+	"toki (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to talk",
@@ -3688,8 +3688,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sona (e )": []Toki{
-		Toki{
+	"sona (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to understand",
@@ -3698,8 +3698,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jan": []Toki{
-		Toki{
+	"jan": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"somebody's",
@@ -3708,7 +3708,7 @@ var TokiLang = map[string][]Toki{
 				"human",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"somebody's",
@@ -3717,7 +3717,7 @@ var TokiLang = map[string][]Toki{
 				"human",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"people",
@@ -3729,8 +3729,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kama sona (e )": []Toki{
-		Toki{
+	"kama sona (e )": {
+		{
 			POS: "transitives verb",
 			Meanings: []string{
 				"to study",
@@ -3738,8 +3738,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"ken la": []Toki{
-		Toki{
+	"ken la": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"if ability",
@@ -3748,16 +3748,16 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kin!": []Toki{
-		Toki{
+	"kin!": {
+		{
 			POS: "interjection",
 			Meanings: []string{
 				"really!",
 			},
 		},
 	},
-	"lete": []Toki{
-		Toki{
+	"lete": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"cool",
@@ -3767,13 +3767,13 @@ var TokiLang = map[string][]Toki{
 				"cold",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"bleakly",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"chill",
@@ -3782,8 +3782,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lili": []Toki{
-		Toki{
+	"lili": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"little",
@@ -3795,7 +3795,7 @@ var TokiLang = map[string][]Toki{
 				"small",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"little",
@@ -3807,7 +3807,7 @@ var TokiLang = map[string][]Toki{
 				"small",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"youth",
@@ -3816,8 +3816,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"sama (e )": []Toki{
-		Toki{
+	"sama (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to make equal",
@@ -3826,43 +3826,43 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lape (e )": []Toki{
-		Toki{
+	"lape (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to knock out",
 			},
 		},
 	},
-	"sina kama e ni": []Toki{},
-	"pu": []Toki{
-		Toki{
+	"sina kama e ni": {},
+	"pu": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"buying and interacting with the official Toki Pona book",
 			},
 		},
-		Toki{
+		{
 			POS: "auxiliary verb",
 			Meanings: []string{
 				"to buying and interacting with the official Toki Pona book",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"buying and interacting with the official Toki Pona book",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"to buy and to read (the official Toki Pona book)",
 			},
 		},
 	},
-	"pilin (e )": []Toki{
-		Toki{
+	"pilin (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to think",
@@ -3873,8 +3873,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kin": []Toki{
-		Toki{
+	"kin": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"still",
@@ -3882,7 +3882,7 @@ var TokiLang = map[string][]Toki{
 				"indeed",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"indeed",
@@ -3893,7 +3893,7 @@ var TokiLang = map[string][]Toki{
 				"actually",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"fact",
@@ -3901,22 +3901,22 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"tan": []Toki{
-		Toki{
+	"tan": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"",
 				"causal",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"cause",
 				"origin",
 			},
 		},
-		Toki{
+		{
 			POS: "preposition",
 			Meanings: []string{
 				"by",
@@ -3925,7 +3925,7 @@ var TokiLang = map[string][]Toki{
 				"from",
 			},
 		},
-		Toki{
+		{
 			POS: "verb intransitive",
 			Meanings: []string{
 				"originate from",
@@ -3934,20 +3934,20 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"kili": []Toki{
-		Toki{
+	"kili": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"fruity",
 			},
 		},
-		Toki{
+		{
 			POS: "adverb",
 			Meanings: []string{
 				"fruity",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"pulpy vegetable",
@@ -3956,15 +3956,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"suwi": []Toki{
-		Toki{
+	"suwi": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"cute",
 				"sweet",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"sweet food",
@@ -3972,15 +3972,15 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"jo": []Toki{
-		Toki{
+	"jo": {
+		{
 			POS: "adjective",
 			Meanings: []string{
 				"personal",
 				"private",
 			},
 		},
-		Toki{
+		{
 			POS: "noun",
 			Meanings: []string{
 				"possessions",
@@ -3989,8 +3989,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"nimi": []Toki{
-		Toki{
+	"nimi": {
+		{
 			POS: "noun",
 			Meanings: []string{
 				"name",
@@ -3998,8 +3998,8 @@ var TokiLang = map[string][]Toki{
 			},
 		},
 	},
-	"lukin (e )": []Toki{
-		Toki{
+	"lukin (e )": {
+		{
 			POS: "verb transitive",
 			Meanings: []string{
 				"to look at",
@@ -4036,7 +4036,7 @@ func (t *Toki) fix(msg string) (string, string) {
 }
 
 // RespondText to hi events
-func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
 	cmd, w := t.fix(post)
 	cmd = strings.ToLower(cmd)
 	switch cmd {
@@ -4046,13 +4046,13 @@ func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post st
 			for _, v := range word {
 				defs = append(defs, v.Print(w))
 			}
-			SendMD(c, ev.RoomID, strings.Join(defs, "\n\n"))
+			return SendMD(c, ev.RoomID, strings.Join(defs, "\n\n"))
 		} else {
-			SendText(c, ev.RoomID, "mi sona ala")
+			return SendText(c, ev.RoomID, "mi sona ala")
 		}
 	case "toki?":
 		st := stemmer.Stem(w)
-		words := []string{}
+		var words []string
 		for i, ts := range TokiLang {
 			for _, t := range ts {
 				stems := stemmer.StemMultiple(t.Words())
@@ -4063,8 +4063,9 @@ func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post st
 				}
 			}
 		}
-		SendMD(c, ev.RoomID, strings.Join(words, "\n\n"))
+		return SendMD(c, ev.RoomID, strings.Join(words, "\n\n"))
 	}
+	return nil
 }
 
 // Name hi

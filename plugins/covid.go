@@ -35,16 +35,16 @@ func (h *Covid) fix(msg string) string {
 }
 
 // Match determines if we should call the response for Covid
-func (h *Covid) Match(user, msg string) bool {
+func (h *Covid) Match(_, msg string) bool {
 	re := regexp.MustCompile(h.Re())
 	return re.MatchString(msg)
 }
 
 // SetStore we don't need a store here.
-func (h *Covid) SetStore(s PluginStore) {}
+func (h *Covid) SetStore(_ PluginStore) {}
 
 // RespondText to looking up of beer requests
-func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
+func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	state := h.fix(post)
 	if state != "" {
 		var states = make(map[string]State)
@@ -66,8 +66,9 @@ func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post s
 				state = i
 			}
 		}
-		SendMD(c, ev.RoomID, fmt.Sprintf("_%s_: confirmed cases: **%d**, recovered: _%d_, deaths: _%d_", state, s.Confirmed, s.Recovered, s.Deaths))
+		return SendMD(c, ev.RoomID, fmt.Sprintf("_%s_: confirmed cases: **%d**, recovered: _%d_, deaths: _%d_", state, s.Confirmed, s.Recovered, s.Deaths))
 	}
+	return nil
 }
 
 // Name Covid!

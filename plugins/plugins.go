@@ -39,7 +39,7 @@ type Plugin interface {
 	Re() string
 
 	// RespondText responds to a "m.text" event
-	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string)
+	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string) error
 
 	// SetStore exposes the top level MCStore to a plugin
 	SetStore(s PluginStore)
@@ -58,7 +58,7 @@ func ToMe(user, message string) bool {
 // RemoveName removes the friendly name from a given message
 func RemoveName(user, message string) string {
 	n := NameRE.ReplaceAllString(user, "$1")
-	return strings.ReplaceAll(message, n + ": ", "")
+	return strings.ReplaceAll(message, n+": ", "")
 }
 
 // HTTPRequest has the bits for making http requests

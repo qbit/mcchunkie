@@ -19,7 +19,7 @@ type MCStore struct {
 func NewStore(path string) (*MCStore, error) {
 	flatTransform := func(s string) []string { return []string{} }
 	db := diskv.New(diskv.Options{
-		BasePath:     "db",
+		BasePath:     path,
 		Transform:    flatTransform,
 		CacheSizeMax: 1024 * 1024,
 	})
@@ -32,7 +32,7 @@ func NewStore(path string) (*MCStore, error) {
 // Set takes a key value pair and shoves it in a db.
 func (s *MCStore) Set(key string, value string) {
 	v := []byte(value)
-	s.db.Write(key, v)
+	_ = s.db.Write(key, v)
 }
 
 // Get retrives a value from the db
@@ -71,7 +71,7 @@ func (s *MCStore) SaveFilterID(userID, filterID string) {
 // LoadFilterID exposed for gomatrix
 func (s *MCStore) LoadFilterID(userID string) string {
 	filter, _ := s.Get(fmt.Sprintf("filter_%s", userID))
-	return string(filter)
+	return filter
 }
 
 // SaveNextBatch exposed for gomatrix
@@ -82,7 +82,7 @@ func (s *MCStore) SaveNextBatch(userID, nextBatchToken string) {
 // LoadNextBatch exposed for gomatrix
 func (s *MCStore) LoadNextBatch(userID string) string {
 	batch, _ := s.Get(fmt.Sprintf("batch_%s", userID))
-	return string(batch)
+	return batch
 }
 
 // SaveRoom exposed for gomatrix

@@ -46,8 +46,8 @@ func (h *LoveYou) resp() string {
 func (h *LoveYou) SetStore(s PluginStore) {}
 
 // RespondText to love events
-func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) {
-	SendText(c, ev.RoomID, h.resp())
+func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
+	return SendText(c, ev.RoomID, h.resp())
 }
 
 // Name i love you
