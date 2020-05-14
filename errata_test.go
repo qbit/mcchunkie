@@ -5,7 +5,7 @@ import (
 )
 
 func TestParseErrata(t *testing.T) {
-	got, err := ParseRemoteErrata("http://ftp.openbsd.org/pub/OpenBSD/patches/6.6/common/")
+	got, err := ParseRemoteErrata("http://ftp.openbsd.org/pub/OpenBSD/patches/6.7/common/")
 	if err != nil {
 		t.Error(err)
 	}
