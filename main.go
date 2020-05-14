@@ -224,8 +224,8 @@ func main() {
 			if plugins.ToMe(username, post) {
 				mp := plugins.RemoveName(shortName, post)
 				if kvRE.MatchString(mp) {
-					key := kvRE.ReplaceAllString(post, "$1")
-					val := kvRE.ReplaceAllString(post, "$2")
+					key := kvRE.ReplaceAllString(mp, "$1")
+					val := kvRE.ReplaceAllString(mp, "$2")
 					store.Set(key, val)
 					log.Printf("Setting %q to %q", key, val)
 					err := plugins.SendMD(cli, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
