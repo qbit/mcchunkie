@@ -166,11 +166,12 @@ func main() {
 	})
 
 	go func() {
-		errataCount := 0
-		storeCount, _ := store.Get("errata_count")
-		openbsdRelease, _ := store.Get("openbsd_release")
-		errataCount, err = strconv.Atoi(storeCount)
 		for {
+			errataCount := 0
+			storeCount, _ := store.Get("errata_count")
+			openbsdRelease, _ := store.Get("openbsd_release")
+			errataCount, err = strconv.Atoi(storeCount)
+
 			got, err := ParseRemoteErrata(
 				fmt.Sprintf("http://ftp.openbsd.org/pub/OpenBSD/patches/%s/common/", openbsdRelease),
 			)
