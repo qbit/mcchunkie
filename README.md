@@ -10,6 +10,7 @@
 |BotSnack|`(?i)botsnack`|Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.|
 |Covid|`(?i)^covid: (.+)$`|Queries [thebigboard.cc](http://www.thebigboard.cc)'s api for information on COVID-19.|
 |Feder|`(?i)^(?:feder: |tayshame: )(.*)$`|check the Matrix federation status of a given URL.|
+|Groan|`(?i)^@groan$`|Ugh.|
 |Ham|`(?i)^ham: (\w+)$`|queries the FCC's [ULS](https://wireless2.fcc.gov/UlsApp/UlsSearch/searchLicense.jsp) for a given callsign.|
 |HighFive|`o/|\\o`|Everyone loves highfives.|
 |Hi|`(?i)^hi|hi$`|Friendly bots say hi.|
