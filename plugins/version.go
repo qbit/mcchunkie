@@ -10,6 +10,12 @@ import (
 
 var version string
 
+const response = `
+**%s** running on: **%s**
+
+Built with Go: **%s**
+`
+
 // Version responds to hi messages
 type Version struct {
 }
@@ -35,7 +41,7 @@ func (v *Version) print() string {
 	if version == "" {
 		version = "unknown version"
 	}
-	return fmt.Sprintf("%s running on %s", version, runtime.GOOS)
+	return fmt.Sprintf(response, version, runtime.GOOS, runtime.Version())
 }
 
 // SetStore does nothing in here
@@ -43,7 +49,7 @@ func (v *Version) SetStore(_ PluginStore) {}
 
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, v.print())
+	return SendMD(c, ev.RoomID, v.print())
 }
 
 // Name Version
