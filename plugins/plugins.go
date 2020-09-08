@@ -230,5 +230,6 @@ var Plugs = Plugins{
 	&Toki{},
 	&Version{},
 	&Wb{},
+	&RFC{},
 	&Weather{},
 }
