@@ -167,11 +167,14 @@ func main() {
 	})
 
 	go func() {
-		var htpass, _  = store.Get("got_htpass")
+		var htpass, _ = store.Get("got_htpass")
 		var got_room, _ = store.Get("got_room")
 		var got_port, _ = store.Get("got_listen")
 
+		log.Printf("GOT: listening on %q and sending messages to %q\n", got_port, got_room)
+
 		http.HandleFunc("/_got", func(w http.ResponseWriter, r *http.Request) {
+			var msg string
 			user, pass, ok := r.BasicAuth()
 			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
 			if !(ok && err == nil && user == "got") {
@@ -181,14 +184,21 @@ func main() {
 				return
 			}
 
-
 			err = r.ParseForm()
 			if err != nil {
 				http.Error(w, "invalid request", http.StatusBadRequest)
 				return
 			}
 
-			msg := fmt.Sprintf("%q", r.Form.Get("message"))
+			switch r.Method {
+			case http.MethodGet:
+				msg = r.Form.Get("message")
+			case http.MethodPost:
+				msg = r.Form.Get("file")
+			default:
+				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
+				return
+			}
 
 			log.Printf("GOT: sending '%s'\n", msg)
 			err = plugins.SendMDNotice(cli, got_room, msg)
@@ -196,6 +206,9 @@ func main() {
 				http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
 				return
 			}
+
+			fmt.Fprintf(w, "ok")
+
 		})
 
 		log.Fatal(http.ListenAndServe(got_port, nil))
