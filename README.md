@@ -23,4 +23,5 @@
 |Toki|`(?i)^(toki[\?]?):? (.+)$`|Toki Pona dictionary|
 |Version|`(?i)version$`|Show a bit of information about what we are.|
 |Wb|`(?i)^welcome back|welcome back$|^wb|wb$`|Respond to welcome back messages.|
+|RFC|`(?i)^rfc\s?([0-9]+)$`|Produces a link to tools.ietf.org.|
 |Weather|`(?i)^weather: (\d+)$`|Produce weather information for a given ZIP code. Data comes from openweathermap.org.|
