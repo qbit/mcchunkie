@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/matrix-org/gomatrix"
+	"golang.org/x/crypto/bcrypt"
 	"suah.dev/mcchunkie/plugins"
 	"suah.dev/protect"
 )
@@ -164,6 +165,41 @@ func main() {
 			}
 		}
 	})
+
+	go func() {
+		var htpass, _  = store.Get("got_htpass")
+		var got_room, _ = store.Get("got_room")
+		var got_port, _ = store.Get("got_listen")
+
+		http.HandleFunc("/_got", func(w http.ResponseWriter, r *http.Request) {
+			user, pass, ok := r.BasicAuth()
+			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
+			if !(ok && err == nil && user == "got") {
+				log.Printf("GOT: failed auth '%s'\n", user)
+				w.Header().Set("WWW-Authenticate", `Basic realm="got notify"`)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+
+			err = r.ParseForm()
+			if err != nil {
+				http.Error(w, "invalid request", http.StatusBadRequest)
+				return
+			}
+
+			msg := fmt.Sprintf("%q", r.Form.Get("message"))
+
+			log.Printf("GOT: sending '%s'\n", msg)
+			err = plugins.SendMDNotice(cli, got_room, msg)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
+				return
+			}
+		})
+
+		log.Fatal(http.ListenAndServe(got_port, nil))
+	}()
 
 	go func() {
 		for {
