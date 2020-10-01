@@ -200,8 +200,15 @@ func main() {
 				return
 			}
 
+			msg = strings.TrimSuffix(msg, "\n")
+
+			if msg == "" {
+				fmt.Fprintf(w, "empty message")
+				return
+			}
+
 			log.Printf("GOT: sending '%s'\n", msg)
-			err = plugins.SendMDNotice(cli, got_room, msg)
+			err = plugins.SendNotice(cli, got_room, msg)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
 				return

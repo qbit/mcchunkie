@@ -177,6 +177,26 @@ func SendMDNotice(c *gomatrix.Client, roomID, message string) error {
 	return nil
 }
 
+// SendNotice sends an text notice to a given room. It pretends to be
+// "typing" by calling UserTyping for the caller.
+func SendNotice(c *gomatrix.Client, roomID, message string) error {
+	_, err := c.UserTyping(roomID, true, 3)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.notice", message))
+	if err != nil {
+		return err
+	}
+
+	_, err = c.UserTyping(roomID, false, 0)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SendMD takes markdown and converts it to an html message.
 func SendMD(c *gomatrix.Client, roomID, message string) error {
 	md := []byte(message)
