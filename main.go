@@ -207,11 +207,13 @@ func main() {
 				return
 			}
 
-			log.Printf("GOT: sending '%s'\n", msg)
-			err = plugins.SendNotice(cli, got_room, msg)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
-				return
+			for _, line := range strings.Split(msg, "\n") {
+				log.Printf("GOT: sending '%s'\n", line)
+				err = plugins.SendNotice(cli, got_room, line)
+				if err != nil {
+					http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
+					return
+				}
 			}
 
 			fmt.Fprintf(w, "ok")
