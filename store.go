@@ -4,44 +4,32 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path"
 
 	"github.com/matrix-org/gomatrix"
-	"github.com/peterbourgon/diskv"
 )
 
-// MCStore implements a gomatrix.Storer and exposes a diskv db to be used for
-// application storage (account info, config info etc).
-type MCStore struct {
-	db *diskv.Diskv
+// FStore is the path to a directory which will contain our data.
+type FStore string
+
+// NewStore creates a new instance of FStore
+func NewStore(s string) (*FStore, error) {
+	fi, err := os.Lstat(s)
+	if err != nil {
+		return nil, err
+	}
+
+	if !fi.IsDir() {
+		return nil, fmt.Errorf("not a directory")
+	}
+	fstore := FStore(s)
+	return &fstore, nil
 }
 
-// NewStore creates a new MCStore instance.
-func NewStore(path string) (*MCStore, error) {
-	flatTransform := func(s string) []string { return []string{} }
-	db := diskv.New(diskv.Options{
-		BasePath:     path,
-		Transform:    flatTransform,
-		CacheSizeMax: 1024 * 1024,
-	})
-
-	s := &MCStore{db: db}
-
-	return s, nil
-}
-
-// Set takes a key value pair and shoves it in a db.
-func (s *MCStore) Set(key string, value string) {
-	v := []byte(value)
-	_ = s.db.Write(key, v)
-}
-
-// Get retrives a value from the db
-func (s *MCStore) Get(key string) (string, error) {
-	b, err := s.db.Read(key)
-	return string(b), err
-}
-
-func (s *MCStore) encodeRoom(room *gomatrix.Room) ([]byte, error) {
+func (s *FStore) encodeRoom(room *gomatrix.Room) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
 	err := enc.Encode(room)
@@ -51,7 +39,7 @@ func (s *MCStore) encodeRoom(room *gomatrix.Room) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (s *MCStore) decodeRoom(room []byte) (*gomatrix.Room, error) {
+func (s *FStore) decodeRoom(room []byte) (*gomatrix.Room, error) {
 	var r *gomatrix.Room
 	buf := bytes.NewBuffer(room)
 	dec := gob.NewDecoder(buf)
@@ -62,37 +50,52 @@ func (s *MCStore) decodeRoom(room []byte) (*gomatrix.Room, error) {
 	return r, nil
 }
 
-// SaveFilterID exposed for gomatrix
-func (s *MCStore) SaveFilterID(userID, filterID string) {
-	s.Set(fmt.Sprintf("filter_%s", userID), filterID)
+// Set dumps value into a file named key
+func (s FStore) Set(key string, value string) {
+	err := ioutil.WriteFile(path.Join(string(s), key), []byte(value), 0600)
+	if err != nil {
+		log.Println(err)
+	}
+}
 
+// Get pulls value from a file named key
+func (s FStore) Get(key string) (string, error) {
+	data, err := ioutil.ReadFile(path.Join(string(s), key))
+	if err != nil {
+		return "", nil
+	}
+	return string(data), nil
+}
+
+// SaveFilterID exposed for gomatrix
+func (s *FStore) SaveFilterID(userID, filterID string) {
+	s.Set(fmt.Sprintf("filter_%s", userID), filterID)
 }
 
 // LoadFilterID exposed for gomatrix
-func (s *MCStore) LoadFilterID(userID string) string {
+func (s *FStore) LoadFilterID(userID string) string {
 	filter, _ := s.Get(fmt.Sprintf("filter_%s", userID))
 	return filter
 }
 
-// SaveNextBatch exposed for gomatrix
-func (s *MCStore) SaveNextBatch(userID, nextBatchToken string) {
+func (s *FStore) SaveNextBatch(userID, nextBatchToken string) {
 	s.Set(fmt.Sprintf("batch_%s", userID), nextBatchToken)
 }
 
 // LoadNextBatch exposed for gomatrix
-func (s *MCStore) LoadNextBatch(userID string) string {
+func (s *FStore) LoadNextBatch(userID string) string {
 	batch, _ := s.Get(fmt.Sprintf("batch_%s", userID))
 	return batch
 }
 
 // SaveRoom exposed for gomatrix
-func (s *MCStore) SaveRoom(room *gomatrix.Room) {
+func (s *FStore) SaveRoom(room *gomatrix.Room) {
 	b, _ := s.encodeRoom(room)
 	s.Set(fmt.Sprintf("room_%s", room.ID), string(b))
 }
 
 // LoadRoom exposed for gomatrix
-func (s *MCStore) LoadRoom(roomID string) *gomatrix.Room {
+func (s *FStore) LoadRoom(roomID string) *gomatrix.Room {
 	b, _ := s.Get(fmt.Sprintf("room_%s", roomID))
 	room, _ := s.decodeRoom([]byte(b))
 	return room
