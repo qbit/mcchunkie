@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"testing"
 )
 
@@ -33,27 +34,29 @@ type testResp struct {
 }
 
 func TestHTTPRequestDoJSON(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintln(w, `{"test":"success"}`)
+	if runtime.GOOS != "plan9" {
+		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			_, err := fmt.Fprintln(w, `{"test":"success"}`)
+			if err != nil {
+				t.Error(err)
+			}
+		}))
+		defer ts.Close()
+
+		var tr = &testResp{}
+
+		req := HTTPRequest{
+			ResBody: tr,
+			URL:     ts.URL,
+		}
+
+		err := req.DoJSON()
 		if err != nil {
 			t.Error(err)
 		}
-	}))
-	defer ts.Close()
 
-	var tr = &testResp{}
-
-	req := HTTPRequest{
-		ResBody: tr,
-		URL:     ts.URL,
-	}
-
-	err := req.DoJSON()
-	if err != nil {
-		t.Error(err)
-	}
-
-	if tr.Name != "success" {
-		t.Errorf("Expected 'test'; got '%s'\n", tr.Name)
+		if tr.Name != "success" {
+			t.Errorf("Expected 'test'; got '%s'\n", tr.Name)
+		}
 	}
 }
