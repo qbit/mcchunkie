@@ -16,12 +16,13 @@
 |Hi|`(?i)^hi|hi$`|Friendly bots say hi.|
 |LoveYou|`(?i)i love you`|Spreading love where ever we can by responding when someone shows us love.|
 |OpenBSDMan|`(?i)^man: ([1-9][p]?)?\s?(.+)$`|Produces a link to man.openbsd.org.|
+|PGP|`(?i)^pgp: (.+@.+\..+)$`|Queries keys.openpgp.org|
 |Palette|`(?i)^#[a-f0-9]{6}$`|Creates an solid 56x56 image of the color specified.|
+|RFC|`(?i)^rfc\s?([0-9]+)$`|Produces a link to tools.ietf.org.|
 |Snap|`(?i)^snap:$`|checks the current build date of OpenBSD snapshots.|
 |Source|`(?i)where is your (source|code)`|Tell people where they can find more information about myself.|
 |Thanks|`(?i)^thank you|thank you$|^thanks|thanks$|^ty|ty$`|Bots should be respectful. Respond to thanks.|
 |Toki|`(?i)^(toki[\?]?):? (.+)$`|Toki Pona dictionary|
 |Version|`(?i)version$`|Show a bit of information about what we are.|
 |Wb|`(?i)^welcome back|welcome back$|^wb|wb$`|Respond to welcome back messages.|
-|RFC|`(?i)^rfc\s?([0-9]+)$`|Produces a link to tools.ietf.org.|
 |Weather|`(?i)^weather: (\d+)$`|Produce weather information for a given ZIP code. Data comes from openweathermap.org.|
