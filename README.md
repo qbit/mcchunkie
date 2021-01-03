@@ -9,6 +9,7 @@
 |Beer|`(?i)^beer: `|Queries [OpenDataSoft](https://public-us.opendatasoft.com/explore/dataset/open-beer-database/table/)'s beer database for a given beer.|
 |BotSnack|`(?i)botsnack`|Consumes a botsnack. This pleases mcchunkie and brings balance to the universe.|
 |Covid|`(?i)^covid: (.+)$`|Queries [thebigboard.cc](http://www.thebigboard.cc)'s api for information on COVID-19.|
+|DMR|`(?i)^dmr (user|repeater) (surname|id|callsign|city|county) (.+)$`|Queries radioid.net|
 |Feder|`(?i)^(?:feder: |tayshame: )(.*)$`|check the Matrix federation status of a given URL.|
 |Groan|`(?i)^@groan$`|Ugh.|
 |Ham|`(?i)^ham: (\w+)$`|queries the FCC's [ULS](https://wireless2.fcc.gov/UlsApp/UlsSearch/searchLicense.jsp) for a given callsign.|
