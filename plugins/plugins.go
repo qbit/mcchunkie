@@ -236,6 +236,7 @@ var Plugs = Plugins{
 	&Beer{},
 	&BotSnack{},
 	&Covid{},
+	&DMR{},
 	&Feder{},
 	&Groan{},
 	&Ham{},
