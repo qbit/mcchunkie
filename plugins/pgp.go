@@ -27,7 +27,7 @@ func (p *PGP) Descr() string {
 
 // Re is what our pgp request matches
 func (p *PGP) Re() string {
-	return `(?i)^pgp: (.+@.+\..+)$`
+	return `(?i)^pgp: (.+@.+\..+|[a-f0-9]+)$`
 }
 
 // Match checks for "pgp: " messages
@@ -38,19 +38,24 @@ func (p *PGP) Match(_, msg string) bool {
 
 func (p *PGP) fix(msg string) string {
 	re := regexp.MustCompile(p.Re())
-	return re.ReplaceAllString(msg, "$1")
+	return strings.ToUpper(re.ReplaceAllString(msg, "$1"))
 }
 
 // RespondText to looking up of PGP info
 func (p *PGP) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	search := p.fix(post)
+	searchURL := "https://keys.openpgp.org//vks/v1/by-fingerprint/%s"
+
+	if strings.ContainsAny(search, "@") {
+		searchURL = "https://keys.openpgp.org//vks/v1/by-email/%s"
+	}
+
 	escSearch, err := url.Parse(search)
 	if err != nil {
 		return err
 	}
 
-	u := fmt.Sprintf("https://keys.openpgp.org//vks/v1/by-email/%s",
-		escSearch)
+	u := fmt.Sprintf(searchURL, escSearch)
 
 	resp, err := http.Get(u)
 	if err != nil {
