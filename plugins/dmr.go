@@ -1,13 +1,11 @@
 package plugins
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -101,28 +99,21 @@ func (p *DMR) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 
 	u := fmt.Sprintf(endpoint, mode, params.Encode())
 
-	fmt.Println(u)
-
-	resp, err := http.Get(u)
-	if err != nil {
-		_ = SendText(c, ev.RoomID, fmt.Sprintf("Can't search radioid.net: %s", err))
-		return err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
+	var req = HTTPRequest{
+		Timeout: 10 * time.Second,
+		URL:     u,
+		Method:  "GET",
 	}
 
 	switch mode {
 	case "repeater":
 		var res = &DMRRepeater{}
-		err = json.Unmarshal(body, res)
+		req.ResBody = res
+		err := req.DoJSON()
 		if err != nil {
 			return err
 		}
+
 		if res.Count == 0 {
 			return SendMD(c, ev.RoomID, fmt.Sprintf("nothing found for '%s'", params.Encode()))
 		}
@@ -137,10 +128,12 @@ func (p *DMR) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 
 	case "user":
 		var res = &DMRUser{}
-		err = json.Unmarshal(body, res)
+		req.ResBody = res
+		err := req.DoJSON()
 		if err != nil {
 			return err
 		}
+
 		if res.Count == 0 {
 			return SendMD(c, ev.RoomID, fmt.Sprintf("nothing found for '%s'", params.Encode()))
 		}
