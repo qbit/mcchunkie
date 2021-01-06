@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"math/rand"
 	"regexp"
 	"strings"
 	"time"
@@ -10,32 +9,32 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// LicenseResp represents a response from https://data.fcc.gov/api/license-view/basicSearch/getLicenses
+// LicenseResp represents a response from http://hamdb.org/api
 type LicenseResp struct {
-	Status   string   `json:"status"`
-	Licenses Licenses `json:"Licenses"`
-}
-
-// License is an individual license
-type License struct {
-	LicName      string `json:"licName"`
-	Frn          string `json:"frn"`
-	Callsign     string `json:"callsign"`
-	CategoryDesc string `json:"categoryDesc"`
-	ServiceDesc  string `json:"serviceDesc"`
-	StatusDesc   string `json:"statusDesc"`
-	ExpiredDate  string `json:"expiredDate"`
-	LicenseID    string `json:"licenseID"`
-	LicDetailURL string `json:"licDetailURL"`
-}
-
-// Licenses is a collection of individual licenses.
-type Licenses struct {
-	Page       string    `json:"page"`
-	RowPerPage string    `json:"rowPerPage"`
-	TotalRows  string    `json:"totalRows"`
-	LastUpdate string    `json:"lastUpdate"`
-	License    []License `json:"License"`
+	Hamdb struct {
+		Version  string `json:"version"`
+		Callsign struct {
+			Call    string `json:"call"`
+			Class   string `json:"class"`
+			Expires string `json:"expires"`
+			Status  string `json:"status"`
+			Grid    string `json:"grid"`
+			Lat     string `json:"lat"`
+			Lon     string `json:"lon"`
+			Fname   string `json:"fname"`
+			Mi      string `json:"mi"`
+			Name    string `json:"name"`
+			Suffix  string `json:"suffix"`
+			Addr1   string `json:"addr1"`
+			Addr2   string `json:"addr2"`
+			State   string `json:"state"`
+			Zip     string `json:"zip"`
+			Country string `json:"country"`
+		} `json:"callsign"`
+		Messages struct {
+			Status string `json:"status"`
+		} `json:"messages"`
+	} `json:"hamdb"`
 }
 
 // Ham for querying the fcc'd uls
@@ -43,7 +42,7 @@ type Ham struct{}
 
 // Descr describes this plugin
 func (h *Ham) Descr() string {
-	return "queries the FCC's [ULS](https://wireless2.fcc.gov/UlsApp/UlsSearch/searchLicense.jsp) for a given callsign."
+	return "queries HamDB.org for a given callsign."
 }
 
 // Re returns the federation check matching string
@@ -67,19 +66,13 @@ func (h *Ham) SetStore(_ PluginStore) {}
 
 func (h *Ham) pretty(resp *LicenseResp) string {
 	var s []string
-	idx := 0
 
-	if resp.Licenses.TotalRows != "1" {
-		rand.Seed(time.Now().Unix())
-		idx = rand.Intn(len(resp.Licenses.License))
-		s = append(s, fmt.Sprintf("Found %s licenses, here is a random one:", resp.Licenses.TotalRows))
-	}
-
-	s = append(s, fmt.Sprintf("%s: %s (expires: %s) %s\n",
-		resp.Licenses.License[idx].Callsign,
-		resp.Licenses.License[idx].LicName,
-		resp.Licenses.License[idx].ExpiredDate,
-		resp.Licenses.License[idx].CategoryDesc,
+	s = append(s, fmt.Sprintf("%s: %s %s (expires: %s) %s (%s)\n",
+		resp.Hamdb.Callsign.Call,
+		resp.Hamdb.Callsign.Fname, resp.Hamdb.Callsign.Name,
+		resp.Hamdb.Callsign.Expires,
+		resp.Hamdb.Callsign.Country,
+		resp.Hamdb.Callsign.Grid,
 	))
 
 	return strings.Join(s, " ")
@@ -89,14 +82,13 @@ func (h *Ham) pretty(resp *LicenseResp) string {
 func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	call := h.fix(post)
 	if call != "" {
-		furl := fmt.Sprintf("%s%s",
-			"http://data.fcc.gov/api/license-view/basicSearch/getLicenses?format=json&searchValue=",
+		furl := fmt.Sprintf("http://api.hamdb.org/v1/%s/json/mcchunkie",
 			call,
 		)
 
 		var res = &LicenseResp{}
 		var req = HTTPRequest{
-			Timeout: 10 * time.Second,
+			Timeout: 15 * time.Second,
 			URL:     furl,
 			Method:  "GET",
 			ResBody: res,
@@ -107,12 +99,13 @@ func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS (%s)", ev.Sender, err))
 		}
 
-		if res.Status == "OK" {
+		if res.Hamdb.Messages.Status == "OK" {
 			return SendText(c, ev.RoomID, h.pretty(res))
-		} else {
-			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", ev.Sender))
 		}
+
+		return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", ev.Sender))
 	}
+
 	return nil
 }
 

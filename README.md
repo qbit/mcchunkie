@@ -12,7 +12,7 @@
 |DMR|`(?i)^dmr (user|repeater) (surname|id|callsign|city|county) (.+)$`|Queries radioid.net|
 |Feder|`(?i)^(?:feder: |tayshame: )(.*)$`|check the Matrix federation status of a given URL.|
 |Groan|`(?i)^@groan$`|Ugh.|
-|Ham|`(?i)^ham: (\w+)$`|queries the FCC's [ULS](https://wireless2.fcc.gov/UlsApp/UlsSearch/searchLicense.jsp) for a given callsign.|
+|Ham|`(?i)^ham: (\w+)$`|queries HamDB.org for a given callsign.|
 |HighFive|`o/|\\o`|Everyone loves highfives.|
 |Hi|`(?i)^hi|hi$`|Friendly bots say hi.|
 |LoveYou|`(?i)i love you`|Spreading love where ever we can by responding when someone shows us love.|
