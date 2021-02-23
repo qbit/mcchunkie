@@ -173,8 +173,8 @@ func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post st
 		return SendText(c, ev.RoomID,
 			fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
 				wd.Name,
-				wd.f(),
 				wd.c(),
+				wd.f(),
 				wd.humidity(),
 				wd.conditions(),
 			))
