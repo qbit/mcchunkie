@@ -119,12 +119,12 @@ func (p *DMR) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 		}
 
 		var s []string
-		s = append(s, fmt.Sprintf("- **Callsign**: %s", res.Results[0].Callsign))
-		s = append(s, fmt.Sprintf("- **ID**: %s", res.Results[0].ID))
-		s = append(s, fmt.Sprintf("- **Frequency**: %s", res.Results[0].Frequency))
-		s = append(s, fmt.Sprintf("- **Offset**: %s", res.Results[0].Offset))
+		s = append(s, fmt.Sprintf("**Callsign**: %s", res.Results[0].Callsign))
+		s = append(s, fmt.Sprintf("**ID**: %s", res.Results[0].ID))
+		s = append(s, fmt.Sprintf("**Frequency**: %s", res.Results[0].Frequency))
+		s = append(s, fmt.Sprintf("**Offset**: %s", res.Results[0].Offset))
 
-		return SendMD(c, ev.RoomID, strings.Join(s, "\n"))
+		return SendMD(c, ev.RoomID, strings.Join(s, ", "))
 
 	case "user":
 		var res = &DMRUser{}
@@ -139,11 +139,11 @@ func (p *DMR) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 		}
 
 		var s []string
-		s = append(s, fmt.Sprintf("- **Name**: %s %s", res.Results[0].Fname, res.Results[0].Surname))
-		s = append(s, fmt.Sprintf("- **ID**: %d", res.Results[0].ID))
-		s = append(s, fmt.Sprintf("- **Callsign**: %s", res.Results[0].Callsign))
+		s = append(s, fmt.Sprintf("**Name**: %s %s", res.Results[0].Fname, res.Results[0].Surname))
+		s = append(s, fmt.Sprintf("**ID**: %d", res.Results[0].ID))
+		s = append(s, fmt.Sprintf("**Callsign**: %s", res.Results[0].Callsign))
 
-		return SendMD(c, ev.RoomID, strings.Join(s, "\n"))
+		return SendMD(c, ev.RoomID, strings.Join(s, ", "))
 	}
 	return nil
 }
