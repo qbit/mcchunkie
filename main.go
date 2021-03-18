@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"net/http/pprof"
 	"os"
 	"regexp"
 	"strconv"
@@ -23,7 +25,7 @@ const header = `
 [![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)`
 
 func main() {
-	var username, shortName, password, userID, accessToken, server, db, avatar, botOwner string
+	var username, shortName, password, userID, accessToken, server, db, avatar, botOwner, prof string
 	var key, value, get string
 	var setup, doc, verbose bool
 
@@ -38,6 +40,7 @@ func main() {
 	flag.StringVar(&server, "server", "", "matrix server")
 	flag.StringVar(&username, "user", "", "username to connect to matrix server with")
 	flag.StringVar(&value, "value", "", "set the value of 'key' to be stored")
+	flag.StringVar(&prof, "prof", "", "listen string for pprof")
 
 	flag.Parse()
 
@@ -99,6 +102,27 @@ func main() {
 	}
 
 	log.Printf("connecting to %s\n", server)
+
+	if prof != "" {
+		mux := http.NewServeMux()
+
+		mux.Handle("/", http.RedirectHandler("/pprof/", http.StatusSeeOther))
+
+		mux.HandleFunc("/pprof/", pprof.Index)
+		mux.HandleFunc("/pprof/cmdline", pprof.Cmdline)
+		mux.HandleFunc("/pprof/profile", pprof.Profile)
+		mux.HandleFunc("/pprof/symbol", pprof.Symbol)
+		mux.HandleFunc("/pprof/trace", pprof.Trace)
+
+		lis, err := net.Listen("tcp", prof)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		log.Printf("pprof server listening on %s", lis.Addr())
+		s := http.Server{Handler: mux}
+		go func() { log.Println(s.Serve(lis)) }()
+	}
 
 	cli, err := gomatrix.NewClient(
 		server,
