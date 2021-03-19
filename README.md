@@ -3,6 +3,8 @@
 
 [![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)
 
+A [Matrix](https://matrix.org) chat bot.
+
 |Plugin Name|Match|Description|
 |----|---|---|
 |Beat|`(?i)^\.beat$\|^what time is it[\?!]+$\|^beat( )?time:?\??$`|Print the current [beat time](https://en.wikipedia.org/wiki/Swatch_Internet_Time).|
