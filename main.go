@@ -72,7 +72,7 @@ func main() {
 		fmt.Println("\n|Plugin Name|Match|Description|")
 		fmt.Println("|----|---|---|")
 		for _, p := range plugins.Plugs {
-			fmt.Printf("|%s|`%s`|%s|\n", p.Name(), p.Re(), p.Descr())
+			fmt.Printf("|%s|`%s`|%s|\n", p.Name(), strings.ReplaceAll(p.Re(), "|", "\\|"), p.Descr())
 		}
 		os.Exit(0)
 	}
