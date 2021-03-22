@@ -223,7 +223,11 @@ func main() {
 				case http.MethodPost:
 					msg = r.Form.Get("file")
 				default:
-					http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
+					http.Error(
+						w,
+						fmt.Sprintf("method %q not implemented", r.Method),
+						http.StatusMethodNotAllowed,
+					)
 					return
 				}
 
@@ -236,9 +240,13 @@ func main() {
 
 				for _, line := range strings.Split(msg, "\n") {
 					log.Printf("GOT: sending '%s'\n", line)
-					err = plugins.SendNotice(cli, gotRoom, line)
+					err = plugins.SendUnescNotice(cli, gotRoom, line)
 					if err != nil {
-						http.Error(w, fmt.Sprintf("can not send commit info: %s", err), http.StatusInternalServerError)
+						http.Error(
+							w,
+							fmt.Sprintf("can not send commit info: %s", err),
+							http.StatusInternalServerError,
+						)
 						return
 					}
 				}
@@ -259,7 +267,9 @@ func main() {
 			errataCount, err = strconv.Atoi(storeCount)
 
 			got, err := ParseRemoteErrata(
-				fmt.Sprintf("http://ftp.openbsd.org/pub/OpenBSD/patches/%s/common/", openbsdRelease),
+				fmt.Sprintf("http://ftp.openbsd.org/pub/OpenBSD/patches/%s/common/",
+					openbsdRelease,
+				),
 			)
 			if err != nil {
 				fmt.Println(err)

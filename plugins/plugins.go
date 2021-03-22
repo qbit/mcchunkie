@@ -177,6 +177,32 @@ func SendMDNotice(c *gomatrix.Client, roomID, message string) error {
 	return nil
 }
 
+// SendUnescNotice sends an text notice to a given room. It pretends to be
+// "typing" by calling UserTyping for the caller.
+func SendUnescNotice(c *gomatrix.Client, roomID, message string) error {
+	_, err := c.UserTyping(roomID, true, 3)
+	if err != nil {
+		return err
+	}
+
+	// Undo the escaping
+	_, err = c.SendMessageEvent(roomID, "m.room.message", gomatrix.HTMLMessage{
+		Body:          message,
+		MsgType:       "m.notice",
+		Format:        "org.matrix.custom.text",
+		FormattedBody: message,
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = c.UserTyping(roomID, false, 0)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SendNotice sends an text notice to a given room. It pretends to be
 // "typing" by calling UserTyping for the caller.
 func SendNotice(c *gomatrix.Client, roomID, message string) error {
