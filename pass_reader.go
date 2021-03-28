@@ -3,17 +3,17 @@ package main
 import (
 	"os"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 //noinspection GoUnresolvedReference
 func prompt(p string) (string, error) {
-	oldState, err := terminal.MakeRaw(0)
+	oldState, err := term.MakeRaw(0)
 	if err != nil {
 		panic(err)
 	}
-	defer terminal.Restore(0, oldState)
+	defer term.Restore(0, oldState)
 
-	t := terminal.NewTerminal(os.Stdin, p)
+	t := term.NewTerminal(os.Stdin, p)
 	return t.ReadPassword(p)
 }

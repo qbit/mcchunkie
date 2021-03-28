@@ -9,6 +9,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	golang.org/x/net v0.0.0-20210326220855-61e056675ecf
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
-	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6 // indirect
+	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
 	suah.dev/protect v1.0.0
 )
