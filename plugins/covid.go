@@ -43,9 +43,9 @@ func (h *Covid) Match(_, msg string) bool {
 // SetStore we don't need a store here.
 func (h *Covid) SetStore(_ PluginStore) {}
 
-// RespondText to looking up of beer requests
-func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	state := h.fix(post)
+// Process does the heavy lifting
+func (h *Covid) Process(from, msg string) string {
+	state := h.fix(msg)
 	if state != "" {
 		var states = make(map[string]State)
 		req := HTTPRequest{
@@ -66,9 +66,15 @@ func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post stri
 				state = i
 			}
 		}
-		return SendMD(c, ev.RoomID, fmt.Sprintf("_%s_: confirmed cases: **%d**, recovered: _%d_, deaths: _%d_", state, s.Confirmed, s.Recovered, s.Deaths))
+		return fmt.Sprintf("_%s_: confirmed cases: **%d**, recovered: _%d_, deaths: _%d_", state, s.Confirmed, s.Recovered, s.Deaths)
 	}
-	return nil
+	return fmt.Sprintf("invalid state: %q", state)
+}
+
+// RespondText to looking up of beer requests
+func (h *Covid) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendMD(c, ev.RoomID, h.Process(ev.Sender, post))
+
 }
 
 // Name Covid!

@@ -43,7 +43,7 @@ type Plugin interface {
 
 	// Process is the processed response from the plugin. This is useful for
 	// running the plugins outside of the context of Matrix.
-	Process(from, message string) (string, error)
+	Process(from, message string) string
 
 	// SetStore exposes the top level MCStore to a plugin
 	SetStore(s PluginStore)
@@ -280,6 +280,7 @@ var Plugs = Plugins{
 	&Snap{},
 	&Source{},
 	&Thanks{},
+	&Homestead{},
 	&Toki{},
 	&Version{},
 	&Wb{},

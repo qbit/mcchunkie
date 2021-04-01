@@ -162,24 +162,28 @@ func (h *Weather) fix(msg string) string {
 	return re.ReplaceAllString(msg, "$1")
 }
 
-// RespondText to looking up of weather lookup requests
-func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+func (h *Weather) Process(from, post string) string {
 	weather := h.fix(post)
 	if weather != "" {
 		wd, err := h.get(weather)
 		if err != nil {
-			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look up the weather. %s", ev.Sender, err))
+			return fmt.Sprintf("sorry %s, I can't look up the weather. %s", from, err)
 		}
-		return SendText(c, ev.RoomID,
-			fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
-				wd.Name,
-				wd.c(),
-				wd.f(),
-				wd.humidity(),
-				wd.conditions(),
-			))
+		return fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
+			wd.Name,
+			wd.c(),
+			wd.f(),
+			wd.humidity(),
+			wd.conditions(),
+		)
 	}
-	return nil
+
+	return "shrug."
+}
+
+// RespondText to looking up of weather lookup requests
+func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name Weather!

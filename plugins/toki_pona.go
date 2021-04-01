@@ -4035,8 +4035,8 @@ func (t *Toki) fix(msg string) (string, string) {
 	return re.ReplaceAllString(msg, "$1"), re.ReplaceAllString(msg, "$2")
 }
 
-// RespondText to hi events
-func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+// Process does the heavy lifting
+func (t *Toki) Process(from, post string) string {
 	cmd, w := t.fix(post)
 	cmd = strings.ToLower(cmd)
 	switch cmd {
@@ -4046,9 +4046,9 @@ func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post strin
 			for _, v := range word {
 				defs = append(defs, v.Print(w))
 			}
-			return SendMD(c, ev.RoomID, strings.Join(defs, "\n\n"))
+			return strings.Join(defs, "\n\n")
 		} else {
-			return SendText(c, ev.RoomID, "mi sona ala")
+			return "mi sona ala"
 		}
 	case "toki?":
 		st := stemmer.Stem(w)
@@ -4063,9 +4063,14 @@ func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post strin
 				}
 			}
 		}
-		return SendMD(c, ev.RoomID, strings.Join(words, "\n\n"))
+		return strings.Join(words, "\n\n")
 	}
-	return nil
+	return "mi sona ala"
+}
+
+// RespondText to hi events
+func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendMD(c, ev.RoomID, t.Process(ev.Sender, post))
 }
 
 // Name hi

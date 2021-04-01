@@ -3,7 +3,6 @@ package plugins
 import (
 	"fmt"
 	"regexp"
-	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -39,24 +38,26 @@ func (h *HighFive) Match(user, msg string) bool {
 	return ToMe(user, msg) && re.MatchString(msg)
 }
 
-// RespondText to high five events
-func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	s := NameRE.ReplaceAllString(ev.Sender, "$1")
+func (h *HighFive) Process(from, post string) string {
+	s := NameRE.ReplaceAllString(from, "$1")
 
 	rm := regexp.MustCompile(rightFive())
 	lm := regexp.MustCompile(leftFive())
 
 	if rm.MatchString(post) {
-		_ = SendText(c, ev.RoomID, fmt.Sprintf("\\o %s", s))
-		time.Sleep(time.Second * 5)
-		return SendText(c, ev.RoomID, fmt.Sprintf("now go wash your hands, %s", s))
+		return fmt.Sprintf("\\o %s", s)
 	}
+
 	if lm.MatchString(post) {
-		_ = SendText(c, ev.RoomID, fmt.Sprintf("%s o/", s))
-		time.Sleep(time.Second * 5)
-		return SendText(c, ev.RoomID, fmt.Sprintf("now go wash your hands, %s", s))
+		return fmt.Sprintf("%s o/", s)
 	}
-	return nil
+
+	return "\\o/"
+}
+
+// RespondText to high five events
+func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name returns the name of the HighFive plugin

@@ -50,14 +50,17 @@ func (h *OpenBSDMan) Match(_, msg string) bool {
 // SetStore does nothing in OpenBSDMan
 func (h *OpenBSDMan) SetStore(_ PluginStore) {}
 
-// RespondText sends back a man page.
-func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+func (h *OpenBSDMan) Process(from, post string) string {
 	page := h.fix(post)
 	if page != "" {
-		return SendText(c, ev.RoomID, fmt.Sprintf("https://man.openbsd.org/%s", page))
+		return fmt.Sprintf("https://man.openbsd.org/%s", page)
 	}
+	return "..."
+}
 
-	return nil
+// RespondText sends back a man page.
+func (h *OpenBSDMan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name OpenBSDMan!

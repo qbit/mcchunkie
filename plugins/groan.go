@@ -1,10 +1,11 @@
 package plugins
 
 import (
-	"github.com/matrix-org/gomatrix"
 	"math/rand"
 	"regexp"
 	"time"
+
+	"github.com/matrix-org/gomatrix"
 )
 
 // Groan responds to groans.
@@ -30,7 +31,7 @@ func (h *Groan) Match(user, msg string) bool {
 	return re.MatchString(msg)
 }
 
-func (h *Groan) resp() string {
+func (h *Groan) Process(_, _ string) string {
 	a := []string{
 		"Ugh.",
 		"ugh",
@@ -47,7 +48,7 @@ func (h *Groan) resp() string {
 
 // RespondText to groan events
 func (h *Groan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.resp())
+	return SendText(c, ev.RoomID, h.Process("", ""))
 }
 
 // Name returns the name of the Groan plugin

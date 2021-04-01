@@ -37,7 +37,7 @@ func (v *Version) Match(user, msg string) bool {
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 
-func (v *Version) print() string {
+func (v *Version) Process(_, _ string) string {
 	if version == "" {
 		version = "unknown version"
 	}
@@ -49,7 +49,7 @@ func (v *Version) SetStore(_ PluginStore) {}
 
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendMD(c, ev.RoomID, v.print())
+	return SendMD(c, ev.RoomID, v.Process("", ""))
 }
 
 // Name Version

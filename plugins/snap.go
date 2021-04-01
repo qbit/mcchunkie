@@ -32,20 +32,25 @@ func (p *Snap) Match(_, msg string) bool {
 // SetStore we don't need a store here.
 func (p *Snap) SetStore(_ PluginStore) {}
 
-// RespondText to looking up of federation check requests
-func (p *Snap) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
+// Process does the heavy lifting
+func (p *Snap) Process(from, post string) string {
 	resp, err := http.Get("https://ftp.usa.openbsd.org/pub/OpenBSD/snapshots/amd64/BUILDINFO")
 	if err != nil {
-		return SendText(c, ev.RoomID, fmt.Sprintf("%s", err))
+		return fmt.Sprintf("%s", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return SendText(c, ev.RoomID, fmt.Sprintf("%s", err))
+		return fmt.Sprintf("%s", err)
 	}
 
-	return SendText(c, ev.RoomID, string(body))
+	return string(body)
+}
+
+// RespondText to looking up of federation check requests
+func (p *Snap) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
+	return SendText(c, ev.RoomID, p.Process("", ""))
 }
 
 // Name Snap!

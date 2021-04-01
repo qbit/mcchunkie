@@ -115,9 +115,9 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 // SetStore we don't need a store here.
 func (h *Beer) SetStore(_ PluginStore) {}
 
-// RespondText to looking up of beer requests
-func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	beer := h.fix(post)
+func (h *Beer) Process(from, msg string) string {
+	beer := h.fix(msg)
+	resp := "¯\\_(ツ)_/¯"
 	if beer != "" {
 		var beers = &BeerResp{}
 		u := fmt.Sprintf("%s%s",
@@ -131,19 +131,23 @@ func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post strin
 		}
 		err := req.DoJSON()
 		if err != nil {
-			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look for beer. (%s)", ev.Sender, err))
+			return fmt.Sprintf("sorry %s, I can't look for beer. (%s)", from, err)
 		}
 
 		switch {
-		case beers.Nhits == 0:
-			return SendText(c, ev.RoomID, "¯\\_(ツ)_/¯")
 		case beers.Nhits == 1:
-			return SendText(c, ev.RoomID, h.pretty(*beers, false))
+			resp = h.pretty(*beers, false)
 		case beers.Nhits > 1:
-			return SendText(c, ev.RoomID, fmt.Sprintf("Found %d beers, here is a random one:\n%s", beers.Nhits, h.pretty(*beers, true)))
+			resp = fmt.Sprintf("Found %d beers, here is a random one:\n%s", beers.Nhits, h.pretty(*beers, true))
 		}
+
 	}
-	return nil
+	return resp
+}
+
+// RespondText to looking up of beer requests
+func (h *Beer) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name Beer!

@@ -56,6 +56,10 @@ func isEdge(x, y int) bool {
 	return false
 }
 
+func (h *Palette) Process(_, _ string) string {
+	return "not supported"
+}
+
 // RespondText to color request events
 func (h *Palette) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
 	const width, height = 56, 56

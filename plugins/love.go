@@ -28,7 +28,8 @@ func (h *LoveYou) Match(user, msg string) bool {
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 
-func (h *LoveYou) resp() string {
+// Process does the heavy lifting
+func (h *LoveYou) Process(from, post string) string {
 	a := []string{
 		"I am not ready for this kind of relationship!",
 		"ಠ_ಠ",
@@ -47,7 +48,7 @@ func (h *LoveYou) SetStore(_ PluginStore) {}
 
 // RespondText to love events
 func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, h.resp())
+	return SendText(c, ev.RoomID, h.Process("", ""))
 }
 
 // Name i love you

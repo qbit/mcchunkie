@@ -78,8 +78,8 @@ func (h *Ham) pretty(resp *LicenseResp) string {
 	return strings.Join(s, " ")
 }
 
-// RespondText to looking up of federation check requests
-func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+// Process does the heavy lifting
+func (h *Ham) Process(from, post string) string {
 	call := h.fix(post)
 	if call != "" {
 		furl := fmt.Sprintf("http://api.hamdb.org/v1/%s/json/mcchunkie",
@@ -96,17 +96,22 @@ func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 
 		err := req.DoJSON()
 		if err != nil {
-			return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS (%s)", ev.Sender, err))
+			return fmt.Sprintf("sorry %s, I can't look things up in ULS (%s)", from, err)
 		}
 
 		if res.Hamdb.Messages.Status == "OK" {
-			return SendText(c, ev.RoomID, h.pretty(res))
+			return h.pretty(res)
 		}
 
-		return SendText(c, ev.RoomID, fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", ev.Sender))
+		return fmt.Sprintf("sorry %s, I can't look things up in ULS. The response was not OK.", from)
 	}
 
-	return nil
+	return "invalid callsign"
+}
+
+// RespondText to looking up of federation check requests
+func (h *Ham) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name Ham!

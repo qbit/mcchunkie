@@ -41,8 +41,7 @@ func (p *PGP) fix(msg string) string {
 	return strings.ToUpper(re.ReplaceAllString(msg, "$1"))
 }
 
-// RespondText to looking up of PGP info
-func (p *PGP) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+func (p *PGP) Process(from, post string) string {
 	search := p.fix(post)
 	searchURL := "https://keys.openpgp.org//vks/v1/by-fingerprint/%s"
 
@@ -52,23 +51,21 @@ func (p *PGP) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 
 	escSearch, err := url.Parse(search)
 	if err != nil {
-		return err
+		return err.Error()
 	}
 
 	u := fmt.Sprintf(searchURL, escSearch)
 
 	resp, err := http.Get(u)
 	if err != nil {
-		_ = SendText(c, ev.RoomID, fmt.Sprintf("Can't search keys.openpgp.org: %s", err))
-		return err
+		return err.Error()
 	}
 
 	defer resp.Body.Close()
 
 	kr, err := openpgp.ReadArmoredKeyRing(resp.Body)
 	if err != nil {
-		_ = SendText(c, ev.RoomID, fmt.Sprintf("Can't parse key ring: %s", err))
-		return err
+		return err.Error()
 	}
 
 	var ids []string
@@ -81,9 +78,14 @@ func (p *PGP) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string
 			hex.EncodeToString(entity.PrimaryKey.Fingerprint[:])))
 	}
 
-	return SendMD(c, ev.RoomID, fmt.Sprintf("%s\n\n%s",
+	return fmt.Sprintf("%s\n\n%s",
 		strings.Join(ids, "\n"),
-		strings.Join(fps, "\n")))
+		strings.Join(fps, "\n"))
+}
+
+// RespondText to looking up of PGP info
+func (p *PGP) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendMD(c, ev.RoomID, p.Process(ev.Sender, post))
 }
 
 // Name PGP!

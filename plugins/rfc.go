@@ -7,7 +7,7 @@ import (
 	"github.com/matrix-org/gomatrix"
 )
 
-// RFC sends rfc urls when someone references an rfc 
+// RFC sends rfc urls when someone references an rfc
 type RFC struct {
 }
 
@@ -30,15 +30,20 @@ func (h *RFC) Match(_, msg string) bool {
 // SetStore does nothing in RFC
 func (h *RFC) SetStore(_ PluginStore) {}
 
-// RespondText sends back a man page.
-func (h *RFC) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+// Process does the heavy lifting
+func (h *RFC) Process(from, post string) string {
 	re := regexp.MustCompile(h.Re())
 	rfcNum := re.ReplaceAllString(post, "$1")
 	if rfcNum != "" {
-		return SendText(c, ev.RoomID, fmt.Sprintf("https://tools.ietf.org/html/rfc%s", rfcNum))
+		return fmt.Sprintf("https://tools.ietf.org/html/rfc%s", rfcNum)
 	}
 
-	return nil
+	return "that's not an RFC."
+}
+
+// RespondText sends back a man page.
+func (h *RFC) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name RFC
