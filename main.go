@@ -195,9 +195,9 @@ func main() {
 		gotListen(store, cli)
 	}()
 
-			log.Fatal(http.ListenAndServe(gotPort, nil))
-		}()
-	}
+	go func() {
+		smsListen(store, &plugins.Plugs)
+	}()
 
 	go func() {
 		for {

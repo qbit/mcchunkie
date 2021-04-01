@@ -38,8 +38,12 @@ type Plugin interface {
 	// Re returns the regular expression that a plugin uses to "match"
 	Re() string
 
-	// RespondText responds to a "m.text" event
+	// RespondMatrix responds to a Matrix "m.text" event
 	RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, path string) error
+
+	// Process is the processed response from the plugin. This is useful for
+	// running the plugins outside of the context of Matrix.
+	Process(from, message string) (string, error)
 
 	// SetStore exposes the top level MCStore to a plugin
 	SetStore(s PluginStore)
