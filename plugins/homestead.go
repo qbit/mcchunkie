@@ -40,7 +40,7 @@ func (h *Homestead) SetStore(s PluginStore) {
 }
 
 func (h *Homestead) get(loc string) (*HomesteadResp, error) {
-	u := "https://graph.tapenet.org/pub"
+	u := "https://graph.tapenet.org/_pub"
 	resp, err := http.Get(u)
 	if err != nil {
 		return nil, err
