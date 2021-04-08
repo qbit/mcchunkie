@@ -21,6 +21,8 @@ import (
 const header = `
 # mcchunkie
 
+[![mcchunkie's face](mcchunkie.png)](https://builds.sr.ht/~qbit/mcchunkie?)
+
 [![builds.sr.ht status](https://builds.sr.ht/~qbit/mcchunkie.svg)](https://builds.sr.ht/~qbit/mcchunkie?)
 
 A [Matrix](https://matrix.org) chat bot.`
