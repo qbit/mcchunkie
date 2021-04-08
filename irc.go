@@ -39,6 +39,7 @@ func ircConnect(store *FStore, plugins *plugins.Plugins) error {
 				switch m.Command {
 				case "001":
 					for _, r := range strings.Split(ircRooms, ",") {
+						log.Printf("IRC: joining %q\n", r)
 						c.Write(fmt.Sprintf("JOIN %s", r))
 					}
 				case "PRIVMSG":
@@ -66,15 +67,18 @@ func ircConnect(store *FStore, plugins *plugins.Plugins) error {
 
 					}
 
-					log.Printf("IRC: sending: %q to %q\n", resp, to)
-
-					c.WriteMessage(&irc.Message{
-						Command: "PRIVMSG",
-						Params: []string{
-							to,
-							resp,
-						},
-					})
+					if resp != "" {
+						log.Printf("IRC: sending: %q to %q\n", resp, to)
+						c.WriteMessage(&irc.Message{
+							Command: "PRIVMSG",
+							Params: []string{
+								to,
+								resp,
+							},
+						})
+					}
+				default:
+					log.Printf("IRC: unhandled - %q", m.String())
 				}
 			}),
 		}
