@@ -125,7 +125,7 @@ func main() {
 		go func() { log.Println(s.Serve(lis)) }()
 	}
 
-	cli, err := gomatrix.NewClient(
+	matrixCLI, err := gomatrix.NewClient(
 		server,
 		"",
 		"",
@@ -142,7 +142,7 @@ func main() {
 		}
 		fmt.Println()
 
-		resp, err := cli.Login(&gomatrix.ReqLogin{
+		resp, err := matrixCLI.Login(&gomatrix.ReqLogin{
 			Type:     "m.login.password",
 			User:     username,
 			Password: password,
@@ -169,11 +169,11 @@ func main() {
 
 	shortName = plugins.NameRE.ReplaceAllString(username, "$1")
 
-	cli.SetCredentials(userID, accessToken)
-	cli.Store = store
+	matrixCLI.SetCredentials(userID, accessToken)
+	matrixCLI.Store = store
 	syncer := gomatrix.NewDefaultSyncer(username, store)
-	cli.Client = http.DefaultClient
-	cli.Syncer = syncer
+	matrixCLI.Client = http.DefaultClient
+	matrixCLI.Syncer = syncer
 
 	syncer.OnEventType("m.room.member", func(ev *gomatrix.Event) {
 		if ev.Sender == username {
@@ -183,7 +183,7 @@ func main() {
 		case botOwner:
 			if ev.Content["membership"] == "invite" {
 				log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
-				if _, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
+				if _, err := matrixCLI.JoinRoom(ev.RoomID, "", nil); err != nil {
 					log.Fatalln(err)
 				}
 				return
@@ -192,11 +192,22 @@ func main() {
 	})
 
 	go func() {
-		gotListen(store, cli)
+		gotListen(store, matrixCLI)
 	}()
 
 	go func() {
 		smsListen(store, &plugins.Plugs)
+	}()
+
+	go func() {
+		for {
+			err := ircConnect(store, &plugins.Plugs)
+			if err != nil {
+				log.Println(err)
+			}
+			log.Println("IRC: reconnecting in 60 seconds")
+			time.Sleep(time.Second * 60)
+		}
 	}()
 
 	go func() {
@@ -229,7 +240,7 @@ func main() {
 							break
 						}
 						for _, room := range strings.Split(alertRooms, ",") {
-							err = plugins.SendMDNotice(cli, room, PrintErrataMD(&erratum))
+							err = plugins.SendMDNotice(matrixCLI, room, PrintErrataMD(&erratum))
 							if err != nil {
 								fmt.Println(err)
 							}
@@ -265,7 +276,7 @@ func main() {
 					val := kvRE.ReplaceAllString(mp, "$2")
 					store.Set(key, val)
 					log.Printf("Setting %q to %q", key, val)
-					err := plugins.SendMD(cli, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
+					err := plugins.SendMD(matrixCLI, ev.RoomID, fmt.Sprintf("Set **%q** = *%q*", key, val))
 					if err != nil {
 						log.Println(err)
 					}
@@ -300,7 +311,7 @@ func main() {
 						p.SetStore(store)
 
 						start := time.Now()
-						err := p.RespondText(cli, ev, username, post)
+						err := p.RespondText(matrixCLI, ev, username, post)
 						if err != nil {
 							fmt.Println(err)
 						}
@@ -313,7 +324,7 @@ func main() {
 			}
 		}
 		if len(helps) > 0 {
-			err := plugins.SendMD(cli, ev.RoomID, strings.Join(helps, "\n"))
+			err := plugins.SendMD(matrixCLI, ev.RoomID, strings.Join(helps, "\n"))
 			if err != nil {
 				log.Println(err)
 			}
@@ -322,13 +333,13 @@ func main() {
 
 	if avatar != "" {
 		log.Printf("Setting avatar to: '%s'", avatar)
-		rmu, err := cli.UploadLink(avatar)
+		rmu, err := matrixCLI.UploadLink(avatar)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
-		err = cli.SetAvatarURL(rmu.ContentURI)
+		err = matrixCLI.SetAvatarURL(rmu.ContentURI)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -338,7 +349,7 @@ func main() {
 
 	for {
 		log.Println("syncing..")
-		if err := cli.Sync(); err != nil {
+		if err := matrixCLI.Sync(); err != nil {
 			fmt.Println("Sync() returned ", err)
 		}
 

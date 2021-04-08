@@ -10,5 +10,6 @@ require (
 	golang.org/x/net v0.0.0-20210326220855-61e056675ecf
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
 	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
+	gopkg.in/irc.v3 v3.1.4
 	suah.dev/protect v1.0.0
 )

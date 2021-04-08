@@ -27,6 +27,7 @@ A [Matrix](https://matrix.org) chat bot.
 |Snap|`(?i)^snap:$`|checks the current build date of OpenBSD snapshots.|
 |Source|`(?i)where is your (source\|code)`|Tell people where they can find more information about myself.|
 |Thanks|`(?i)^thank you\|thank you$\|^thanks\|thanks$\|^ty\|ty$`|Bots should be respectful. Respond to thanks.|
+|Homestead|`(?i)^home:\|^homestead:\s?(\w+)?$`|Display weather information for the Homestead|
 |Toki|`(?i)^(toki[\?]?):? (.+)$`|Toki Pona dictionary|
 |Version|`(?i)version$`|Show a bit of information about what we are.|
 |Wb|`(?i)^welcome back\|welcome back$\|^wb\|wb$`|Respond to welcome back messages.|

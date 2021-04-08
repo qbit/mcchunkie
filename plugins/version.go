@@ -10,11 +10,7 @@ import (
 
 var version string
 
-const response = `
-**%s** running on: **%s**
-
-Built with Go: **%s**
-`
+const response = `**%s** running on: **%s**. Built with Go: **%s**.`
 
 // Version responds to hi messages
 type Version struct {
@@ -37,6 +33,7 @@ func (v *Version) Match(user, msg string) bool {
 	return re.MatchString(msg) && ToMe(user, msg)
 }
 
+// Process does the heavy lifting
 func (v *Version) Process(_, _ string) string {
 	if version == "" {
 		version = "unknown version"
