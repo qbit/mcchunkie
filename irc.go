@@ -90,7 +90,7 @@ func ircConnect(store *FStore, plugins *plugins.Plugins) error {
 		client := irc.NewClient(conn, config)
 		err = client.Run()
 		if err != nil {
-			log.Fatalln(err)
+			return err
 		}
 	}
 	return nil
