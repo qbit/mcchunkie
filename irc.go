@@ -42,6 +42,10 @@ func ircConnect(store *FStore, plugins *plugins.Plugins) error {
 						log.Printf("IRC: joining %q\n", r)
 						c.Write(fmt.Sprintf("JOIN %s", r))
 					}
+				case "PING":
+					server := m.Trailing()
+					log.Printf("IRC: pong %q\n", server)
+					c.Write(fmt.Sprintf("PONG %s", server))
 				case "INVITE":
 					room := m.Trailing()
 					log.Printf("IRC: joining %q\n", room)
