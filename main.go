@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/matrix-org/gomatrix"
+	"suah.dev/mcchunkie/chats"
 	"suah.dev/mcchunkie/plugins"
 	"suah.dev/protect"
 )
@@ -198,12 +199,21 @@ func main() {
 	}()
 
 	go func() {
-		smsListen(store, &plugins.Plugs)
+		chats.SMSListen(store, &plugins.Plugs)
+	}()
+
+	go func() {
+		log.Println("MATRIX: syncing..")
+		if err := matrixCLI.Sync(); err != nil {
+			fmt.Println("Sync() returned ", err)
+		}
+
+		time.Sleep(1 * time.Second)
 	}()
 
 	go func() {
 		for {
-			err := ircConnect(store, &plugins.Plugs)
+			err := chats.IRCConnect(store, &plugins.Plugs)
 			if err != nil {
 				log.Println(err)
 			}
@@ -350,11 +360,6 @@ func main() {
 	}
 
 	for {
-		log.Println("syncing..")
-		if err := matrixCLI.Sync(); err != nil {
-			fmt.Println("Sync() returned ", err)
-		}
-
-		time.Sleep(1 * time.Second)
+		time.Sleep(time.Second * 60)
 	}
 }
