@@ -10,14 +10,22 @@ import (
 	"suah.dev/mcchunkie/plugins"
 )
 
-// IRCConnect connects to our irc server
-func IRCConnect(store ChatStore, plugins *plugins.Plugins) error {
+// IRC represents our IRC chat service
+type IRC struct {
+	Client irc.Client
+	Store  plugins.PluginStore
+}
+
+// Connect connects to an IRC server
+func (i *IRC) Connect(store plugins.PluginStore) error {
 	var ircServer, _ = store.Get("irc_server")
 	var ircPort, _ = store.Get("irc_port")
 	var ircNick, _ = store.Get("irc_nick")
 	var ircPass, _ = store.Get("irc_pass")
 	var ircRooms, _ = store.Get("irc_rooms")
 	//var toRE = regexp.MustCompile(`^:(\w+)\s`)
+
+	i.Store = store
 
 	if ircServer != "" {
 
@@ -62,7 +70,7 @@ func IRCConnect(store ChatStore, plugins *plugins.Plugins) error {
 					}
 
 					resp := ""
-					for _, p := range *plugins {
+					for _, p := range plugins.Plugs {
 						if p.Match(c.CurrentNick(), msg) {
 							p.SetStore(store)
 
@@ -97,6 +105,19 @@ func IRCConnect(store ChatStore, plugins *plugins.Plugins) error {
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// Disconnect disconnects cleanely from our service
+func (i *IRC) Disconnect() error {
+	return nil
+}
+
+// Process receives a Message and determines if it should be used or not
+func (i *IRC) Process(msg *Message) error {
+	if msg.Service != "IRC" {
+		return nil
 	}
 	return nil
 }
