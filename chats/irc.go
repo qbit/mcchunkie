@@ -14,6 +14,7 @@ import (
 type IRC struct {
 	Client irc.Client
 	Store  plugins.PluginStore
+	Log    *log.Logger
 }
 
 // Connect connects to an IRC server
@@ -25,11 +26,14 @@ func (i *IRC) Connect(store plugins.PluginStore) error {
 	var ircRooms, _ = store.Get("irc_rooms")
 	//var toRE = regexp.MustCompile(`^:(\w+)\s`)
 
+	i.Log = log.Default()
+	i.Log.SetPrefix("IRC: ")
+
 	i.Store = store
 
 	if ircServer != "" {
 
-		log.Printf("IRC: connecting to %q\n", ircServer)
+		i.Log.Printf("connecting to %q\n", ircServer)
 
 		dialStr := fmt.Sprintf("%s:%s", ircServer, ircPort)
 		conn, err := tls.Dial("tcp", dialStr, &tls.Config{
@@ -48,16 +52,16 @@ func (i *IRC) Connect(store plugins.PluginStore) error {
 				switch m.Command {
 				case "001":
 					for _, r := range strings.Split(ircRooms, ",") {
-						log.Printf("IRC: joining %q\n", r)
+						i.Log.Printf("joining %q\n", r)
 						c.Write(fmt.Sprintf("JOIN %s", r))
 					}
 				case "PING":
 					server := m.Trailing()
-					log.Printf("IRC: pong %q\n", server)
+					i.Log.Printf("pong %q\n", server)
 					c.Write(fmt.Sprintf("PONG %s", server))
 				case "INVITE":
 					room := m.Trailing()
-					log.Printf("IRC: joining %q\n", room)
+					i.Log.Printf("joining %q\n", room)
 					c.Write(fmt.Sprintf("JOIN %s", room))
 				case "PRIVMSG":
 					msg := m.Trailing()
@@ -85,7 +89,7 @@ func (i *IRC) Connect(store plugins.PluginStore) error {
 					}
 
 					if resp != "" {
-						log.Printf("IRC: sending: %q to %q\n", resp, to)
+						i.Log.Printf("sending: %q to %q\n", resp, to)
 						c.WriteMessage(&irc.Message{
 							Command: "PRIVMSG",
 							Params: []string{
@@ -95,7 +99,7 @@ func (i *IRC) Connect(store plugins.PluginStore) error {
 						})
 					}
 				default:
-					log.Printf("IRC: unhandled - %q", m.String())
+					i.Log.Printf("unhandled - %q", m.String())
 				}
 			}),
 		}

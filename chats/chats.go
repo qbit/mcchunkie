@@ -7,9 +7,9 @@ import (
 // Message is a cross-service representation of a chat message
 type Message struct {
 	Service string // TODO: Maybe this should be a type?
-	To      string
-	From    string
+	Sender  string
 	Body    string
+	Room    string
 }
 
 // ChatStore matches MCStore. This allows the main store to be used by
@@ -33,5 +33,5 @@ type Chats []Chat
 // ChatMethods defines the "enabled" chat methogs.
 var ChatMethods = Chats{
 	&Matrix{},
-	&IRC{},
+	//&IRC{},
 }

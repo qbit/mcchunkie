@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/matrix-org/gomatrix"
@@ -16,6 +15,7 @@ type Matrix struct {
 	Client *gomatrix.Client
 	Store  plugins.PluginStore
 	Name   string
+	Log    *log.Logger
 }
 
 // Connect connects to a matrix server
@@ -24,6 +24,9 @@ func (m *Matrix) Connect(store plugins.PluginStore) error {
 	if err != nil {
 		return err
 	}
+
+	m.Log = log.Default()
+	m.Log.SetPrefix("MATRIX: ")
 
 	fmt.Println(server)
 
@@ -54,9 +57,9 @@ func (m *Matrix) Connect(store plugins.PluginStore) error {
 		switch ev.Sender {
 		case botOwner:
 			if ev.Content["membership"] == "invite" {
-				log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
+				m.Log.Printf("Joining %s (invite from %s)\n", ev.RoomID, ev.Sender)
 				if _, err := m.Client.JoinRoom(ev.RoomID, "", nil); err != nil {
-					log.Fatalln(err)
+					m.Log.Fatalln(err)
 				}
 				return
 			}
@@ -68,46 +71,34 @@ func (m *Matrix) Connect(store plugins.PluginStore) error {
 			return
 		}
 
-		// Sending a response per plugin hits issues, so save them and
-		// send as one message.
-		var helps []string
-		for _, p := range plugins.Plugs {
-			var post string
-			var ok bool
-			if post, ok = ev.Body(); !ok {
-				// Invaild body, for some reason
-				return
-			}
-			if mtype, ok := ev.MessageType(); ok {
-				switch mtype {
-				case "m.text":
-					if p.Match(m.Name, post) {
-						log.Printf("%s: responding to '%s'", p.Name(), ev.Sender)
-						p.SetStore(store)
-
-						err := m.Process(&Message{
-							From: m.Name,
-							Body: post,
-						})
-						if err != nil {
-							fmt.Println(err)
-						}
-					}
-				}
-			}
+		var post string
+		var ok bool
+		if post, ok = ev.Body(); !ok {
+			// Invaild body, for some reason
+			return
 		}
-		if len(helps) > 0 {
-			err := plugins.SendMD(m.Client, ev.RoomID, strings.Join(helps, "\n"))
-			if err != nil {
-				log.Println(err)
+		if mtype, ok := ev.MessageType(); ok {
+			switch mtype {
+			case "m.text":
+				err := m.Process(&Message{
+					Service: "Matrix",
+					Sender:  ev.Sender,
+					Body:    post,
+					Room:    ev.RoomID,
+				})
+				if err != nil {
+					m.Log.Println(err)
+				}
 			}
 		}
 	})
 
 	go func() {
-		log.Println("MATRIX: syncing..")
+		m.Log.Println("syncing..")
 		if err := m.Client.Sync(); err != nil {
-			fmt.Println("Sync() returned ", err)
+
+			m.Log.Printf("Sync() returned: \n")
+			m.Log.Println(err)
 		}
 
 		time.Sleep(1 * time.Second)
@@ -124,15 +115,31 @@ func (m *Matrix) Disconnect() error {
 
 // Process receives a Message and determines if it should be used or not
 func (m *Matrix) Process(msg *Message) error {
+	m.Log.Printf("%#v\n", msg)
 	if msg.Service != "Matrix" {
 		return nil
 	}
+
 	for _, p := range plugins.Plugs {
 		if p.Match(m.Name, msg.Body) {
-			log.Printf("%s: responding to '%s'", p.Name(), msg.From)
+			m.Log.Printf("%s: responding to '%s'", p.Name(), msg.Sender)
 			p.SetStore(m.Store)
-			resp := p.Process(msg.From, msg.Body)
-			log.Println(resp)
+			_, err := m.Client.UserTyping(msg.Room, true, 3)
+			if err != nil {
+				return err
+			}
+
+			_, err = m.Client.SendText(msg.Room, p.Process(msg.Sender, msg.Body))
+			if err != nil {
+				return err
+			}
+
+			_, err = m.Client.UserTyping(msg.Room, false, 0)
+			if err != nil {
+				return err
+			}
+
+			return nil
 		}
 	}
 	return nil
