@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/matrix-org/gomatrix"
-	"golang.org/x/crypto/openpgp"
 )
 
 // PGP is our plugin type

@@ -204,11 +204,14 @@ func main() {
 
 	go func() {
 		log.Println("MATRIX: syncing..")
-		if err := matrixCLI.Sync(); err != nil {
-			fmt.Println("Sync() returned ", err)
-		}
+		for {
+			if err := matrixCLI.Sync(); err != nil {
+				log.Println(err)
+				fmt.Println("Sync() errored. Restarting...")
+			}
 
-		time.Sleep(1 * time.Second)
+			time.Sleep(5 * time.Second)
+		}
 	}()
 
 	go func() {
