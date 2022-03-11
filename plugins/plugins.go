@@ -139,6 +139,26 @@ func SendText(c *gomatrix.Client, roomID, message string) error {
 	return nil
 }
 
+// SendEmote sends an emote to a given room. It pretends to be
+// "typing" by calling UserTyping for the caller.
+func SendEmote(c *gomatrix.Client, roomID, message string) error {
+	_, err := c.UserTyping(roomID, true, 3)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.SendMessageEvent(roomID, "m.room.message", gomatrix.GetHTMLMessage("m.emote", message))
+	if err != nil {
+		return err
+	}
+
+	_, err = c.UserTyping(roomID, false, 0)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // SendHTML sends an html message to a given room. It pretends to be
 // "typing" by calling UserTyping for the caller.
 func SendHTML(c *gomatrix.Client, roomID, message string) error {
@@ -262,6 +282,7 @@ type Plugins []Plugin
 
 // Plugs defines the "enabled" plugins.
 var Plugs = Plugins{
+	&BananaStab{},
 	&Beat{},
 	&Beer{},
 	&BotSnack{},
