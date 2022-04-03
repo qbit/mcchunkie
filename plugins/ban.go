@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"math/rand"
 	"regexp"
 	"strings"
 	"time"
@@ -35,15 +34,7 @@ func (h *Ban) SetStore(_ PluginStore) {}
 
 // Process does the heavy lifting
 func (h *Ban) Process(from, msg string) string {
-	a := []string{
-		"omm nom nom nom",
-		"*puke*",
-		"MOAR!",
-		"=.=",
-	}
-
-	rand.Seed(time.Now().Unix())
-	return a[rand.Intn(len(a))]
+	return ""
 }
 
 // RespondText to botsnack events
