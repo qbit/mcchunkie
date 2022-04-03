@@ -45,12 +45,15 @@ func (h *Ban) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post str
 		re := regexp.MustCompile(h.Re())
 		bans := strings.Split(re.ReplaceAllString(post, "$1"), " ")
 
-		SendText(c, ev.RoomID, fmt.Sprintf("Banning %d users with %d seconds inbetween bans.", len(bans), speed))
-		for _, ban := range bans {
-			st := fmt.Sprintf("hammer ban ob user %s spam", ban)
-			SendText(c, ev.RoomID, st)
-			time.Sleep(time.Second * time.Duration(speed))
-		}
+		go func() {
+			SendText(c, ev.RoomID, fmt.Sprintf("Banning %d users with %d seconds inbetween bans.", len(bans), speed))
+			for _, ban := range bans {
+				st := fmt.Sprintf("hammer ban ob user %s spam", ban)
+				SendText(c, ev.RoomID, st)
+				time.Sleep(time.Second * time.Duration(speed))
+			}
+			SendText(c, ev.RoomID, "Done banning.")
+		}()
 	}
 	return nil
 }
