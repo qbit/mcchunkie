@@ -24,6 +24,7 @@ A [Matrix](https://matrix.org) chat bot.
 |PGP|`(?i)^pgp: (.+@.+\..+\|[a-f0-9]+)$`|Queries keys.openpgp.org|
 |Palette|`(?i)^#[a-f0-9]{6}$`|Creates an solid 56x56 image of the color specified.|
 |RFC|`(?i)^rfc\s?([0-9]+)$`|Produces a link to tools.ietf.org.|
+|Salute|`o7`|Everyone loves salutes.|
 |Snap|`(?i)^snap:$`|checks the current build date of OpenBSD snapshots.|
 |Source|`(?i)where is your (source\|code)`|Tell people where they can find more information about myself.|
 |Thanks|`(?i)^thank you\|thank you$\|^thanks\|thanks$\|^ty\|ty$`|Bots should be respectful. Respond to thanks.|
