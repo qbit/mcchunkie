@@ -22,7 +22,7 @@ func (h *Salute) Descr() string {
 
 // Re are the regexes that high five uses
 func (h *Salute) Re() string {
-	return fmt.Sprintf("%s", rightSalute())
+	return rightSalute()
 }
 
 // SetStore we don't need a store here.

@@ -299,6 +299,7 @@ var Plugs = Plugins{
 	&PGP{},
 	&Palette{},
 	&RFC{},
+	&Salute{},
 	&Snap{},
 	&Source{},
 	&Thanks{},
