@@ -15,12 +15,12 @@ type Ban struct {
 
 // Descr returns a description
 func (h *Ban) Descr() string {
-	return "Ban a list of users."
+	return "Ban a list of users or servers."
 }
 
 // Re matches "ban:" in a given string
 func (h *Ban) Re() string {
-	return `(?i)^ban: (.*)$`
+	return `(?i)^ban (user|server): (.*)$`
 }
 
 // Match determines if we should execute Ban
@@ -43,12 +43,13 @@ func (h *Ban) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post str
 	case "@qbit:tapenet.org":
 		speed := 5
 		re := regexp.MustCompile(h.Re())
-		bans := strings.Split(re.ReplaceAllString(post, "$1"), " ")
+		cmd := re.ReplaceAllString(post, "$1")
+		bans := strings.Split(re.ReplaceAllString(post, "$2"), " ")
 
 		go func() {
-			SendText(c, ev.RoomID, fmt.Sprintf("Banning %d users with %d seconds inbetween bans.", len(bans), speed))
+			SendText(c, ev.RoomID, fmt.Sprintf("Banning %d %s with %d seconds inbetween bans.", len(bans), cmd, speed))
 			for _, ban := range bans {
-				st := fmt.Sprintf("hammer ban ob user %s spam", ban)
+				st := fmt.Sprintf("hammer ban ob %s %s spam", cmd, ban)
 				SendText(c, ev.RoomID, st)
 				time.Sleep(time.Second * time.Duration(speed))
 			}

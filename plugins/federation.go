@@ -33,7 +33,7 @@ func (h *Feder) Descr() string {
 
 // Re returns the federation check matching string
 func (h *Feder) Re() string {
-	return `(?i)^(?:feder: |tayshame: )(.*)$`
+	return `(?i)^(?:feder: |tayshame: |danshame: )(.*)$`
 }
 
 func (h *Feder) fix(msg string) string {
