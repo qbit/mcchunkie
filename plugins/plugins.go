@@ -268,7 +268,7 @@ func SendImage(c *gomatrix.Client, roomID string, img *image.RGBA) error {
 		return err
 	}
 
-	_, err = c.SendImage(roomID, "", mediaURL.ContentURI)
+	_, err = c.SendImage(roomID, "embedded_image.png", mediaURL.ContentURI)
 	if err != nil {
 		return err
 	}
