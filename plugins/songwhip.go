@@ -89,7 +89,7 @@ func hasService(s string, enabled bool) string {
 func (s *Songwhip) Process(from, post string) string {
 	musicURL := s.fix(post)
 	if musicURL != "" {
-		_, err := url.Parse(musicURL)
+		_, err := url.ParseRequestURI(musicURL)
 		if err != nil {
 			return fmt.Sprintf("Please don't abuse this free service. that's not a real url: %q", musicURL)
 		}
