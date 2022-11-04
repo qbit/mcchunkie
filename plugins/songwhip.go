@@ -97,7 +97,7 @@ func (s *Songwhip) Process(from, post string) string {
 		var swresp = &SongwhipResp{}
 
 		var req = HTTPRequest{
-			Timeout: 5 * time.Second,
+			Timeout: 20 * time.Second,
 			URL:     "https://songwhip.com/",
 			Method:  "POST",
 			ResBody: swresp,
