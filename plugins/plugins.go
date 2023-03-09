@@ -309,4 +309,5 @@ var Plugs = Plugins{
 	&Version{},
 	&Wb{},
 	&Weather{},
+	&Yeah{},
 }
