@@ -1,10 +1,11 @@
 package plugins
 
 import (
-	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"regexp"
+	"strings"
+	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -34,18 +35,49 @@ func (p *Snap) SetStore(_ PluginStore) {}
 
 // Process does the heavy lifting
 func (p *Snap) Process(from, post string) string {
-	resp, err := http.Get("https://ftp.usa.openbsd.org/pub/OpenBSD/snapshots/amd64/BUILDINFO")
+	snapResp, err := http.Get("https://ftp.usa.openbsd.org/pub/OpenBSD/snapshots/amd64/BUILDINFO")
 	if err != nil {
-		return fmt.Sprintf("%s", err)
+		return err.Error()
 	}
-	defer resp.Body.Close()
+	defer snapResp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	buildBody, err := io.ReadAll(snapResp.Body)
 	if err != nil {
-		return fmt.Sprintf("%s", err)
+		return err.Error()
 	}
 
-	return string(body)
+	str := string(buildBody)
+	parts := strings.Split(str, " - ")
+	if len(parts) != 2 {
+		return "Can't parse BUILDINFO"
+	}
+
+	snapDate, err := time.Parse(time.UnixDate, strings.TrimSpace(parts[1]))
+	if err != nil {
+		return err.Error()
+	}
+
+	pkgResp, err := http.Get("https://ftp3.usa.openbsd.org/pub/OpenBSD/snapshots/packages/amd64/SHA256")
+	if err != nil {
+		return err.Error()
+	}
+	defer pkgResp.Body.Close()
+
+	lm := strings.TrimSpace(pkgResp.Header.Get("last-modified"))
+	if lm == "" {
+		return "Missing last-modified for SHA256"
+	}
+
+	pkgDate, err := time.Parse(time.RFC1123, lm)
+	if lm == "" {
+		return err.Error()
+	}
+
+	if pkgDate.Before(snapDate) {
+		return "🔴: packages are behind snapshots. It is likely not safe to update currently!"
+	}
+
+	return "🟢:' It is safe to update your snapshot and packages!"
 }
 
 // RespondText to looking up of federation check requests
