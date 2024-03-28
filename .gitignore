@@ -4,3 +4,4 @@ db/*
 mcchunkie
 deploy.sh
 *.core
+.direnv
