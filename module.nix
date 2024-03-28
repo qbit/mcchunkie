@@ -59,7 +59,7 @@ in {
         Group = cfg.group;
 
         ExecStart = ''
-          ${cfg.package}/bin/mcchunkie
+          ${cfg.package}/bin/mcchunkie -db ${cfg.dataDir}/db
         '';
       };
     };
