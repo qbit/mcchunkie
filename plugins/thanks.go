@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"regexp"
-	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -42,8 +41,6 @@ func (h *Thanks) Process(from, post string) string {
 		"np!",
 		fmt.Sprintf("you're welcome, %s", s),
 	}
-
-	rand.Seed(time.Now().Unix())
 
 	return a[rand.Intn(len(a))]
 }

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -53,7 +52,7 @@ func (s *FStore) decodeRoom(room []byte) (*gomatrix.Room, error) {
 
 // Set dumps value into a file named key
 func (s FStore) Set(key string, value string) {
-	err := ioutil.WriteFile(path.Join(string(s), key), []byte(value), 0600)
+	err := os.WriteFile(path.Join(string(s), key), []byte(value), 0600)
 	if err != nil {
 		log.Println(err)
 	}
@@ -61,7 +60,7 @@ func (s FStore) Set(key string, value string) {
 
 // Get pulls value from a file named key
 func (s FStore) Get(key string) (string, error) {
-	data, err := ioutil.ReadFile(path.Join(string(s), key))
+	data, err := os.ReadFile(path.Join(string(s), key))
 	if err != nil {
 		return "", nil
 	}

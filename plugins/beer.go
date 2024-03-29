@@ -95,7 +95,6 @@ func (h *Beer) pretty(b BeerResp, random bool) string {
 	idx := 0
 
 	if random {
-		rand.Seed(time.Now().Unix())
 		idx = rand.Intn(len(b.Records))
 	}
 

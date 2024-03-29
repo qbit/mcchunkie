@@ -3,7 +3,6 @@ package plugins
 import (
 	"math/rand"
 	"regexp"
-	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -40,7 +39,6 @@ func (h *BotSnack) Process(from, msg string) string {
 		"=.=",
 	}
 
-	rand.Seed(time.Now().Unix())
 	return a[rand.Intn(len(a))]
 }
 

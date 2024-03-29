@@ -3,7 +3,6 @@ package plugins
 import (
 	"math/rand"
 	"regexp"
-	"time"
 
 	"github.com/matrix-org/gomatrix"
 )
@@ -38,9 +37,7 @@ func (h *LoveYou) Process(from, post string) string {
 		"hawkard!",
 	}
 
-	rand.Seed(time.Now().Unix())
 	return a[rand.Intn(len(a))]
-
 }
 
 // SetStore we don't need a store, so just return
