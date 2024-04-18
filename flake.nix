@@ -23,10 +23,10 @@
         {
           mcchunkie = pkgs.buildGoModule rec {
             pname = "mcchunkie";
-            version = "v1.0.16";
+            version = "v1.0.17";
             src = ./.;
 
-            vendorHash = "sha256-LMWaHqmvxG17Z0zh0vmTAYDsc9UkztSCM1+jl2iXSds=";
+            vendorHash = "sha256-reSaRpXheuqLKGZ+LtY/wyZj3bw4vqQDg/0S0WAFJEw=";
 
             # makes outbound http requests
             doCheck = false;
@@ -47,7 +47,13 @@
               nix run github:qbit/xin#flake-warn
               echo "Go `${pkgs.go}/bin/go version`"
             '';
-            nativeBuildInputs = with pkgs; [ git go gopls go-tools ];
+            nativeBuildInputs = with pkgs; [
+              git
+              go
+              gopls
+              go-tools
+              nilaway
+            ];
           };
         });
     };
