@@ -12,26 +12,54 @@ import (
 	"suah.dev/mcchunkie/plugins"
 )
 
+type Author struct {
+	Full string `json:"full"`
+	Name string `json:"name"`
+	Mail string `json:"mail"`
+	User string `json:"user"`
+}
+type Committer struct {
+	Full string `json:"full"`
+	Name string `json:"name"`
+	Mail string `json:"mail"`
+	User string `json:"user"`
+}
+type Files struct {
+	Action  string `json:"action"`
+	File    string `json:"file"`
+	Added   int    `json:"added"`
+	Removed int    `json:"removed"`
+}
+type Total struct {
+	Added   int `json:"added"`
+	Removed int `json:"removed"`
+}
+type Diffstat struct {
+	Files []Files `json:"files"`
+	Total Total   `json:"total"`
+}
 type Notification struct {
-	Short    bool   `json:"short"`
-	ID       string `json:"id"`
-	Author   string `json:"author"`
-	Date     string `json:"date"`
-	Message  string `json:"message"`
-	Diffstat struct {
-	} `json:"diffstat"`
-	Changes struct {
-	} `json:"changes"`
+	Type         string    `json:"type"`
+	Short        bool      `json:"short"`
+	Repo         string    `json:"repo"`
+	ID           string    `json:"id"`
+	Author       Author    `json:"author"`
+	Committer    Committer `json:"committer"`
+	Date         string    `json:"date"`
+	ShortMessage string    `json:"short_message"`
+	Message      string    `json:"message"`
+	Diffstat     Diffstat  `json:"diffstat"`
 }
 
 func (n *Notification) String() string {
 	// op committed got.git f9e653700..f9e653700^1 (main): fix gotd_parse_url() (https://git.gameoftrees.org/gitweb/?p=got.git;a=commitdiff;h=f9e653700)
-	return fmt.Sprintf("%s committed %s: %s (%s)",
-		n.Author,
+	return fmt.Sprintf("%s committed %s %s: %s (%s)",
+		n.Author.User,
+		n.Repo,
 		n.ID,
-		n.Message,
+		n.ShortMessage,
 		fmt.Sprintf("https://git.gameoftrees.org/gitweb/?p=%s;a=commitdiff;h=%s",
-			"repo",
+			n.Repo,
 			n.ID),
 	)
 }
