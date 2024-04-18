@@ -58,9 +58,10 @@ func (n *Notification) String() string {
 		n.Repo,
 		n.ID,
 		n.ShortMessage,
-		fmt.Sprintf("https://git.gameoftrees.org/gitweb/?p=%s;a=commitdiff;h=%s",
+		fmt.Sprintf("https://got.gameoftrees.org/?action=diff&commit=%s&headref=HEAD&path=%s",
+			n.ID,
 			n.Repo,
-			n.ID),
+		),
 	)
 }
 
