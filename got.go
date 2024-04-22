@@ -95,13 +95,15 @@ func gotListen(store *FStore, cli *gomatrix.Client) {
 			dec := json.NewDecoder(r.Body)
 			err = dec.Decode(&gn)
 			if err != nil {
-				http.Error(w, "invalid data sent to server", http.StatusBadRequest)
+				log.Printf("GOT: invalid data sent to server: '%s'\n", err)
+				http.Error(w, fmt.Sprintf("invalid data sent to server: %s", err), http.StatusBadRequest)
 				return
 			}
 			for _, line := range gn.Notifications {
 				log.Printf("GOT: sending '%s'\n", line.String())
 				err = plugins.SendUnescNotice(cli, gotRoom, line.String())
 				if err != nil {
+					log.Printf("GOT: error sending commit info: '%s'\n", err)
 					http.Error(
 						w,
 						fmt.Sprintf("can not send commit info: %s", err),
