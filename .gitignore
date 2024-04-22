@@ -5,3 +5,4 @@ mcchunkie
 deploy.sh
 *.core
 .direnv
+result
