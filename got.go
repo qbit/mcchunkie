@@ -79,6 +79,7 @@ func gotListen(store *FStore, cli *gomatrix.Client) {
 
 		http.HandleFunc("/_got/v2", func(w http.ResponseWriter, r *http.Request) {
 			if r.Method != http.MethodPost {
+				log.Printf("GOT: invalid method: '%q'\n", r.Method)
 				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
 				return
 			}
@@ -156,11 +157,9 @@ func gotListen(store *FStore, cli *gomatrix.Client) {
 				log.Printf("GOT: sending '%s'\n", line)
 				err = plugins.SendUnescNotice(cli, gotRoom, line)
 				if err != nil {
-					http.Error(
-						w,
-						fmt.Sprintf("can not send commit info: %s", err),
-						http.StatusInternalServerError,
-					)
+					errMsg := fmt.Sprintf("can not send commit info: %s", err)
+					log.Printf("GOT: error sending '%s': %q\n", line, err)
+					http.Error(w, errMsg, http.StatusInternalServerError)
 					return
 				}
 			}
