@@ -45,7 +45,7 @@ type Notification struct {
 	ID           string    `json:"id"`
 	Author       Author    `json:"author,omitempty"`
 	Committer    Committer `json:"committer"`
-	Date         string    `json:"date"`
+	Date         int       `json:"date"`
 	ShortMessage string    `json:"short_message"`
 	Message      string    `json:"message"`
 	Diffstat     Diffstat  `json:"diffstat,omitempty"`

@@ -17,7 +17,7 @@
         "mail": "flan@openbsd.org",
         "user": "flan"
       },
-      "date": "Thu Apr 18 16:47:40 2024 UTC",
+      "date": 1714041300,
       "short_message": "make changes",
       "message": "make changes\n",
       "diffstat": {
@@ -52,7 +52,7 @@
         "mail": "flans@openbsd.org",
         "user": "flans"
       },
-      "date": "Thu Apr 18 16:48:40 2024 UTC",
+      "date": 1714041301,
       "short_message": "make more changes",
       "message": "make more changes\n",
       "diffstat": {
@@ -81,7 +81,7 @@
         "mail": "flans@openbsd.org",
         "user": "flans"
       },
-      "date": "Thu Apr 19 16:48:40 2024 UTC",
+      "date": 1714041302,
       "short_message": "revert changes",
       "message": "revert all the previous changes\n"
     }
