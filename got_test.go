@@ -21,6 +21,11 @@ func TestGotNotification(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	err = nots.Save()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	for _, n := range nots.Notifications {
 		fmt.Println(n.String())
 	}

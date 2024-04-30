@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/matrix-org/gomatrix"
@@ -42,6 +43,7 @@ type Notification struct {
 	Type         string    `json:"type"`
 	Short        bool      `json:"short"`
 	Repo         string    `json:"repo"`
+	AuthorUser   string    `json:"author_user"`
 	ID           string    `json:"id"`
 	Author       Author    `json:"author,omitempty"`
 	Committer    Committer `json:"committer"`
@@ -54,7 +56,7 @@ type Notification struct {
 func (n *Notification) String() string {
 	// op committed got.git f9e653700..f9e653700^1 (main): fix gotd_parse_url() (https://git.gameoftrees.org/gitweb/?p=got.git;a=commitdiff;h=f9e653700)
 	return fmt.Sprintf("%s committed %s %s: %s (%s)",
-		n.Committer.User,
+		n.AuthorUser,
 		n.Repo,
 		n.ID,
 		n.ShortMessage,
@@ -67,6 +69,18 @@ func (n *Notification) String() string {
 
 type GotNotifications struct {
 	Notifications []Notification `json:"notifications"`
+}
+
+func (g *GotNotifications) Save() error {
+	gnJson, err := json.Marshal(g)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("/tmp/mcchunkie-notification.json", gnJson, 0600)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func gotListen(store *FStore, cli *gomatrix.Client) {
@@ -100,6 +114,9 @@ func gotListen(store *FStore, cli *gomatrix.Client) {
 				http.Error(w, fmt.Sprintf("invalid data sent to server: %s", err), http.StatusBadRequest)
 				return
 			}
+
+			_ = gn.Save()
+
 			for _, line := range gn.Notifications {
 				log.Printf("GOT: sending '%s'\n", line.String())
 				err = plugins.SendUnescNotice(cli, gotRoom, line.String())
