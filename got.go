@@ -41,23 +41,28 @@ type Diffstat struct {
 	Total Total   `json:"total"`
 }
 type Notification struct {
-	Type         string    `json:"type"`
-	Short        bool      `json:"short"`
-	Repo         string    `json:"repo"`
-	AuthUser     string    `json:"auth_user"`
-	ID           string    `json:"id"`
-	Author       Author    `json:"author,omitempty"`
-	Committer    Committer `json:"committer"`
-	Date         int       `json:"date"`
-	ShortMessage string    `json:"short_message"`
-	Message      string    `json:"message"`
-	Diffstat     Diffstat  `json:"diffstat,omitempty"`
+	Type              string    `json:"type"`
+	Short             bool      `json:"short"`
+	Repo              string    `json:"repo"`
+	AuthUser          string    `json:"auth_user"`
+	AuthenticatedUser string    `json:"authenticated_user"`
+	ID                string    `json:"id"`
+	Author            Author    `json:"author,omitempty"`
+	Committer         Committer `json:"committer"`
+	Date              int       `json:"date"`
+	ShortMessage      string    `json:"short_message"`
+	Message           string    `json:"message"`
+	Diffstat          Diffstat  `json:"diffstat,omitempty"`
 }
 
 func (n *Notification) String() string {
 	// op committed got.git f9e653700..f9e653700^1 (main): fix gotd_parse_url() (https://git.gameoftrees.org/gitweb/?p=got.git;a=commitdiff;h=f9e653700)
+	user := n.AuthenticatedUser
+	if user == "" {
+		user = n.AuthUser
+	}
 	return fmt.Sprintf("%s committed %s %s: %s (%s)",
-		n.AuthUser,
+		user,
 		n.Repo,
 		n.ID,
 		n.ShortMessage,
