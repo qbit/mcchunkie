@@ -285,6 +285,7 @@ var Plugs = Plugins{
 	&Ban{},
 	&BananaStab{},
 	&Beat{},
+	&Llama{},
 	&Beer{},
 	&BotSnack{},
 	&DMR{},
