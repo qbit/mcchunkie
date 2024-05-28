@@ -32,10 +32,28 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 
 		http.HandleFunc("/_sms", func(w http.ResponseWriter, r *http.Request) {
 			var msg, from string
+			if r.Method != http.MethodPost {
+				log.Printf("SMS: invalid method: '%q'\n", r.Method)
+				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
+				return
+			}
 			user, pass, ok := r.BasicAuth()
+			if !ok {
+				log.Println("SMS: basic auth no ok")
+				w.Header().Set("WWW-Authenticate", `Basic realm="sms notify"`)
+				http.Error(w, "auth error", http.StatusUnauthorized)
+				return
+			}
+
+			if user != "sms" {
+				log.Printf("SMS: failed auth for invalid user: %q, %q\n", user, pass)
+				w.Header().Set("WWW-Authenticate", `Basic realm="sms notify"`)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
 			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
-			log.Printf("OK: %#v\nERR: %#v\nUSER: %#v\n", ok, err, user)
-			if !(ok && err == nil && user == "sms") {
+			if err != nil {
 				log.Printf("SMS: failed auth %q %q\n", user, pass)
 				w.Header().Set("WWW-Authenticate", `Basic realm="sms notify"`)
 				http.Error(w, "Unauthorized", http.StatusUnauthorized)
