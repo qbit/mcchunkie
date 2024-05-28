@@ -66,8 +66,6 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 				return
 			}
 
-			log.Println(r.Method)
-
 			switch r.Method {
 			case http.MethodPost:
 				msg = r.Form.Get("Body")
