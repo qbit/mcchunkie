@@ -34,6 +34,7 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 			var msg, from string
 			user, pass, ok := r.BasicAuth()
 			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
+			log.Printf("OK: %#v\nERR: %#v\nUSER: %#v\n", ok, err, user)
 			if !(ok && err == nil && user == "sms") {
 				log.Printf("SMS: failed auth %q %q\n", user, pass)
 				w.Header().Set("WWW-Authenticate", `Basic realm="sms notify"`)
