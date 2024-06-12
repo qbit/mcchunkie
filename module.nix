@@ -49,8 +49,7 @@ in {
     systemd.services.mcchunkie = {
       enable = true;
       description = "mcchunkie server";
-      wantedBy = [ "network-online.target" ];
-      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
 
       environment = { HOME = "${cfg.dataDir}"; };
 
