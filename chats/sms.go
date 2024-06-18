@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/smtp"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -21,9 +22,13 @@ func smsCanSend(number string, numbers []string) bool {
 
 // SMSListen listens for our incoming sms
 func SMSListen(store ChatStore, plugins *plugins.Plugins) {
-	var smsPort, _ = store.Get("sms_listen")
-	var smsAllowed, _ = store.Get("sms_users")
-	var smsUsers = strings.Split(smsAllowed, ",")
+	var (
+		smsPort, _      = store.Get("sms_listen")
+		smsAllowed, _   = store.Get("sms_users")
+		smtpUser, _     = store.Get("smtp_user")
+		smtpReceiver, _ = store.Get("smtp_receiver")
+		smsUsers        = strings.Split(smsAllowed, ",")
+	)
 
 	if smsPort != "" {
 		var htpass, _ = store.Get("sms_htpass")
@@ -31,7 +36,8 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 		log.Printf("SMS: listening on %q\n", smsPort)
 
 		http.HandleFunc("/_sms", func(w http.ResponseWriter, r *http.Request) {
-			var msg, from string
+			var msg, from, id, date string
+			emailSend := false
 			user, pass, ok := r.BasicAuth()
 			if !ok {
 				log.Println("SMS: basic auth no ok")
@@ -65,8 +71,13 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 				msg = r.Form.Get("Body")
 				from = r.Form.Get("From")
 			case http.MethodGet:
+				// to={TO}&from={FROM}&message={MESSAGE}&id={ID}&date={TIMESTAMP}
+				id = r.URL.Query().Get("id")
+				date = r.URL.Query().Get("date")
 				msg = r.URL.Query().Get("message")
 				from = r.URL.Query().Get("from")
+
+				emailSend = true
 			default:
 				http.Error(
 					w,
@@ -90,7 +101,52 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 						p.SetStore(store)
 
 						resp := p.Process(from, msg)
-						fmt.Fprint(w, resp)
+
+						if emailSend {
+							sc, err := smtp.Dial("localhost:25")
+							if err != nil {
+								log.Printf("SMS: smtp dial failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+							}
+
+							if err := sc.Mail(smtpUser); err != nil {
+								log.Printf("SMS: smtp Mail failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+
+							}
+							if err := sc.Rcpt(smtpReceiver); err != nil {
+								log.Printf("SMS: smtp Rcpt failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+
+							}
+
+							wc, err := sc.Data()
+							if err != nil {
+								log.Printf("SMS: smtp Data failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+
+							}
+
+							fmt.Fprintf(wc, fmt.Sprintf("To: %s\r\n", smtpReceiver))
+							fmt.Fprintf(wc, fmt.Sprintf("From: %s\r\n", smtpUser))
+							fmt.Fprintf(wc, fmt.Sprintf("Subject: Message received from number %s to number %s [%s]\r\n", from, from, id))
+							fmt.Fprintf(wc, resp)
+
+							defer wc.Close()
+
+							err = sc.Quit()
+							if err != nil {
+								log.Printf("SMS: smtp Quit failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+							}
+						} else {
+							fmt.Fprint(w, resp)
+						}
 					}
 				}
 			} else {
