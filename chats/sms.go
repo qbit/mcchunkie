@@ -32,11 +32,6 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 
 		http.HandleFunc("/_sms", func(w http.ResponseWriter, r *http.Request) {
 			var msg, from string
-			if r.Method != http.MethodPost {
-				log.Printf("SMS: invalid method: '%q'\n", r.Method)
-				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
-				return
-			}
 			user, pass, ok := r.BasicAuth()
 			if !ok {
 				log.Println("SMS: basic auth no ok")
@@ -60,16 +55,18 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 				return
 			}
 
-			err = r.ParseForm()
-			if err != nil {
-				http.Error(w, "invalid request", http.StatusBadRequest)
-				return
-			}
-
 			switch r.Method {
 			case http.MethodPost:
+				err = r.ParseForm()
+				if err != nil {
+					http.Error(w, "invalid request", http.StatusBadRequest)
+					return
+				}
 				msg = r.Form.Get("Body")
 				from = r.Form.Get("From")
+			case http.MethodGet:
+				msg = r.URL.Query().Get("message")
+				from = r.URL.Query().Get("from")
 			default:
 				http.Error(
 					w,
