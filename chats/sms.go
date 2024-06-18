@@ -135,7 +135,12 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 							fmt.Fprintf(wc, fmt.Sprintf("Subject: Message received from number %s to number %s [%s]\r\n", from, from, id))
 							fmt.Fprintf(wc, resp)
 
-							defer wc.Close()
+							err = wc.Close()
+							if err != nil {
+								log.Printf("SMS: smtp Close failed: %q\n", err)
+								http.Error(w, "internal server error", http.StatusInternalServerError)
+								return
+							}	
 
 							err = sc.Quit()
 							if err != nil {
