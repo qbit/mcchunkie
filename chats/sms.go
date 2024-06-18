@@ -130,6 +130,7 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 
 							}
 
+							log.Printf("SMS: smtp sending id: %q to: %q, from: %q", id, smtpReceiver, smtpUser)
 							fmt.Fprintf(wc, fmt.Sprintf("To: %s\r\n", smtpReceiver))
 							fmt.Fprintf(wc, fmt.Sprintf("From: %s\r\n", smtpUser))
 							fmt.Fprintf(wc, fmt.Sprintf("Subject: Message received from number %s to number %s [%s]\r\n", from, from, id))
