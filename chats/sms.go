@@ -36,7 +36,7 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 		log.Printf("SMS: listening on %q\n", smsPort)
 
 		http.HandleFunc("/_sms", func(w http.ResponseWriter, r *http.Request) {
-			var msg, from, id, date string
+			var msg, from, id string
 			emailSend := false
 			user, pass, ok := r.BasicAuth()
 			if !ok {
@@ -73,7 +73,6 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 			case http.MethodGet:
 				// to={TO}&from={FROM}&message={MESSAGE}&id={ID}&date={TIMESTAMP}
 				id = r.URL.Query().Get("id")
-				date = r.URL.Query().Get("date")
 				msg = r.URL.Query().Get("message")
 				from = r.URL.Query().Get("from")
 
