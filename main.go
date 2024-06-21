@@ -31,11 +31,12 @@ A [Matrix](https://matrix.org) chat bot.`
 func main() {
 	var username, shortName, password, userID, accessToken, server, db, avatar, botOwner, prof string
 	var key, value, get string
-	var setup, doc, verbose bool
+	var setup, doc, verbose, irc bool
 
 	flag.BoolVar(&doc, "doc", false, "print plugin information and exit")
 	flag.BoolVar(&setup, "s", false, "setup account")
 	flag.BoolVar(&verbose, "v", false, "print verbose messages")
+	flag.BoolVar(&irc, "irc", true, "enable irc")
 
 	flag.StringVar(&avatar, "avatar", "", "set the avatar of the bot to specified url")
 	flag.StringVar(&db, "db", "db", "full path to database directory")
@@ -216,14 +217,27 @@ func main() {
 
 	go func() {
 		for {
-			err := chats.IRCConnect(store, &plugins.Plugs)
+			err := chats.MailListen(store, &plugins.Plugs)
 			if err != nil {
 				log.Println(err)
 			}
-			log.Println("IRC: reconnecting in 60 seconds")
+			log.Println("Mail: reconnecting in 60 seconds")
 			time.Sleep(time.Second * 60)
 		}
 	}()
+
+	if irc {
+		go func() {
+			for {
+				err := chats.IRCConnect(store, &plugins.Plugs)
+				if err != nil {
+					log.Println(err)
+				}
+				log.Println("IRC: reconnecting in 60 seconds")
+				time.Sleep(time.Second * 60)
+			}
+		}()
+	}
 
 	go func() {
 		for {
