@@ -124,8 +124,8 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 
 						resp := p.Process(from, msg)
 						err := sendVoipmsResp(voipms{
-							did:         from,
-							dst:         to,
+							did:         to,
+							dst:         from,
 							message:     resp,
 							method:      "sendSMS",
 							apiUser:     voipmsUser,
