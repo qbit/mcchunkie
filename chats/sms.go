@@ -115,6 +115,8 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 				from = r.URL.Query().Get("from")
 				to := r.URL.Query().Get("to")
 
+				log.Println("dst:", to, "did:", from)
+
 				for _, p := range *plugins {
 					if p.Match(from, msg) {
 						log.Printf("%s: responding to '%s'", p.Name(), from)
