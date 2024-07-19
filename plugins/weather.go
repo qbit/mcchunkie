@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/matrix-org/gomatrix"
@@ -83,6 +85,35 @@ type CloudsResp struct {
 	All int `json:"all"`
 }
 
+type PollutionResp struct {
+	Coord CoordResp `json:"coord"`
+	List  []struct {
+		Dt   int `json:"dt"`
+		Main struct {
+			Aqi int `json:"aqi"`
+		} `json:"main"`
+		Components struct {
+			Co   float64 `json:"co"`
+			No   float64 `json:"no"`
+			No2  float64 `json:"no2"`
+			O3   float64 `json:"o3"`
+			So2  float64 `json:"so2"`
+			Pm25 float64 `json:"pm2_5"`
+			Pm10 float64 `json:"pm10"`
+			Nh3  float64 `json:"nh3"`
+		} `json:"components"`
+	} `json:"list"`
+}
+
+func (p *PollutionResp) String() string {
+	if len(p.List) == 0 {
+		return "AQI: unavailable"
+	}
+
+	c := p.List[0].Components
+	return fmt.Sprintf("AQI: %d (CO2: %.1f, PM2.5: %.1f, PM10: %.1f)", p.List[0].Main.Aqi, c.Co, c.Pm25, c.Pm10)
+}
+
 // SysResp seems to be used internally for something
 type SysResp struct {
 	Type    int     `json:"type"`
@@ -103,7 +134,50 @@ func (h *Weather) SetStore(s PluginStore) {
 	h.db = s
 }
 
-func (h *Weather) get(loc string) (*WeatherResp, error) {
+func (h *Weather) getPollution(c *CoordResp) (*PollutionResp, error) {
+	u, err := url.Parse("http://api.openweathermap.org/data/2.5/air_pollution")
+	if err != nil {
+		return nil, err
+	}
+	key, err := h.db.Get("weather_api_key")
+	if err != nil {
+		return nil, err
+	}
+
+	if key == "" {
+		return nil, fmt.Errorf("no API key set")
+	}
+
+	v := url.Values{}
+	v.Set("APPID", key)
+	v.Add("lat", strconv.FormatFloat(c.Lat, 'g', -1, 64))
+	v.Add("lon", strconv.FormatFloat(c.Lon, 'g', -1, 64))
+
+	u.RawQuery = v.Encode()
+
+	resp, err := http.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var w = &PollutionResp{}
+	err = json.Unmarshal(body, w)
+	if err != nil {
+		log.Println(string(body))
+		return nil, err
+	}
+
+	return w, nil
+}
+
+func (h *Weather) getCurrent(loc string) (*WeatherResp, error) {
 	u := "http://api.openweathermap.org/data/2.5/weather?%s"
 	key, err := h.db.Get("weather_api_key")
 	if err != nil {
@@ -143,12 +217,12 @@ func (h *Weather) get(loc string) (*WeatherResp, error) {
 
 // Descr describes this plugin
 func (h *Weather) Descr() string {
-	return "Produce weather information for a given ZIP code. Data comes from openweathermap.org."
+	return "Produce weather information for a given ZIP or ZIP,CountryCode combo. Data comes from openweathermap.org."
 }
 
 // Re is what our weather matches
 func (h *Weather) Re() string {
-	return `(?i)^weather: (\d+)$`
+	return `(?i)^weather: (\d+|\d+(:?,[a-z][A-Z]))$`
 }
 
 // Match checks for "weather: " messages
@@ -165,16 +239,24 @@ func (h *Weather) fix(msg string) string {
 func (h *Weather) Process(from, post string) string {
 	weather := h.fix(post)
 	if weather != "" {
-		wd, err := h.get(weather)
+		wd, err := h.getCurrent(weather)
 		if err != nil {
 			return fmt.Sprintf("sorry %s, I can't look up the weather. %s", from, err)
 		}
-		return fmt.Sprintf("%s: %s (%s) Humidity: %s%%, %s",
+		po, err := h.getPollution(&wd.Coord)
+		if err != nil {
+			return fmt.Sprintf("sorry %s, I can't look up the pollution. %s", from, err)
+		}
+
+		pollution := po.String()
+
+		return fmt.Sprintf(`%s: %s (%s) %s, Humidity: %s%%, %s`,
 			wd.Name,
 			wd.c(),
 			wd.f(),
-			wd.humidity(),
 			wd.conditions(),
+			wd.humidity(),
+			pollution,
 		)
 	}
 
