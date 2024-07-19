@@ -23,10 +23,10 @@
         {
           mcchunkie = pkgs.buildGoModule rec {
             pname = "mcchunkie";
-            version = "v1.0.20";
+            version = "v1.0.21";
             src = ./.;
 
-            vendorHash = "sha256-HbJ6BsBJMuWZtpTTWMit2WryPNgQugwQHLhdvSzv5XY=";
+            vendorHash = "sha256-7IBp9/ybw594nDaGbZ/dmwYFwYvrvQvWwjJ0zc6nUfk=";
 
             # makes outbound http requests
             doCheck = false;
