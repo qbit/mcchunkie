@@ -51,7 +51,11 @@ func sendVoipmsResp(v voipms) error {
 		return err
 	}
 	defer resp.Body.Close()
-	log.Println(io.ReadAll(resp.Body))
+	str, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	log.Println(str)
 	return nil
 }
 
