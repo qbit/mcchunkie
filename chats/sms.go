@@ -55,7 +55,7 @@ func sendVoipmsResp(v voipms) error {
 	if err != nil {
 		return err
 	}
-	log.Println(str)
+	log.Println(string(str))
 	return nil
 }
 
