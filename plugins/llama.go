@@ -80,7 +80,7 @@ func (l *Llama) Process(from, msg string) string {
 	}
 
 	req := &api.ChatRequest{
-		Model:    "llama3",
+		Model:    "llama3.1",
 		Messages: messages,
 	}
 
