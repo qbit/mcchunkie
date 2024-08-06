@@ -24,7 +24,7 @@ func (l *Llama) Descr() string {
 }
 
 func (l *Llama) Re() string {
-	return `(?i)^llama:(.+)$`
+	return `(?i)^(o)?llama:(.+)$`
 }
 
 func (l *Llama) Match(_, msg string) bool {
