@@ -59,7 +59,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var help = `^help: (\w+)$`
+	var help = `(?i)^help: (\w+)$`
 	var helpRE = regexp.MustCompile(help)
 	var kvRE = regexp.MustCompile(`^(.+)\s->\s(.+)$`)
 	store, err := NewStore(db)
