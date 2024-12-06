@@ -47,8 +47,7 @@ func (h *BananaStab) Process(from, post string) string {
 
 // RespondText stabs an unsuspecting person
 func (h *BananaStab) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	err := SendEmote(c, ev.RoomID, h.Process(ev.Sender, post))
-	return err
+	return SendEmote(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name BananaStab!

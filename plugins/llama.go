@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/matrix-org/gomatrix"
@@ -37,15 +38,6 @@ func (l *Llama) SetStore(s PluginStore) {
 }
 
 func (l *Llama) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	botOwner, err := l.db.Get("bot_owner")
-	if err != nil {
-		return err
-	}
-
-	if ev.Sender != botOwner {
-		return errors.New("llama: sorry, you aren't qbit")
-	}
-
 	return SendMD(c, ev.RoomID, l.Process("", post))
 }
 
@@ -58,6 +50,15 @@ func (l *Llama) Process(from, msg string) string {
 	llamaServer, err := l.db.Get("ollama_host")
 	if err != nil {
 		return err.Error()
+	}
+
+	botOwners, err := l.db.Get("bot_owners")
+	if err != nil {
+		return err.Error()
+	}
+	log.Println(botOwners, from)
+	if !slices.Contains(strings.Split(botOwners, ","), from) {
+		return errors.New("llama: sorry, you aren't an owner").Error()
 	}
 
 	if l.client == nil {

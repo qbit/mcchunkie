@@ -9,8 +9,19 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+	"suah.dev/mcchunkie/mcstore"
 	"suah.dev/mcchunkie/plugins"
 )
+
+type SMSChat struct{}
+
+func (s *SMSChat) Name() string {
+	return "SMS"
+}
+
+func (s *SMSChat) Send(string, string) error {
+	return nil
+}
 
 func smsCanSend(number string, numbers []string) bool {
 	for _, s := range numbers {
@@ -60,17 +71,30 @@ func sendVoipmsResp(v voipms) error {
 }
 
 // SMSListen listens for our incoming sms
-func SMSListen(store ChatStore, plugins *plugins.Plugins) {
-	var (
-		smsPort, _    = store.Get("sms_listen")
-		smsAllowed, _ = store.Get("sms_users")
-		smsUsers      = strings.Split(smsAllowed, ",")
-		voipmsUser, _ = store.Get("voipms_user")
-		voipmsPass, _ = store.Get("voipms_api_pass")
-	)
+func (sc *SMSChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) error {
+	smsPort, err := store.Get("sms_listen")
+	if err != nil {
+		return err
+	}
+	smsAllowed, err := store.Get("sms_users")
+	if err != nil {
+		return err
+	}
+	smsUsers := strings.Split(smsAllowed, ",")
+	voipmsUser, err := store.Get("voipms_user")
+	if err != nil {
+		return err
+	}
+	voipmsPass, err := store.Get("voipms_api_pass")
+	if err != nil {
+		return err
+	}
 
 	if smsPort != "" {
-		var htpass, _ = store.Get("sms_htpass")
+		var htpass, err = store.Get("sms_htpass")
+		if err != nil {
+			return err
+		}
 
 		log.Printf("SMS: listening on %q\n", smsPort)
 
@@ -171,6 +195,7 @@ func SMSListen(store ChatStore, plugins *plugins.Plugins) {
 				return
 			}
 		})
-		log.Fatal(http.ListenAndServe(smsPort, nil))
+		return http.ListenAndServe(smsPort, nil)
 	}
+	return nil
 }

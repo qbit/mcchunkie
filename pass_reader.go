@@ -6,7 +6,7 @@ import (
 	"golang.org/x/term"
 )
 
-//noinspection GoUnresolvedReference
+// noinspection GoUnresolvedReference
 func prompt(p string) (string, error) {
 	oldState, err := term.MakeRaw(0)
 	if err != nil {

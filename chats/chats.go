@@ -1,20 +1,18 @@
 package chats
 
 import (
+	"strings"
+
+	"suah.dev/mcchunkie/mcstore"
 	"suah.dev/mcchunkie/plugins"
 )
-
-// ChatStore matches MCStore. This allows the main store to be used by
-// plugins.
-type ChatStore interface {
-	Set(key, values string)
-	Get(key string) (string, error)
-}
 
 // Chat represents a mode of communication like Matrix, IRC or SMS.
 type Chat interface {
 	// Connect connects
-	Connect(s plugins.PluginStore) error
+	Connect(*mcstore.MCStore, *plugins.Plugins) error
+	Name() string
+	Send(string, string) error
 }
 
 // Chats is a collection of our chat methods. An instance of this is iterated
@@ -22,4 +20,20 @@ type Chat interface {
 type Chats []Chat
 
 // ChatMethods defines the "enabled" chat methogs.
-var ChatMethods = Chats{}
+var ChatMethods = Chats{
+	&MatrixChat{},
+	&XMPPChat{},
+	&IRCChat{},
+	&MailChat{},
+	&SMSChat{},
+}
+
+func (c *Chats) List() string {
+	s := []string{}
+
+	for _, ch := range *c {
+		s = append(s, ch.Name())
+	}
+
+	return strings.Join(s, ", ")
+}

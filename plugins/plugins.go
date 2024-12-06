@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -55,6 +56,7 @@ var NameRE = regexp.MustCompile(`@(.+):.+$`)
 
 // ToMe returns true of the message pertains to the bot
 func ToMe(user, message string) bool {
+	log.Println("TOME", user)
 	u := NameRE.ReplaceAllString(user, "$1")
 	return strings.Contains(message, u)
 }
@@ -291,6 +293,7 @@ var Plugs = Plugins{
 	&Feder{},
 	&Groan{},
 	&Ham{},
+	&Help{},
 	&HighFive{},
 	&Hi{},
 	&Homestead{},
@@ -311,4 +314,14 @@ var Plugs = Plugins{
 	&Wb{},
 	&Weather{},
 	&Yeah{},
+}
+
+func (p *Plugins) List() string {
+	s := []string{}
+
+	for _, plg := range *p {
+		s = append(s, plg.Name())
+	}
+
+	return strings.Join(s, ", ")
 }

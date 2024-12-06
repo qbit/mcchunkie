@@ -1,4 +1,4 @@
-package main
+package chats
 
 import (
 	"encoding/json"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/matrix-org/gomatrix"
 	"golang.org/x/crypto/bcrypt"
+	"suah.dev/mcchunkie/mcstore"
 	"suah.dev/mcchunkie/plugins"
 )
 
@@ -77,8 +78,12 @@ type GotNotifications struct {
 	Notifications []Notification `json:"notifications"`
 }
 
-func gotListen(store *FStore, cli *gomatrix.Client) {
-	var gotPort, _ = store.Get("got_listen")
+func gotListen(store *mcstore.MCStore, cli *gomatrix.Client) {
+	var gotPort, err = store.Get("got_listen")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	if gotPort != "" {
 		var htpass, _ = store.Get("got_htpass")
 		var gotRoom, _ = store.Get("got_room")

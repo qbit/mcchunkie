@@ -32,23 +32,23 @@ func (h *BotSnack) SetStore(_ PluginStore) {}
 
 // Process does the heavy lifting
 func (h *BotSnack) Process(from, msg string) string {
-	a := []string{
-		"omm nom nom nom",
-		"*puke*",
-		"MOAR!",
-		"=.=",
-	}
+	u := NameRE.ReplaceAllString(from, "$1")
+	if ToMe(u, msg) {
+		a := []string{
+			"omm nom nom nom",
+			"*puke*",
+			"MOAR!",
+			"=.=",
+		}
 
-	return a[rand.Intn(len(a))]
+		return a[rand.Intn(len(a))]
+	}
+	return ""
 }
 
 // RespondText to botsnack events
 func (h *BotSnack) RespondText(c *gomatrix.Client, ev *gomatrix.Event, user, post string) error {
-	u := NameRE.ReplaceAllString(user, "$1")
-	if ToMe(u, post) {
-		return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
-	}
-	return nil
+	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
 }
 
 // Name BotSnack

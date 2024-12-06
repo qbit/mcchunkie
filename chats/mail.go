@@ -13,8 +13,19 @@ import (
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
 	"github.com/emersion/go-message/mail"
+	"suah.dev/mcchunkie/mcstore"
 	"suah.dev/mcchunkie/plugins"
 )
+
+type MailChat struct{}
+
+func (m *MailChat) Name() string {
+	return "Mail"
+}
+
+func (m *MailChat) Send(string, string) error {
+	return nil
+}
 
 type mmail struct {
 	smtpUser   string
@@ -125,14 +136,27 @@ func (m *mmail) buildReply(msgID, subj, to, from, resp string) error {
 	return m.send(to, from, wc.Bytes())
 }
 
-func MailListen(store ChatStore, plugins *plugins.Plugins) error {
-	var (
-		smtpUser, _   = store.Get("smtp_user")
-		smtpServer, _ = store.Get("smtp_server")
-		imapServer, _ = store.Get("imap_server")
-		imapUser, _   = store.Get("imap_user")
-		mailPass, _   = store.Get("mail_password")
-	)
+func (mc *MailChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) error {
+	smtpUser, err := store.Get("smtp_user")
+	if err != nil {
+		return err
+	}
+	smtpServer, err := store.Get("smtp_server")
+	if err != nil {
+		return err
+	}
+	imapServer, err := store.Get("imap_server")
+	if err != nil {
+		return err
+	}
+	imapUser, err := store.Get("imap_user")
+	if err != nil {
+		return err
+	}
+	mailPass, err := store.Get("mail_password")
+	if err != nil {
+		return err
+	}
 
 	m := mmail{
 		smtpUser:   smtpUser,

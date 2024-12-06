@@ -26,7 +26,7 @@
             version = "v1.0.21";
             src = ./.;
 
-            vendorHash = "sha256-7IBp9/ybw594nDaGbZ/dmwYFwYvrvQvWwjJ0zc6nUfk=";
+            vendorHash = "sha256-+JdEDHgyTQFpS2aQsOgtInpMZrr3MyU1NY2LFucBfpU=";
 
             # makes outbound http requests
             doCheck = false;

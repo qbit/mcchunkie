@@ -7,17 +7,42 @@ import (
 	"strings"
 
 	"gopkg.in/irc.v3"
+	"suah.dev/mcchunkie/mcstore"
 	"suah.dev/mcchunkie/plugins"
 )
 
+type IRCChat struct{}
+
+func (i *IRCChat) Name() string {
+	return "IRC"
+}
+
+func (i *IRCChat) Send(string, string) error {
+	return nil
+}
+
 // IRCConnect connects to our irc server
-func IRCConnect(store ChatStore, plugins *plugins.Plugins) error {
-	var ircServer, _ = store.Get("irc_server")
-	var ircPort, _ = store.Get("irc_port")
-	var ircNick, _ = store.Get("irc_nick")
-	var ircPass, _ = store.Get("irc_pass")
-	var ircRooms, _ = store.Get("irc_rooms")
-	//var toRE = regexp.MustCompile(`^:(\w+)\s`)
+func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) error {
+	ircServer, err := store.Get("irc_server")
+	if err != nil {
+		return err
+	}
+	ircPort, err := store.Get("irc_port")
+	if err != nil {
+		return err
+	}
+	ircNick, err := store.Get("irc_nick")
+	if err != nil {
+		return err
+	}
+	ircPass, err := store.Get("irc_pass")
+	if err != nil {
+		log.Println(err)
+	}
+	ircRooms, err := store.Get("irc_rooms")
+	if err != nil {
+		return err
+	}
 
 	if ircServer != "" {
 
