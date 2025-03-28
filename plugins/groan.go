@@ -30,7 +30,7 @@ func (h *Groan) Match(user, msg string) bool {
 	return re.MatchString(msg)
 }
 
-func (h *Groan) Process(_, _ string) string {
+func (h *Groan) Process(_, _ string) (string, func() string) {
 	a := []string{
 		"Ugh.",
 		"ugh",
@@ -40,12 +40,13 @@ func (h *Groan) Process(_, _ string) string {
 		"........",
 	}
 
-	return a[rand.Intn(len(a))]
+	return a[rand.Intn(len(a))], RespStub
 }
 
 // RespondText to groan events
 func (h *Groan) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process("", ""))
+	resp, _ := h.Process("", "")
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name returns the name of the Groan plugin

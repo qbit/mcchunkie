@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/matrix-org/gomatrix"
@@ -30,23 +31,28 @@ func (h *Yeah) Match(user, msg string) bool {
 	return ToMe(user, msg) && re.MatchString(msg)
 }
 
-func (h *Yeah) Process(from, post string) string {
-	return ""
-}
-
-// RespondText to high five events
-func (h *Yeah) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+func (h *Yeah) Process(from, post string) (string, func() string) {
 	parts := []string{
 		"( •_•)",
 		"( •_•)>⌐■-■",
 		"(⌐■_■)",
 	}
-	for _, p := range parts {
-		SendText(c, ev.RoomID, p)
-		time.Sleep(1 * time.Second)
+
+	return strings.Join(parts, "\n"), func() string {
+		time.Sleep(5 * time.Second)
+		return "YEEEAAAAAAHHHHHH!"
 	}
-	time.Sleep(5 * time.Second)
-	return SendText(c, ev.RoomID, "YEEEAAAAAAHHHHHH!")
+}
+
+// RespondText to high five events
+func (h *Yeah) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
+	resp, delayedResp := h.Process(ev.Sender, post)
+	SendText(c, ev.RoomID, resp)
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return nil
 }
 
 // Name returns the name of the Yeah plugin

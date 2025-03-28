@@ -34,11 +34,11 @@ func (v *Version) Match(user, msg string) bool {
 }
 
 // Process does the heavy lifting
-func (v *Version) Process(_, _ string) string {
+func (v *Version) Process(_, _ string) (string, func() string) {
 	if version == "" {
 		version = "unknown version"
 	}
-	return fmt.Sprintf(response, version, runtime.GOOS, runtime.Version())
+	return fmt.Sprintf(response, version, runtime.GOOS, runtime.Version()), RespStub
 }
 
 // SetStore does nothing in here
@@ -46,7 +46,8 @@ func (v *Version) SetStore(_ PluginStore) {}
 
 // RespondText to version events
 func (v *Version) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendMD(c, ev.RoomID, v.Process("", ""))
+	resp, _ := v.Process("", "")
+	return SendMD(c, ev.RoomID, resp)
 }
 
 // Name Version

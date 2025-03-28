@@ -31,7 +31,7 @@ func (h *ROA) Match(user, msg string) bool {
 func (h *ROA) SetStore(_ PluginStore) {}
 
 // Process
-func (h *ROA) Process(from, post string) string {
+func (h *ROA) Process(from, post string) (string, func() string) {
 	a := []string{
 		`1	Once you have their money, you never give it back.`,
 		`2	The best deal is the one that brings the most profit.`,
@@ -138,12 +138,13 @@ func (h *ROA) Process(from, post string) string {
 		`-	If that's what's written, then that's what's written.`,
 	}
 
-	return a[rand.Intn(len(a))]
+	return a[rand.Intn(len(a))], RespStub
 }
 
 // RespondText
 func (h *ROA) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, ""))
+	resp, _ := h.Process(ev.Sender, "")
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name ROA

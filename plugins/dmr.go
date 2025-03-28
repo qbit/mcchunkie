@@ -86,7 +86,7 @@ func (p *DMR) query(msg string) string {
 	return re.ReplaceAllString(msg, "$3")
 }
 
-func (p *DMR) Process(from, post string) string {
+func (p *DMR) Process(from, post string) (string, func() string) {
 	mode := p.mode(post)
 	param := p.param(post)
 	search := p.query(post)
@@ -110,11 +110,11 @@ func (p *DMR) Process(from, post string) string {
 		req.ResBody = res
 		err := req.DoJSON()
 		if err != nil {
-			return err.Error()
+			return err.Error(), RespStub
 		}
 
 		if res.Count == 0 {
-			return fmt.Sprintf("nothing found for '%s'", params.Encode())
+			return fmt.Sprintf("nothing found for '%s'", params.Encode()), RespStub
 		}
 
 		var s []string
@@ -123,18 +123,18 @@ func (p *DMR) Process(from, post string) string {
 		s = append(s, fmt.Sprintf("**Frequency**: %s", res.Results[0].Frequency))
 		s = append(s, fmt.Sprintf("**Offset**: %s", res.Results[0].Offset))
 
-		return strings.Join(s, ", ")
+		return strings.Join(s, ", "), RespStub
 
 	case "user":
 		var res = &DMRUser{}
 		req.ResBody = res
 		err := req.DoJSON()
 		if err != nil {
-			return err.Error()
+			return err.Error(), RespStub
 		}
 
 		if res.Count == 0 {
-			return fmt.Sprintf("nothing found for '%s'", params.Encode())
+			return fmt.Sprintf("nothing found for '%s'", params.Encode()), RespStub
 		}
 
 		var s []string
@@ -142,14 +142,15 @@ func (p *DMR) Process(from, post string) string {
 		s = append(s, fmt.Sprintf("**ID**: %d", res.Results[0].ID))
 		s = append(s, fmt.Sprintf("**Callsign**: %s", res.Results[0].Callsign))
 
-		return strings.Join(s, ", ")
+		return strings.Join(s, ", "), RespStub
 	}
-	return fmt.Sprintf("invalid mode: %q", mode)
+	return fmt.Sprintf("invalid mode: %q", mode), RespStub
 }
 
 // RespondText to looking up of DMR info
 func (p *DMR) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendMD(c, ev.RoomID, p.Process(ev.Sender, post))
+	resp, _ := p.Process(ev.Sender, post)
+	return SendMD(c, ev.RoomID, resp)
 }
 
 // Name DMR!

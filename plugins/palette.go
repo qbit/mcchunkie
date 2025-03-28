@@ -56,8 +56,8 @@ func isEdge(x, y int) bool {
 	return false
 }
 
-func (h *Palette) Process(_, _ string) string {
-	return "not supported"
+func (h *Palette) Process(_, _ string) (string, func() string) {
+	return "not supported", RespStub
 }
 
 // RespondText to color request events

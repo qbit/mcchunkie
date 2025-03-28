@@ -31,14 +31,19 @@ func (h *Hi) Match(user, msg string) bool {
 func (h *Hi) SetStore(_ PluginStore) {}
 
 // Process does the lifting
-func (h *Hi) Process(from, post string) string {
+func (h *Hi) Process(from, post string) (string, func() string) {
 	s := NameRE.ReplaceAllString(from, "$1")
-	return fmt.Sprintf("hi %s!", s)
+	return fmt.Sprintf("hi %s!", s), RespStub
 }
 
 // RespondText to hi events
 func (h *Hi) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, delayedResp := h.Process(ev.Sender, post)
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name hi

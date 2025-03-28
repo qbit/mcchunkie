@@ -32,7 +32,7 @@ func (h *Thanks) Match(user, msg string) bool {
 func (h *Thanks) SetStore(_ PluginStore) {}
 
 // Process
-func (h *Thanks) Process(from, post string) string {
+func (h *Thanks) Process(from, post string) (string, func() string) {
 	s := NameRE.ReplaceAllString(from, "$1")
 	a := []string{
 		fmt.Sprintf("welcome %s", s),
@@ -42,12 +42,13 @@ func (h *Thanks) Process(from, post string) string {
 		fmt.Sprintf("you're welcome, %s", s),
 	}
 
-	return a[rand.Intn(len(a))]
+	return a[rand.Intn(len(a))], RespStub
 }
 
 // RespondText to welcome back events
 func (h *Thanks) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, ""))
+	resp, _ := h.Process(ev.Sender, "")
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name Thanks

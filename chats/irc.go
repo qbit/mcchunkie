@@ -87,11 +87,12 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 					}
 
 					resp := ""
+					delayedResp := func() string { return "" }
 					for _, p := range *plugins {
 						if p.Match(c.CurrentNick(), msg) {
 							p.SetStore(store)
 
-							resp = p.Process(from, msg)
+							resp, delayedResp = p.Process(from, msg)
 						}
 					}
 
@@ -110,6 +111,20 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 								resp,
 							},
 						})
+						go func() {
+							dresp := delayedResp()
+
+							if resp != "" {
+								log.Printf("IRC: sending: %q to %q\n", dresp, to)
+								c.WriteMessage(&irc.Message{
+									Command: "PRIVMSG",
+									Params: []string{
+										to,
+										dresp,
+									},
+								})
+							}
+						}()
 					}
 				default:
 					log.Printf("IRC: unhandled - %q", m.String())

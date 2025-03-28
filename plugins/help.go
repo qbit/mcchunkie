@@ -37,22 +37,27 @@ func (h *Help) fix(msg string) string {
 func (h *Help) SetStore(_ PluginStore) {}
 
 // Process does the lifting
-func (h *Help) Process(from, post string) string {
+func (h *Help) Process(from, post string) (string, func() string) {
 	item := h.fix(post)
 
 	var pnames []string
 	for _, plg := range Plugs {
 		if strings.ToLower(plg.Name()) == strings.ToLower(item) {
-			return fmt.Sprintf("**%s**: `%s` -  _%s_\n", plg.Name(), plg.Re(), plg.Descr())
+			return fmt.Sprintf("**%s**: `%s` -  _%s_\n", plg.Name(), plg.Re(), plg.Descr()), func() string { return "" }
 		}
 		pnames = append(pnames, plg.Name())
 	}
-	return fmt.Sprintf("no help found for %q, available: %s", item, strings.Join(pnames, ", "))
+	return fmt.Sprintf("no help found for %q, available: %s", item, strings.Join(pnames, ", ")), func() string { return "" }
 }
 
 // RespondText to hi events
 func (h *Help) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, delayedResp := h.Process(ev.Sender, post)
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name hi

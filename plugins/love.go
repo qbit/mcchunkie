@@ -28,7 +28,7 @@ func (h *LoveYou) Match(user, msg string) bool {
 }
 
 // Process does the heavy lifting
-func (h *LoveYou) Process(from, post string) string {
+func (h *LoveYou) Process(from, post string) (string, func() string) {
 	a := []string{
 		"I am not ready for this kind of relationship!",
 		"ಠ_ಠ",
@@ -37,7 +37,7 @@ func (h *LoveYou) Process(from, post string) string {
 		"hawkard!",
 	}
 
-	return a[rand.Intn(len(a))]
+	return a[rand.Intn(len(a))], RespStub
 }
 
 // SetStore we don't need a store, so just return
@@ -45,7 +45,12 @@ func (h *LoveYou) SetStore(_ PluginStore) {}
 
 // RespondText to love events
 func (h *LoveYou) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, h.Process("", ""))
+	resp, delayedResp := h.Process("", "")
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name i love you

@@ -144,17 +144,35 @@ func (sc *SMSChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) err
 						log.Printf("%s: responding to '%s'", p.Name(), from)
 						p.SetStore(store)
 
-						resp := p.Process(from, msg)
-						err := sendVoipmsResp(voipms{
-							did:         to,
-							dst:         from,
-							message:     resp,
-							method:      "sendSMS",
-							apiUser:     voipmsUser,
-							apiPassword: voipmsPass,
-						})
-						if err != nil {
-							log.Println(err)
+						resp, delayedResp := p.Process(from, msg)
+						if resp != "" {
+							err := sendVoipmsResp(voipms{
+								did:         to,
+								dst:         from,
+								message:     resp,
+								method:      "sendSMS",
+								apiUser:     voipmsUser,
+								apiPassword: voipmsPass,
+							})
+							if err != nil {
+								log.Println(err)
+							}
+							go func() {
+								resp := delayedResp()
+								if resp != "" {
+									err := sendVoipmsResp(voipms{
+										did:         to,
+										dst:         from,
+										message:     resp,
+										method:      "sendSMS",
+										apiUser:     voipmsUser,
+										apiPassword: voipmsPass,
+									})
+									if err != nil {
+										log.Println(err)
+									}
+								}
+							}()
 						}
 					}
 				}
@@ -181,8 +199,16 @@ func (sc *SMSChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) err
 						log.Printf("%s: responding to '%s'", p.Name(), from)
 						p.SetStore(store)
 
-						resp := p.Process(from, msg)
-						fmt.Fprint(w, resp)
+						resp, delayedResp := p.Process(from, msg)
+						if resp != "" {
+							fmt.Fprint(w, resp)
+							go func() {
+								dresp := delayedResp()
+								if dresp != "" {
+									fmt.Fprint(w, dresp)
+								}
+							}()
+						}
 					}
 				}
 			} else {

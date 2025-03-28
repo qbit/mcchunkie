@@ -236,16 +236,16 @@ func (h *Weather) fix(msg string) string {
 	return re.ReplaceAllString(msg, "$1")
 }
 
-func (h *Weather) Process(from, post string) string {
+func (h *Weather) Process(from, post string) (string, func() string) {
 	weather := h.fix(post)
 	if weather != "" {
 		wd, err := h.getCurrent(weather)
 		if err != nil {
-			return fmt.Sprintf("sorry %s, I can't look up the weather. %s", from, err)
+			return fmt.Sprintf("sorry %s, I can't look up the weather. %s", from, err), RespStub
 		}
 		po, err := h.getPollution(&wd.Coord)
 		if err != nil {
-			return fmt.Sprintf("sorry %s, I can't look up the pollution. %s", from, err)
+			return fmt.Sprintf("sorry %s, I can't look up the pollution. %s", from, err), RespStub
 		}
 
 		pollution := po.String()
@@ -257,15 +257,16 @@ func (h *Weather) Process(from, post string) string {
 			wd.conditions(),
 			wd.humidity(),
 			pollution,
-		)
+		), RespStub
 	}
 
-	return "shrug."
+	return "shrug.", RespStub
 }
 
 // RespondText to looking up of weather lookup requests
 func (h *Weather) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, _ := h.Process(ev.Sender, post)
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name Weather!

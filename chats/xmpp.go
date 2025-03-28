@@ -45,19 +45,29 @@ func (x *XMPPChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) err
 		}
 
 		resp := ""
+		delayedResp := func() string { return "" }
 		log.Println(msg.From, msg.To)
 		log.Println(msg.Body)
 		for _, p := range *plugins {
 			if p.Match(msg.From, msg.Body) {
 				log.Printf("%s: responding to '%s'", p.Name(), msg.From)
 				p.SetStore(store)
-				resp = p.Process(msg.From, msg.Body)
+				resp, delayedResp = p.Process(msg.From, msg.Body)
 			}
 		}
 		if resp != "" {
 			log.Printf("XMPP: sending: %q to %q\n", resp, msg.From)
 			reply := stanza.Message{Attrs: stanza.Attrs{To: msg.From}, Body: resp}
 			_ = s.Send(reply)
+			go func() {
+				dresp := delayedResp()
+				if dresp != "" {
+					log.Printf("XMPP: sending: %q to %q\n", dresp, msg.From)
+					reply := stanza.Message{Attrs: stanza.Attrs{To: msg.From}, Body: dresp}
+					_ = s.Send(reply)
+				}
+			}()
+
 		}
 	})
 

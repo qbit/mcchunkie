@@ -3,6 +3,7 @@ package plugins
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -38,10 +39,15 @@ func (l *Llama) SetStore(s PluginStore) {
 }
 
 func (l *Llama) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendMD(c, ev.RoomID, l.Process("", post))
+	resp, delayedResp := l.Process(ev.Sender, post)
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return SendMD(c, ev.RoomID, resp)
 }
 
-func (l *Llama) Process(from, msg string) string {
+func (l *Llama) Process(from, msg string) (string, func() string) {
 	var err error
 	ctx := context.Background()
 
@@ -49,22 +55,22 @@ func (l *Llama) Process(from, msg string) string {
 	query := re.ReplaceAllString(msg, "$1")
 	llamaServer, err := l.db.Get("ollama_host")
 	if err != nil {
-		return err.Error()
+		return err.Error(), RespStub
 	}
 
 	botOwners, err := l.db.Get("bot_owners")
 	if err != nil {
-		return err.Error()
+		return err.Error(), RespStub
 	}
-	log.Println(botOwners, from)
+	log.Println("owners, from", botOwners, from)
 	if !slices.Contains(strings.Split(botOwners, ","), from) {
-		return errors.New("llama: sorry, you aren't an owner").Error()
+		return errors.New(fmt.Sprintf("sorry, %s, I can't let you do that.", from)).Error(), RespStub
 	}
 
 	if l.client == nil {
 		u, err := url.Parse(llamaServer)
 		if err != nil {
-			return err.Error()
+			return err.Error(), RespStub
 		}
 		l.client = api.NewClient(u, http.DefaultClient)
 	}
@@ -94,7 +100,7 @@ func (l *Llama) Process(from, msg string) string {
 		log.Println(err)
 	}
 
-	return strings.Join(respSet, "")
+	return strings.Join(respSet, ""), RespStub
 }
 
 func (l *Llama) Name() string {

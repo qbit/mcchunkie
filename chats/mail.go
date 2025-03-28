@@ -271,8 +271,7 @@ func (mc *MailChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) er
 								log.Printf("%s: responding to '%s'", p.Name(), from)
 								p.SetStore(store)
 
-								resp := p.Process(from, msg)
-								log.Println(resp)
+								resp, delayedResp := p.Process(from, msg)
 
 								/*
 									err := m.buildReply(msgID, subj, to, from, resp)
@@ -282,12 +281,22 @@ func (mc *MailChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) er
 									}
 								*/
 
-								err := m.buildFancyReply(msgID, to, from, subj, resp)
-								if err != nil {
-									log.Println(err)
-									continue
+								if resp != "" {
+									err := m.buildFancyReply(msgID, to, from, subj, resp)
+									if err != nil {
+										log.Println(err)
+										continue
+									}
+									go func() {
+										dresp := delayedResp()
+										if dresp != "" {
+											err := m.buildFancyReply(msgID, to, from, subj, dresp)
+											if err != nil {
+												log.Println(err)
+											}
+										}
+									}()
 								}
-
 							}
 						}
 					}

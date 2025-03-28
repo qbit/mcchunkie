@@ -31,19 +31,20 @@ func (h *RFC) Match(_, msg string) bool {
 func (h *RFC) SetStore(_ PluginStore) {}
 
 // Process does the heavy lifting
-func (h *RFC) Process(from, post string) string {
+func (h *RFC) Process(from, post string) (string, func() string) {
 	re := regexp.MustCompile(h.Re())
 	rfcNum := re.ReplaceAllString(post, "$1")
 	if rfcNum != "" {
-		return fmt.Sprintf("https://tools.ietf.org/html/rfc%s", rfcNum)
+		return fmt.Sprintf("https://tools.ietf.org/html/rfc%s", rfcNum), RespStub
 	}
 
-	return "that's not an RFC."
+	return "that's not an RFC.", RespStub
 }
 
 // RespondText sends back a man page.
 func (h *RFC) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, _ := h.Process(ev.Sender, post)
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name RFC

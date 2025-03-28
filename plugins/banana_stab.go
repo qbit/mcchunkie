@@ -35,19 +35,20 @@ func (h *BananaStab) Match(_, msg string) bool {
 // SetStore does nothing in BananaStab
 func (h *BananaStab) SetStore(_ PluginStore) {}
 
-func (h *BananaStab) Process(from, post string) string {
+func (h *BananaStab) Process(from, post string) (string, func() string) {
 	stabee := h.fix(post)
 	stabtxt := "..."
 	if stabee != "" {
 		stabtxt = fmt.Sprintf("stabs %s with the fury of a thousand radioactive bananas", stabee)
 	}
 	//jsonmsg := "{ \"body\": \"" + stabtxt + "\", \"type\": \"m.emote\"}"
-	return stabtxt
+	return stabtxt, RespStub
 }
 
 // RespondText stabs an unsuspecting person
 func (h *BananaStab) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendEmote(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, _ := h.Process(ev.Sender, post)
+	return SendEmote(c, ev.RoomID, resp)
 }
 
 // Name BananaStab!

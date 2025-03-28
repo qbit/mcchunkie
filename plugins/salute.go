@@ -34,22 +34,22 @@ func (h *Salute) Match(user, msg string) bool {
 	return ToMe(user, msg) && re.MatchString(msg)
 }
 
-func (h *Salute) Process(from, post string) string {
+func (h *Salute) Process(from, post string) (string, func() string) {
 	s := NameRE.ReplaceAllString(from, "$1")
 
 	rm := regexp.MustCompile(rightSalute())
 
 	if rm.MatchString(post) {
-		return fmt.Sprintf("%s o7", s)
+		return fmt.Sprintf("%s o7", s), RespStub
 	}
 
-
-	return "o7"
+	return "o7", RespStub
 }
 
 // RespondText to high five events
 func (h *Salute) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, _ := h.Process(ev.Sender, post)
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name returns the name of the Salute plugin

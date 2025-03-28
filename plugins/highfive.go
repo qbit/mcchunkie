@@ -38,26 +38,31 @@ func (h *HighFive) Match(user, msg string) bool {
 	return ToMe(user, msg) && re.MatchString(msg)
 }
 
-func (h *HighFive) Process(from, post string) string {
+func (h *HighFive) Process(from, post string) (string, func() string) {
 	s := NameRE.ReplaceAllString(from, "$1")
 
 	rm := regexp.MustCompile(rightFive())
 	lm := regexp.MustCompile(leftFive())
 
 	if rm.MatchString(post) {
-		return fmt.Sprintf("\\o %s", s)
+		return fmt.Sprintf("\\o %s", s), func() string { return "" }
 	}
 
 	if lm.MatchString(post) {
-		return fmt.Sprintf("%s o/", s)
+		return fmt.Sprintf("%s o/", s), func() string { return "" }
 	}
 
-	return "\\o/"
+	return "\\o/", func() string { return "" }
 }
 
 // RespondText to high five events
 func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, delayedResp := h.Process(ev.Sender, post)
+	go func() {
+		SendText(c, ev.RoomID, delayedResp())
+	}()
+
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name returns the name of the HighFive plugin

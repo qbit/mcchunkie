@@ -4036,7 +4036,7 @@ func (t *Toki) fix(msg string) (string, string) {
 }
 
 // Process does the heavy lifting
-func (t *Toki) Process(from, post string) string {
+func (t *Toki) Process(from, post string) (string, func() string) {
 	cmd, w := t.fix(post)
 	cmd = strings.ToLower(cmd)
 	switch cmd {
@@ -4046,9 +4046,9 @@ func (t *Toki) Process(from, post string) string {
 			for _, v := range word {
 				defs = append(defs, v.Print(w))
 			}
-			return strings.Join(defs, "\n\n")
+			return strings.Join(defs, "\n\n"), RespStub
 		} else {
-			return "mi sona ala"
+			return "mi sona ala", RespStub
 		}
 	case "toki?":
 		st := stemmer.Stem(w)
@@ -4063,14 +4063,15 @@ func (t *Toki) Process(from, post string) string {
 				}
 			}
 		}
-		return strings.Join(words, "\n\n")
+		return strings.Join(words, "\n\n"), RespStub
 	}
-	return "mi sona ala"
+	return "mi sona ala", RespStub
 }
 
 // RespondText to hi events
 func (t *Toki) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendMD(c, ev.RoomID, t.Process(ev.Sender, post))
+	resp, _ := t.Process(ev.Sender, post)
+	return SendMD(c, ev.RoomID, resp)
 }
 
 // Name hi

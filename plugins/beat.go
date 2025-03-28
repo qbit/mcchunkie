@@ -33,16 +33,17 @@ func (h *Beat) SetStore(_ PluginStore) {}
 
 // RespondText to beat request events
 func (h *Beat) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, _ string) error {
-	return SendText(c, ev.RoomID, h.Process("", ""))
+	resp, _ := h.Process("", "")
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Process does the heavy lifting of calculating .beat
-func (h *Beat) Process(from, msg string) string {
+func (h *Beat) Process(from, msg string) (string, func() string) {
 	n := time.Now()
 	utc1 := n.Unix() + 3600
 	r := utc1 % 86400
 	bt := float32(r) / 86.4
-	return fmt.Sprintf("@%03d", int32(bt))
+	return fmt.Sprintf("@%03d", int32(bt)), RespStub
 }
 
 // Name beat

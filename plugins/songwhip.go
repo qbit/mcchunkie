@@ -86,12 +86,12 @@ func hasService(s string, enabled bool) string {
 	return fmt.Sprintf("%s 🇽", s)
 }
 
-func (s *Songwhip) Process(from, post string) string {
+func (s *Songwhip) Process(from, post string) (string, func() string) {
 	musicURL := s.fix(post)
 	if musicURL != "" {
 		_, err := url.ParseRequestURI(musicURL)
 		if err != nil {
-			return fmt.Sprintf("Please don't abuse this free service. that's not a real url: %q", musicURL)
+			return fmt.Sprintf("Please don't abuse this free service. that's not a real url: %q", musicURL), RespStub
 		}
 
 		var swresp = &SongwhipResp{}
@@ -108,7 +108,7 @@ func (s *Songwhip) Process(from, post string) string {
 		err = req.DoJSON()
 
 		if err != nil {
-			return fmt.Sprintf("sorry %s, I can't look up that link on songwhip (%q)", from, err)
+			return fmt.Sprintf("sorry %s, I can't look up that link on songwhip (%q)", from, err), RespStub
 		}
 
 		return fmt.Sprintf("[%s](%s) (%s) can be found on: %s, %s, %s, %s",
@@ -119,14 +119,15 @@ func (s *Songwhip) Process(from, post string) string {
 			hasService("Spotify", swresp.Links.Spotify),
 			hasService("Tidal", swresp.Links.Tidal),
 			hasService("YTMusic", swresp.Links.YoutubeMusic),
-		)
+		), RespStub
 	}
-	return "invalid hostname"
+	return "invalid hostname", RespStub
 }
 
 // RespondText to looking up of federation check requests
 func (s *Songwhip) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendMD(c, ev.RoomID, s.Process(ev.Sender, post))
+	resp, _ := s.Process(ev.Sender, post)
+	return SendMD(c, ev.RoomID, resp)
 }
 
 // Name Songwhip!

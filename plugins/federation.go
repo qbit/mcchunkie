@@ -50,12 +50,12 @@ func (h *Feder) Match(_, msg string) bool {
 // SetStore we don't need a store here.
 func (h *Feder) SetStore(_ PluginStore) {}
 
-func (h *Feder) Process(from, post string) string {
+func (h *Feder) Process(from, post string) (string, func() string) {
 	homeServer := h.fix(post)
 	if homeServer != "" {
 		u, err := url.Parse(fmt.Sprintf("https://%s", homeServer))
 		if err != nil {
-			return fmt.Sprintf("that's not a real host name: %q", homeServer)
+			return fmt.Sprintf("that's not a real host name: %q", homeServer), RespStub
 		}
 
 		homeServer = u.Hostname()
@@ -75,7 +75,7 @@ func (h *Feder) Process(from, post string) string {
 		err = req.DoJSON()
 
 		if err != nil {
-			return fmt.Sprintf("sorry %s, I can't look up the federation status (%s)", from, err)
+			return fmt.Sprintf("sorry %s, I can't look up the federation status (%s)", from, err), RespStub
 		}
 
 		stat := "broken"
@@ -84,17 +84,18 @@ func (h *Feder) Process(from, post string) string {
 		}
 
 		if fed.Info.Error != "" {
-			return fmt.Sprintf("%s seems to be broken, maybe it isn't a homeserver?\n%s", homeServer, fed.Info.Error)
+			return fmt.Sprintf("%s seems to be broken, maybe it isn't a homeserver?\n%s", homeServer, fed.Info.Error), RespStub
 		} else {
-			return fmt.Sprintf("%s is running %s (%s) and is %s.", homeServer, fed.Info.Name, fed.Info.Version, stat)
+			return fmt.Sprintf("%s is running %s (%s) and is %s.", homeServer, fed.Info.Name, fed.Info.Version, stat), RespStub
 		}
 	}
-	return "invalid hostname"
+	return "invalid hostname", RespStub
 }
 
 // RespondText to looking up of federation check requests
 func (h *Feder) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	return SendText(c, ev.RoomID, h.Process(ev.Sender, post))
+	resp, _ := h.Process(ev.Sender, post)
+	return SendText(c, ev.RoomID, resp)
 }
 
 // Name Feder!
