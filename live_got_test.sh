@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PW="$(op item get got-test --field password)"
+PW="$(op item get got-test --reveal --field password)"
 
 echo "test one two three" > /tmp/test
 
