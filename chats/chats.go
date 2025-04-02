@@ -23,6 +23,7 @@ type Chats []Chat
 var ChatMethods = Chats{
 	&MatrixChat{},
 	&XMPPChat{},
+	&SignalChat{},
 	&IRCChat{},
 	&MailChat{},
 	&SMSChat{},
