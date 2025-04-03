@@ -23,7 +23,7 @@
         {
           mcchunkie = pkgs.buildGoModule rec {
             pname = "mcchunkie";
-            version = "v1.0.22";
+            version = "v1.1.1";
             src = ./.;
 
             vendorHash = "sha256-eKRj4W+DeOEYlL/wEa7200sYX1C1Adlweuk3gqrbwU8=";
