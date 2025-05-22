@@ -9,10 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/matrix-org/gomatrix"
 	"golang.org/x/crypto/bcrypt"
 	"suah.dev/mcchunkie/mcstore"
-	"suah.dev/mcchunkie/plugins"
 )
 
 type Author struct {
@@ -78,7 +76,7 @@ type GotNotifications struct {
 	Notifications []Notification `json:"notifications"`
 }
 
-func gotListen(store *mcstore.MCStore, cli *gomatrix.Client) {
+func GotListen(store *mcstore.MCStore, cli Chat) {
 	var gotPort, err = store.Get("got_listen")
 	if err != nil {
 		log.Println(err)
@@ -89,52 +87,6 @@ func gotListen(store *mcstore.MCStore, cli *gomatrix.Client) {
 		var gotRoom, _ = store.Get("got_room")
 
 		log.Printf("GOT: listening on %q and sending messages to %q\n", gotPort, gotRoom)
-
-		http.HandleFunc("/_got/v2", func(w http.ResponseWriter, r *http.Request) {
-			if r.Method != http.MethodPost {
-				log.Printf("GOT: invalid method: '%q'\n", r.Method)
-				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
-				return
-			}
-			user, pass, ok := r.BasicAuth()
-			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
-			if !(ok && err == nil && user == "got") {
-				log.Printf("GOT: failed auth '%s'\n", user)
-				w.Header().Set("WWW-Authenticate", `Basic realm="got notify"`)
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
-			}
-			gn := GotNotifications{}
-
-			data, err := io.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("internal error: %s", err), http.StatusInternalServerError)
-				return
-			}
-
-			_ = os.WriteFile("/tmp/mcchunkie-notification.json", data, 0600)
-
-			err = json.Unmarshal(data, &gn)
-			if err != nil {
-				log.Printf("GOT: invalid data sent to server: '%s'\n", err)
-				http.Error(w, fmt.Sprintf("invalid data sent to server: %s", err), http.StatusBadRequest)
-				return
-			}
-
-			for _, line := range gn.Notifications {
-				log.Printf("GOT: sending '%s'\n", line.String())
-				err = plugins.SendUnescNotice(cli, gotRoom, line.String())
-				if err != nil {
-					log.Printf("GOT: error sending commit info: '%s'\n", err)
-					http.Error(
-						w,
-						fmt.Sprintf("can not send commit info: %s", err),
-						http.StatusInternalServerError,
-					)
-					return
-				}
-			}
-		})
 
 		http.HandleFunc("/_got", func(w http.ResponseWriter, r *http.Request) {
 			var msg string
@@ -176,7 +128,7 @@ func gotListen(store *mcstore.MCStore, cli *gomatrix.Client) {
 
 			for _, line := range strings.Split(msg, "\n") {
 				log.Printf("GOT: sending '%s'\n", line)
-				err = plugins.SendUnescNotice(cli, gotRoom, line)
+				err = cli.Send(gotRoom, line)
 				if err != nil {
 					errMsg := fmt.Sprintf("can not send commit info: %s", err)
 					log.Printf("GOT: error sending '%s': %q\n", line, err)
@@ -187,6 +139,52 @@ func gotListen(store *mcstore.MCStore, cli *gomatrix.Client) {
 
 			fmt.Fprintf(w, "ok")
 
+		})
+
+		http.HandleFunc("/_got/v2", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method != http.MethodPost {
+				log.Printf("GOT: invalid method: '%q'\n", r.Method)
+				http.Error(w, fmt.Sprintf("method %q not implemented", r.Method), http.StatusMethodNotAllowed)
+				return
+			}
+			user, pass, ok := r.BasicAuth()
+			err := bcrypt.CompareHashAndPassword([]byte(htpass), []byte(pass))
+			if !(ok && err == nil && user == "got") {
+				log.Printf("GOT: failed auth '%s'\n", user)
+				w.Header().Set("WWW-Authenticate", `Basic realm="got notify"`)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+			gn := GotNotifications{}
+
+			data, err := io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("internal error: %s", err), http.StatusInternalServerError)
+				return
+			}
+
+			_ = os.WriteFile("/tmp/mcchunkie-notification.json", data, 0600)
+
+			err = json.Unmarshal(data, &gn)
+			if err != nil {
+				log.Printf("GOT: invalid data sent to server: '%s'\n", err)
+				http.Error(w, fmt.Sprintf("invalid data sent to server: %s", err), http.StatusBadRequest)
+				return
+			}
+
+			for _, line := range gn.Notifications {
+				log.Printf("GOT: sending '%s'\n", line.String())
+				err = cli.Send(gotRoom, line.String())
+				if err != nil {
+					log.Printf("GOT: error sending commit info: '%s'\n", err)
+					http.Error(
+						w,
+						fmt.Sprintf("can not send commit info: %s", err),
+						http.StatusInternalServerError,
+					)
+					return
+				}
+			}
 		})
 
 		log.Fatal(http.ListenAndServe(gotPort, nil))

@@ -46,8 +46,6 @@ func (x *XMPPChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) err
 
 		resp := ""
 		delayedResp := func() string { return "" }
-		log.Println(msg.From, msg.To)
-		log.Println(msg.Body)
 		for _, p := range *plugins {
 			if p.Match(msg.From, msg.Body) {
 				log.Printf("%s: responding to '%s'", p.Name(), msg.From)
@@ -67,7 +65,6 @@ func (x *XMPPChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) err
 					_ = s.Send(reply)
 				}
 			}()
-
 		}
 	})
 

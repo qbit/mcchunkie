@@ -11,14 +11,28 @@ import (
 	"suah.dev/mcchunkie/plugins"
 )
 
-type IRCChat struct{}
+var ircClient *irc.Client
+
+type IRCChat struct {
+	connected bool
+}
 
 func (i *IRCChat) Name() string {
 	return "IRC"
 }
 
-func (i *IRCChat) Send(string, string) error {
-	return nil
+func (i *IRCChat) Send(to, message string) error {
+	if !i.connected {
+		return fmt.Errorf("not connected")
+	}
+
+	return ircClient.WriteMessage(&irc.Message{
+		Command: "PRIVMSG",
+		Params: []string{
+			to,
+			message,
+		},
+	})
 }
 
 // IRCConnect connects to our irc server
@@ -45,7 +59,6 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 	}
 
 	if ircServer != "" {
-
 		log.Printf("IRC: connecting to %q\n", ircServer)
 
 		dialStr := fmt.Sprintf("%s:%s", ircServer, ircPort)
@@ -64,6 +77,7 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 			Handler: irc.HandlerFunc(func(c *irc.Client, m *irc.Message) {
 				switch m.Command {
 				case "001":
+					i.connected = true
 					for _, r := range strings.Split(ircRooms, ",") {
 						log.Printf("IRC: joining %q\n", r)
 						c.Write(fmt.Sprintf("JOIN %s", r))
@@ -132,11 +146,13 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 			}),
 		}
 
-		client := irc.NewClient(conn, config)
-		err = client.Run()
+		ircClient = irc.NewClient(conn, config)
+		err = ircClient.Run()
 		if err != nil {
+			i.connected = false
 			return err
 		}
 	}
+
 	return nil
 }

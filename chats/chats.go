@@ -1,6 +1,7 @@
 package chats
 
 import (
+	"fmt"
 	"strings"
 
 	"suah.dev/mcchunkie/mcstore"
@@ -12,7 +13,7 @@ type Chat interface {
 	// Connect connects
 	Connect(*mcstore.MCStore, *plugins.Plugins) error
 	Name() string
-	Send(string, string) error
+	Send(to string, message string) error
 }
 
 // Chats is a collection of our chat methods. An instance of this is iterated
@@ -27,6 +28,15 @@ var ChatMethods = Chats{
 	&IRCChat{},
 	&MailChat{},
 	&SMSChat{},
+}
+
+func (c *Chats) ByName(name string) (Chat, error) {
+	for _, ch := range *c {
+		if ch.Name() == name {
+			return ch, nil
+		}
+	}
+	return nil, fmt.Errorf("no such chat")
 }
 
 func (c *Chats) List() string {

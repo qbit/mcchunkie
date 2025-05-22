@@ -79,23 +79,30 @@ func main() {
 		os.Exit(0)
 	}
 
-	for _, chat := range chats.ChatMethods {
-		disableList := strings.Split(strings.ToLower(disableChats), ",")
-		if slices.Contains(disableList, strings.ToLower(chat.Name())) {
-			log.Printf("%s disabled...", chat.Name())
-			continue
+	disableList := strings.Split(strings.ToLower(disableChats), ",")
+	chatEnabled := func(chat string) bool {
+		if slices.Contains(disableList, strings.ToLower(chat)) {
+			return false
 		}
+		return true
+	}
+	for _, chat := range chats.ChatMethods {
 		go func() {
-			for {
-				log.Printf("Starting %s...", chat.Name())
-				err := chat.Connect(store, &plugins.Plugs)
-				if err != nil {
-					log.Println(fmt.Errorf("%s: %q", chat.Name(), err))
+			if chatEnabled(chat.Name()) {
+				for {
+					log.Printf("Starting %s...", chat.Name())
+					err := chat.Connect(store, &plugins.Plugs)
+					if err != nil {
+						log.Println(fmt.Errorf("%s: %q", chat.Name(), err))
+					}
+					time.Sleep(15 * time.Second)
 				}
-				time.Sleep(15 * time.Second)
 			}
 		}()
 	}
+
+	gotChat, err := chats.ChatMethods.ByName("IRC")
+	go chats.GotListen(store, gotChat)
 
 	for {
 		errataCount := 0
@@ -136,9 +143,11 @@ func main() {
 					}
 					for _, room := range strings.Split(alertRooms, ",") {
 						for _, c := range chats.ChatMethods {
-							err = c.Send(room, PrintErrataMD(&erratum))
-							if err != nil {
-								log.Printf("%s: %q", c.Name(), err)
+							if chatEnabled(c.Name()) {
+								err = c.Send(room, PrintErrataMD(&erratum))
+								if err != nil {
+									log.Printf("%s: %q", c.Name(), err)
+								}
 							}
 						}
 					}

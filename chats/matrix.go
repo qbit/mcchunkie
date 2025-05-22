@@ -104,7 +104,5 @@ func (mc *MatrixChat) Connect(store *mcstore.MCStore, plugs *plugins.Plugins) er
 		}
 	})
 
-	go gotListen(store, mc.client)
-
 	return mc.client.Sync()
 }

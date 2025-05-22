@@ -57,11 +57,7 @@ func (h *HighFive) Process(from, post string) (string, func() string) {
 
 // RespondText to high five events
 func (h *HighFive) RespondText(c *gomatrix.Client, ev *gomatrix.Event, _, post string) error {
-	resp, delayedResp := h.Process(ev.Sender, post)
-	go func() {
-		SendText(c, ev.RoomID, delayedResp())
-	}()
-
+	resp, _ := h.Process(ev.Sender, post)
 	return SendText(c, ev.RoomID, resp)
 }
 
