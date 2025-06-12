@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -72,17 +73,17 @@ func RespStub() string {
 // HTTPRequest has the bits for making http requests
 type HTTPRequest struct {
 	Client  http.Client
+	Headers map[string]string
 	Request *http.Request
 	Timeout time.Duration
 	URL     string
 	Method  string
-	ReqBody interface{}
-	ResBody interface{}
+	ReqBody any
+	ResBody any
 }
 
-// DoJSON is a general purpose http mechanic that can be used to get, post..
-// what evs. The response is always expected to be json
-func (h *HTTPRequest) DoJSON() (err error) {
+func (h *HTTPRequest) setup() error {
+	var err error
 	h.Client.Timeout = h.Timeout
 
 	if h.Method == "" {
@@ -106,6 +107,32 @@ func (h *HTTPRequest) DoJSON() (err error) {
 		return err
 	}
 
+	if h.Headers != nil {
+		for k, v := range h.Headers {
+			log.Println(k, v)
+			h.Request.Header.Set(k, v)
+		}
+	}
+
+	return nil
+}
+
+func (h *HTTPRequest) Do() ([]byte, error) {
+	h.setup()
+	res, err := h.Client.Do(h.Request)
+	if res != nil {
+		defer res.Body.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+	return io.ReadAll(res.Body)
+}
+
+// DoJSON is a general purpose http mechanic that can be used to get, post..
+// what evs. The response is always expected to be json
+func (h *HTTPRequest) DoJSON() (err error) {
+	h.setup()
 	h.Request.Header.Set("Content-Type", "application/json")
 
 	res, err := h.Client.Do(h.Request)
@@ -288,6 +315,7 @@ type Plugins []Plugin
 var Plugs = Plugins{
 	&BananaStab{},
 	&Beat{},
+	&Beer{},
 	&BotSnack{},
 	&DMR{},
 	&Feder{},
@@ -301,9 +329,9 @@ var Plugs = Plugins{
 	&OpenBSDMan{},
 	&PGP{},
 	&Palette{},
-	&Remind{},
 	&RFC{},
 	&ROA{},
+	&Remind{},
 	&Salute{},
 	&Snap{},
 	&Songwhip{},
