@@ -120,7 +120,7 @@ func (h *Beer) Process(from, msg string) (string, func() string) {
 		var singleBeer BeerResp
 		var multipleBeer BeerResps
 		err = json.Unmarshal(data, &multipleBeer)
-		if err == nil {
+		if err == nil && len(multipleBeer.Data) > 0 {
 			l := len(multipleBeer.Data)
 			rb := multipleBeer.Data[rand.Intn(l)]
 			return fmt.Sprintf("Found %d results, here's a random one: %s", l, h.pretty(rb)), RespStub
