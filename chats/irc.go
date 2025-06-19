@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 
 	"gopkg.in/irc.v3"
@@ -57,7 +58,7 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 	if err != nil {
 		return err
 	}
-
+	fromRe := regexp.MustCompile("^<(.+)> (.+)$")
 	if ircServer != "" {
 		log.Printf("IRC: connecting to %q\n", ircServer)
 
@@ -94,6 +95,12 @@ func (i *IRCChat) Connect(store *mcstore.MCStore, plugins *plugins.Plugins) erro
 					msg := m.Trailing()
 					from := m.Prefix.Name
 					to := m.Params[0]
+
+					if from == "tapebot" {
+						msg = strings.TrimPrefix(msg, "tapebot ")
+						from = fromRe.ReplaceAllString(msg, "${1}")
+						msg = fromRe.ReplaceAllString(msg, "${2}")
+					}
 
 					if from == c.CurrentNick() {
 						// Ignore messages from ourselves
