@@ -129,7 +129,12 @@ func (h *Beer) Process(from, msg string) (string, func() string) {
 		if err != nil {
 			return fmt.Sprintf("sorry %s, I can't look for beer. (%s)", from, err), RespStub
 		}
-		return h.pretty(singleBeer.Data), RespStub
+
+		if singleBeer.Code == 200 {
+			return h.pretty(singleBeer.Data), RespStub
+		}
+
+		return fmt.Sprintf("Sorry that beer is %d", singleBeer.Code), RespStub
 	}
 	return resp, RespStub
 }
