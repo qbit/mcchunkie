@@ -326,6 +326,7 @@ var Plugs = Plugins{
 	&Hi{},
 	&Llama{},
 	&LoveYou{},
+	&OWRT{},
 	&OpenBSDMan{},
 	&PGP{},
 	&Palette{},
