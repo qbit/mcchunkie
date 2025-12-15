@@ -4,19 +4,27 @@
   inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
 
   outputs =
-    { self
-    , nixpkgs
-    ,
+    {
+      self,
+      nixpkgs,
     }:
     let
-      supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "x86_64-darwin"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in
     {
-      overlay = _: prev: { inherit (self.packages.${prev.system}) mcchunkie; };
-      nixosModule = import ./module.nix;
-      packages = forAllSystems (system:
+      overlays.default = _: prev: {
+        inherit (self.packages.${prev.stdenv.hostPlatform.system}) mcchunkie;
+      };
+      nixosModules.default = import ./module.nix;
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in
@@ -33,10 +41,11 @@
 
             ldflags = [ "-X suah.dev/mcchunkie/plugins.version=${version}" ];
           };
-        });
+        }
+      );
 
-      defaultPackage = forAllSystems (system: self.packages.${system}.mcchunkie);
-      devShells = forAllSystems (system:
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in
@@ -55,6 +64,7 @@
               nilaway
             ];
           };
-        });
+        }
+      );
     };
 }
