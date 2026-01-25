@@ -334,6 +334,7 @@ var Plugs = Plugins{
 	&ROA{},
 	&Remind{},
 	&Salute{},
+	&Simple{},
 	&Snap{},
 	&Songwhip{},
 	&Source{},
