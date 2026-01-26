@@ -82,7 +82,7 @@ func (h *Simple) Process(from, post string) (string, func() string) {
 		log.Println(userFile)
 		userAPIKey, err := h.db.Get(userFile)
 		if err != nil {
-			return fmt.Sprintf("sorry %s, %s", from, err), RespStub
+			return fmt.Sprintf("sorry %s, looks like you can't make aliases!", from), RespStub
 		}
 
 		reqURL, err := url.Parse("https://app.simplelogin.io/api/alias/random/new/")
