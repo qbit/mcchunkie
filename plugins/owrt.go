@@ -144,6 +144,10 @@ func (h *OWRT) Process(from, msg string) (string, func() string) {
 	for _, e := range rowEntries {
 		resp = append(resp, strings.Join(getRow(e, colSet), ", "))
 	}
+
+	if len(rowEntries) == 0 {
+		return fmt.Sprintf("nothing found for %q", device), RespStub
+	}
 	return strings.Join(resp, "\n"), RespStub
 }
 
